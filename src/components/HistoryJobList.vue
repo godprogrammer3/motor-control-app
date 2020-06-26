@@ -9,19 +9,6 @@
     hide-default-footer
     :items-per-page="itemsPerPage"
   >
-    <template #item.action="{ item }">
-      <div class="text-center">
-        <v-btn class="mx-2" small fab dark color="red">
-          <v-icon dark>delete</v-icon>
-        </v-btn>
-        <v-btn class="mx-2" small fab dark color="indigo">
-          <v-icon dark>create</v-icon>
-        </v-btn>
-        <v-btn class="mx-2" small fab dark color="green">
-          <v-icon dark>play_arrow</v-icon>
-        </v-btn>
-      </div>
-    </template>
   </v-data-table>
 </template>
 
@@ -40,13 +27,9 @@ export default {
         },
         { text: "หมายเลขงาน", value: "workNo", align: "center" },
         { text: "ความยาว", value: "length", align: "center" },
-        { text: "วันที่ดำเนินงาน", value: "workDate", align: "center" },
-        {
-          text: "การดำเนินงาน",
-          value: "action",
-          sortable: false,
-          align: "center",
-        },
+        { text: "เพิ่ม/ลด", value: "offset", align: "center" },
+        { text: "ทั้งหมด", value: "total", align: "center" },
+        { text: "วันที่", value: "workDate", align: "center" },
       ],
       desserts: [],
     };
@@ -57,6 +40,8 @@ export default {
         no: i,
         workNo: 20050384,
         length: 5864,
+        offset: "+100",
+        total: 5964,
         workDate: "13/06/2020",
       });
     }

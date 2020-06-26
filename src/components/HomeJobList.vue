@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    height="85vh"
+    height="83vh"
     v-model="selected"
     :headers="headers"
     fixed-header

@@ -1,7 +1,10 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon style="color:white" @click="drawer = true"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        style="color:white"
+        @click="drawer = true"
+      ></v-app-bar-nav-icon>
 
       <v-toolbar-title style="color:white">รายการงาน</v-toolbar-title>
 
@@ -56,13 +59,13 @@ import HomeJobList from "@/components/HomeJobList.vue";
 import Setting from "@/views/Setting.vue";
 export default {
   components: {
-    HomeJobList
+    HomeJobList,
   },
   data() {
     return {
       datenow: "",
       lists: [],
-      drawer: false
+      drawer: false,
     };
   },
   methods: {
@@ -72,7 +75,7 @@ export default {
     check() {
       let time = moment().format("DD/M/YYYY hh:mm:ss");
       this.lists.push("checked! " + time);
-    }
+    },
   },
   mounted() {
     this.datenow = moment().format("DD/M/YYYY");
@@ -80,6 +83,6 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.interval);
-  }
+  },
 };
 </script>
