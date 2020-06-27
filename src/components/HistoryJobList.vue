@@ -1,7 +1,6 @@
 <template>
   <v-data-table
-    height="85vh"
-    v-model="selected"
+    height="83vh"
     :headers="headers"
     fixed-header
     :items="desserts"
@@ -9,15 +8,50 @@
     hide-default-footer
     :items-per-page="itemsPerPage"
   >
+    <template #top>
+      <v-toolbar>
+        <v-card
+          width="10vw"
+          :color="selectedFillter == 'day' ? 'blue' : 'indigo'"
+          link
+          @click="selectedFillter = 'day'"
+        >
+          <v-card-text class="text-center white--text">วัน</v-card-text>
+        </v-card>
+        <v-divider class="mx-1" inset vertical></v-divider>
+        <v-card
+          width="10vw"
+          :color="selectedFillter == 'month' ? 'blue' : 'indigo'"
+          link
+          @click="selectedFillter = 'month'"
+        >
+          <v-card-text class="text-center white--text">เดือน</v-card-text>
+        </v-card>
+        <v-divider class="mx-1" inset vertical></v-divider>
+        <v-card
+          width="10vw"
+          :color="selectedFillter == 'year' ? 'blue' : 'indigo'"
+          link
+          @click="selectedFillter = 'year'"
+        >
+          <v-card-text class="text-center white--text">ปี</v-card-text>
+        </v-card>
+        <v-spacer></v-spacer>
+        <v-card color="indigo" :date="datenow" style="padding:5px;">
+          <span style="margin:5px;color:white;">{{ datenow }}</span>
+          <v-icon color="white">date_range</v-icon>
+        </v-card>
+      </v-toolbar>
+    </template>
   </v-data-table>
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
-      singleSelect: false,
-      selected: [],
+      selectedFillter: "day",
       itemsPerPage: 10,
       headers: [
         {
@@ -32,6 +66,7 @@ export default {
         { text: "วันที่", value: "workDate", align: "center" },
       ],
       desserts: [],
+      datenow: "",
     };
   },
   mounted() {
@@ -46,8 +81,9 @@ export default {
       });
     }
     this.itemsPerPage = this.desserts.length;
+    this.datenow = moment().format("DD/M/YYYY");
   },
 };
 </script>
 
-<style></style>
+<style scoped></style>

@@ -72,10 +72,6 @@ export default {
     date() {
       this.datenow = moment().format("DD/M/YYYY");
     },
-    check() {
-      let time = moment().format("DD/M/YYYY hh:mm:ss");
-      this.lists.push("checked! " + time);
-    },
   },
   mounted() {
     this.datenow = moment().format("DD/M/YYYY");

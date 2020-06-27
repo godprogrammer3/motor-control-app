@@ -1,7 +1,6 @@
 <template>
   <v-data-table
     height="83vh"
-    v-model="selected"
     :headers="headers"
     fixed-header
     :items="desserts"
@@ -17,7 +16,14 @@
         <v-btn class="mx-2" small fab dark color="indigo">
           <v-icon dark>create</v-icon>
         </v-btn>
-        <v-btn class="mx-2" small fab dark color="green">
+        <v-btn
+          class="mx-2"
+          small
+          fab
+          dark
+          color="green"
+          @click="$router.replace('operating')"
+        >
           <v-icon dark>play_arrow</v-icon>
         </v-btn>
       </div>
@@ -29,8 +35,6 @@
 export default {
   data() {
     return {
-      singleSelect: false,
-      selected: [],
       itemsPerPage: 10,
       headers: [
         {

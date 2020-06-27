@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Setting from "../views/Setting.vue";
 import History from "@/views/History.vue";
+import Operating from "@/views/Operating.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -20,6 +21,11 @@ const routes = [
     path: "/history",
     name: "History",
     component: History,
+  },
+  {
+    path: "/operating",
+    name: "Operating",
+    component: Operating,
   },
 ];
 

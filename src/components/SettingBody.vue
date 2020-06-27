@@ -2,20 +2,6 @@
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
       <v-card width="80vw" height="80vh" class="justify-center">
-        <!-- <v-container fill-height fill-width>
-          <v-row justify="center" align="center">
-            <v-col cols="12" sm="4">
-              <v-row>
-                <v-col cols="8">
-                  <v-subheader>ค่า On Top เริ่มต้น</v-subheader>
-                </v-col>
-                <v-col cols="4">
-                  <v-text-field placeholder="30" suffix="เมตร"></v-text-field>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-container> -->
         <v-container fill-height>
           <v-row align="center" justify="center">
             <v-contianer>
