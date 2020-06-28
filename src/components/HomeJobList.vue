@@ -10,10 +10,24 @@
   >
     <template #item.action="{ item }">
       <div class="text-center">
-        <v-btn class="mx-2" small fab dark color="red">
+        <v-btn
+          class="mx-2"
+          small
+          fab
+          dark
+          color="red"
+          @click="$emit('show-dialog',{type:'delete'})"
+        >
           <v-icon dark>delete</v-icon>
         </v-btn>
-        <v-btn class="mx-2" small fab dark color="indigo">
+        <v-btn
+          class="mx-2"
+          small
+          fab
+          dark
+          color="indigo"
+          @click="$emit('show-dialog',{type:'edit'})"
+        >
           <v-icon dark>create</v-icon>
         </v-btn>
         <v-btn
@@ -22,7 +36,7 @@
           fab
           dark
           color="green"
-          @click="$router.replace('operating')"
+          @click="$emit('show-dialog',{type:'operate'})"
         >
           <v-icon dark>play_arrow</v-icon>
         </v-btn>
@@ -40,7 +54,7 @@ export default {
         {
           text: "ลำดับ",
           align: "center",
-          value: "no",
+          value: "no"
         },
         { text: "หมายเลขงาน", value: "workNo", align: "center" },
         { text: "ความยาว", value: "length", align: "center" },
@@ -49,10 +63,10 @@ export default {
           text: "การดำเนินงาน",
           value: "action",
           sortable: false,
-          align: "center",
-        },
+          align: "center"
+        }
       ],
-      desserts: [],
+      desserts: []
     };
   },
   mounted() {
@@ -61,11 +75,11 @@ export default {
         no: i,
         workNo: 20050384,
         length: 5864,
-        workDate: "13/06/2020",
+        workDate: "13/06/2020"
       });
     }
     this.itemsPerPage = this.desserts.length;
-  },
+  }
 };
 </script>
 

@@ -1,4 +1,4 @@
-# electron-app
+# app-clean-version
 
 ## Project setup
 ```

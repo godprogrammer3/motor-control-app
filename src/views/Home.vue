@@ -1,10 +1,7 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon
-        style="color:white"
-        @click="drawer = true"
-      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon style="color:white" @click="drawer = true"></v-app-bar-nav-icon>
 
       <v-toolbar-title style="color:white">รายการงาน</v-toolbar-title>
 
@@ -39,7 +36,7 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <HomeJobList></HomeJobList>
+    <HomeJobList @show-dialog="showDialog"></HomeJobList>
     <v-btn
       color="indigo"
       dark
@@ -49,6 +46,54 @@
     >
       <v-icon>control_point</v-icon>เพิ่มงาน
     </v-btn>
+    <v-dialog v-model="isDialogShow" max-width="290">
+      <v-card v-if="dialogInfo.type === 'delete'">
+        <v-container class="fill-height">
+          <v-row justify="center" align="center">
+            <v-card-text class="text-center">ต้องการ "ลบ" งาน 20050384</v-card-text>
+            <v-card-text class="text-center mt-0">ใช่หรือไม่</v-card-text>
+          </v-row>
+        </v-container>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="red darken-1" @click="isDialogShow = false">ไม่</v-btn>
+
+          <v-btn color="green darken-1" @click="isDialogShow = false">ใช่</v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-else-if="dialogInfo.type === 'edit'">
+        <v-card class="pa-5" elevation="0">
+          <v-text-field label="หมายเลขงาน" value="20050285"></v-text-field>
+          <v-text-field label="ความยาว" value="1024" suffix="เมตร"></v-text-field>
+        </v-card>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="red darken-1 white--text" @click="isDialogShow = false">ยกเลิก</v-btn>
+
+          <v-btn color="green darken-1 white--text" @click="isDialogShow = false">บันทึก</v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-else-if="dialogInfo.type === 'operate'">
+        <v-container class="fill-height">
+          <v-row justify="center" align="center">
+            <v-card-text class="text-center">ต้องการ "เริ่ม" งาน 20050384</v-card-text>
+            <v-card-text class="text-center mt-0">ใช่หรือไม่</v-card-text>
+          </v-row>
+        </v-container>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="red darken-1" @click="isDialogShow = false">ไม่</v-btn>
+
+          <v-btn color="green darken-1" @click="$router.replace('/operating')">ใช่</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -59,19 +104,26 @@ import HomeJobList from "@/components/HomeJobList.vue";
 import Setting from "@/views/Setting.vue";
 export default {
   components: {
-    HomeJobList,
+    HomeJobList
   },
   data() {
     return {
+      isDialogShow: false,
+      dialogInfo: {},
       datenow: "",
       lists: [],
-      drawer: false,
+      drawer: false
     };
   },
   methods: {
     date() {
       this.datenow = moment().format("DD/M/YYYY");
     },
+    showDialog(data) {
+      this.isDialogShow = true;
+      this.dialogInfo = data;
+      console.log(data);
+    }
   },
   mounted() {
     this.datenow = moment().format("DD/M/YYYY");
@@ -79,6 +131,6 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.interval);
-  },
+  }
 };
 </script>

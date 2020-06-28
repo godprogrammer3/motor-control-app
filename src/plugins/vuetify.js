@@ -4,9 +4,6 @@ import "material-design-icons-iconfont/dist/material-design-icons.css";
 Vue.use(Vuetify);
 
 export default new Vuetify({
-  theme: {
-    primary: "#3F51B5",
-  },
   icons: {
     iconfont: "md",
   },
