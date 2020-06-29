@@ -122,7 +122,6 @@ export default {
     showDialog(data) {
       this.isDialogShow = true;
       this.dialogInfo = data;
-      console.log(data);
     }
   },
   mounted() {

@@ -4,9 +4,9 @@
       <v-card width="80vw" height="80vh" class="justify-center">
         <v-container fill-height>
           <v-row align="center" justify="center">
-            <v-contianer>
+            <v-container>
               <v-row class="mb-5">
-                <div>
+                <div style="margin-left:150px;">
                   <span style="margin-right:34px;">ค่า On Top เริ่มต้น :</span>
                   <input
                     class="rounded-lg"
@@ -18,7 +18,7 @@
                 </div>
               </v-row>
               <v-row>
-                <div>
+                <div style="margin-left:154px;">
                   <span style="margin-right:20px;">ความเร็วในโหมดช้า :</span>
                   <input
                     class="rounded-lg"
@@ -29,7 +29,7 @@
                   <span style="margin-left:20px;">เมตร/นาที</span>
                 </div>
               </v-row>
-            </v-contianer>
+            </v-container>
           </v-row>
         </v-container>
       </v-card>

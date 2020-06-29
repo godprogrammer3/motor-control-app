@@ -9,7 +9,7 @@
         fab
         dark
         color="indigo darken-1"
-        @click="$router.replace('/')"
+        @click="isCloseDialogShow = true"
       >
         <v-icon dark>close</v-icon>
       </v-btn>
@@ -178,6 +178,39 @@
         </v-row>
       </v-container>
     </v-footer>
+     <v-dialog v-model="isShowInserPaper" max-width="290">
+      <v-card >
+        <v-container class="fill-height">
+          <v-row justify="center" align="center">
+            <v-icon x-large>note</v-icon>
+            <v-card-text class="text-center mt-0">กรุณาใส่กระดาษก่อนกดปุ่ม "เริ่มดำเนินงาน"</v-card-text>
+          </v-row>
+        </v-container>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="indigo white--text" @click="isShowInserPaper = false">เริ่มดำเนินการ</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+     <v-dialog v-model="isCloseDialogShow" max-width="290">
+      <v-card>
+        <v-container class="fill-height">
+          <v-row justify="center" align="center">
+            <v-card-text class="text-center">ต้องการ "ยกเลิก" งาน 20050384</v-card-text>
+            <v-card-text class="text-center mt-0">ใช่หรือไม่</v-card-text>
+          </v-row>
+        </v-container>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="red darken-1" @click="isCloseDialogShow = false">ไม่</v-btn>
+
+          <v-btn color="green darken-1" @click="$router.replace('/')">ใช่</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -187,6 +220,8 @@ export default {
     return {
       isSlowMode: false,
       isAutoMode: true,
+      isShowInserPaper : true,
+      isCloseDialogShow: false,
     };
   },
 };
