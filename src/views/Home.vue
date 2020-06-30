@@ -65,8 +65,14 @@
       </v-card>
       <v-card v-else-if="dialogInfo.type === 'edit'">
         <v-card class="pa-5" elevation="0">
-          <v-text-field label="หมายเลขงาน" value="20050285"></v-text-field>
-          <v-text-field label="ความยาว" value="1024" suffix="เมตร"></v-text-field>
+          <v-text-field id="workNo" label="หมายเลขงาน" :value="workNo" @focus="input = 'workNo'"></v-text-field>
+          <v-text-field
+            id="length"
+            label="ความยาว"
+            :value="length"
+            suffix="เมตร"
+            @focus="input = 'length'"
+          ></v-text-field>
         </v-card>
 
         <v-card-actions>
@@ -93,6 +99,9 @@
           <v-btn color="green darken-1" @click="$router.replace('/operating')">ใช่</v-btn>
         </v-card-actions>
       </v-card>
+      <v-footer v-show="input !== ''" fixed>
+        <TouchKeyboard @key-press="keyPress"></TouchKeyboard>
+      </v-footer>
     </v-dialog>
   </div>
 </template>
@@ -102,9 +111,11 @@
 import moment from "moment";
 import HomeJobList from "@/components/HomeJobList.vue";
 import Setting from "@/views/Setting.vue";
+import TouchKeyboard from "../components/TouchKeyboard.vue";
 export default {
   components: {
-    HomeJobList
+    HomeJobList,
+    TouchKeyboard
   },
   data() {
     return {
@@ -112,7 +123,10 @@ export default {
       dialogInfo: {},
       datenow: "",
       lists: [],
-      drawer: false
+      drawer: false,
+      input: "",
+      workNo: "20050285",
+      length: "1024"
     };
   },
   methods: {
@@ -122,6 +136,23 @@ export default {
     showDialog(data) {
       this.isDialogShow = true;
       this.dialogInfo = data;
+    },
+    keyPress(key) {
+      if (key === "close") {
+        this.input = "";
+      } else if (key === "del") {
+        if (this.input === "workNo") {
+          this.workNo = this.workNo.slice(0, -1);
+        } else {
+          this.length = this.length.slice(0, -1);
+        }
+      } else {
+        if (this.input === "workNo") {
+          this.workNo += key;
+        } else {
+          this.length += key;
+        }
+      }
     }
   },
   mounted() {
@@ -130,6 +161,11 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.interval);
+  },
+  watch: {
+    isDialogShow(newValue, oldValue) {
+      this.input = "";
+    }
   }
 };
 </script>

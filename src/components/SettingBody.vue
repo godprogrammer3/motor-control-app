@@ -13,6 +13,8 @@
                     type="text"
                     style="background-color:#3F51B5;text-align:center;color:white;"
                     :value="onTop"
+                    @click="$emit('change-input','onTop')"
+                    id="onTop"
                   />
                   <span style="margin-left:20px;">เมตร</span>
                 </div>
@@ -25,6 +27,8 @@
                     type="text"
                     style="background-color:#3F51B5;text-align:center;color:white;"
                     :value="slowModeVelocity"
+                    @click="$emit('change-input','slowModeVelocity')"
+                    id="slowModeVelocity"
                   />
                   <span style="margin-left:20px;">เมตร/นาที</span>
                 </div>
@@ -39,14 +43,18 @@
 
 <script>
 export default {
-  props:{
-    onTop:{
+  props: {
+    onTop: {
       type: Number,
-      value: 30,
+      value: 30
     },
-    slowModeVelocity:{
+    slowModeVelocity: {
       type: Number,
-      value: 20,
+      value: 20
+    },
+    input: {
+      type: String,
+      value: ""
     }
   }
 };

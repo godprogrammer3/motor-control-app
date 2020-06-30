@@ -1,10 +1,7 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon
-        style="color:white"
-        @click="drawer = true"
-      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon style="color:white" @click="drawer = true"></v-app-bar-nav-icon>
       <v-toolbar-title style="color:white">ตั้งค่า</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
@@ -31,25 +28,53 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <SettingBody :onTop="onTop" :slowModeVelocity="slowModeVelocity"></SettingBody>
+    <SettingBody :onTop="onTop" :slowModeVelocity="slowModeVelocity" @change-input="changeInput"></SettingBody>
+    <v-footer v-show="input !== ''" fixed>
+      <v-card width="100vw">
+        <TouchKeyboard @key-press="keyPress"></TouchKeyboard>
+      </v-card>
+    </v-footer>
   </div>
 </template>
 
 <script>
 import SettingBody from "@/components/SettingBody.vue";
+import TouchKeyboard from "../components/TouchKeyboard.vue";
 export default {
   components: {
     SettingBody,
+    TouchKeyboard
   },
   data() {
     return {
       drawer: false,
       onTop: 123,
       slowModeVelocity: 555,
-
+      input: ""
     };
   },
-
+  methods: {
+    changeInput(data) {
+      this.input = data;
+    },
+    keyPress(key) {
+      if (key == "close") {
+        this.input = "";
+      } else if (key == "del") {
+        if (this.input === "onTop") {
+          this.onTop = this.onTop.slice(0, -1);
+        } else {
+          this.slowModeVelocity = this.slowModeVelocity.slice(0, -1);
+        }
+      } else {
+        if (this.input === "onTop") {
+          this.onTop += key;
+        } else {
+          this.slowModeVelocity += key;
+        }
+      }
+    }
+  }
 };
 </script>
 
