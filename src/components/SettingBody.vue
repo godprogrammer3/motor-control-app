@@ -12,7 +12,7 @@
                     class="rounded-lg"
                     type="text"
                     style="background-color:#3F51B5;text-align:center;color:white;"
-                    value="30"
+                    :value="onTop"
                   />
                   <span style="margin-left:20px;">เมตร</span>
                 </div>
@@ -24,7 +24,7 @@
                     class="rounded-lg"
                     type="text"
                     style="background-color:#3F51B5;text-align:center;color:white;"
-                    value="20"
+                    :value="slowModeVelocity"
                   />
                   <span style="margin-left:20px;">เมตร/นาที</span>
                 </div>
@@ -38,7 +38,18 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props:{
+    onTop:{
+      type: Number,
+      value: 30,
+    },
+    slowModeVelocity:{
+      type: Number,
+      value: 20,
+    }
+  }
+};
 </script>
 
 <style></style>

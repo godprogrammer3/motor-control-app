@@ -31,7 +31,7 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <SettingBody></SettingBody>
+    <SettingBody :onTop="onTop" :slowModeVelocity="slowModeVelocity"></SettingBody>
   </div>
 </template>
 
@@ -44,8 +44,12 @@ export default {
   data() {
     return {
       drawer: false,
+      onTop: 123,
+      slowModeVelocity: 555,
+
     };
   },
+
 };
 </script>
 
