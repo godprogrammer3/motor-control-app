@@ -1,7 +1,10 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon style="color:white" @click="drawer = true"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        style="color:white"
+        @click="drawer = true"
+      ></v-app-bar-nav-icon>
 
       <v-toolbar-title style="color:white">รายการงาน</v-toolbar-title>
 
@@ -43,6 +46,7 @@
       absolute
       bottom
       :style="{ left: '50%', transform: 'translateX(-50%)' }"
+      @click="showCreateDialog"
     >
       <v-icon>control_point</v-icon>เพิ่มงาน
     </v-btn>
@@ -50,7 +54,9 @@
       <v-card v-if="dialogInfo.type === 'delete'">
         <v-container class="fill-height">
           <v-row justify="center" align="center">
-            <v-card-text class="text-center">ต้องการ "ลบ" งาน 20050384</v-card-text>
+            <v-card-text class="text-center"
+              >ต้องการ "ลบ" งาน 20050384</v-card-text
+            >
             <v-card-text class="text-center mt-0">ใช่หรือไม่</v-card-text>
           </v-row>
         </v-container>
@@ -60,45 +66,79 @@
 
           <v-btn color="red darken-1" @click="isDialogShow = false">ไม่</v-btn>
 
-          <v-btn color="green darken-1" @click="isDialogShow = false">ใช่</v-btn>
+          <v-btn color="green darken-1" @click="deleteJobAction">ใช่</v-btn>
         </v-card-actions>
       </v-card>
-      <v-card v-else-if="dialogInfo.type === 'edit'">
+      <v-card
+        v-else-if="dialogInfo.type === 'edit' || dialogInfo.type === 'create'"
+      >
         <v-card class="pa-5" elevation="0">
-          <v-text-field id="workNo" label="หมายเลขงาน" :value="workNo" @focus="input = 'workNo'"></v-text-field>
+          <v-text-field
+            id="workNo"
+            label="หมายเลขงาน"
+            v-model:value="workNo"
+            @focus="input = 'workNo'"
+          ></v-text-field>
           <v-text-field
             id="length"
             label="ความยาว"
-            :value="length"
+            v-model:value="length"
             suffix="เมตร"
             @focus="input = 'length'"
           ></v-text-field>
+          <v-text-field
+            v-model="date"
+            label="วันที่ดำเนินงาน"
+            prepend-icon="event"
+            readonly
+            @click="isDatePickerShow = true"
+          ></v-text-field>
+          <v-dialog v-model="isDatePickerShow">
+            <v-date-picker v-model="date" scrollable>
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="isDatePickerShow = false"
+                >OK</v-btn
+              >
+            </v-date-picker>
+          </v-dialog>
         </v-card>
 
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="red darken-1 white--text" @click="isDialogShow = false">ยกเลิก</v-btn>
+          <v-btn color="red darken-1 white--text" @click="isDialogShow = false"
+            >ยกเลิก</v-btn
+          >
 
-          <v-btn color="green darken-1 white--text" @click="isDialogShow = false">บันทึก</v-btn>
+          <v-btn
+            color="green darken-1 white--text"
+            @click="
+              dialogInfo.type === 'create' ? createJobAction() : editJobAction()
+            "
+            >บันทึก</v-btn
+          >
         </v-card-actions>
       </v-card>
       <v-card v-else-if="dialogInfo.type === 'operate'">
         <v-container class="fill-height">
           <v-row justify="center" align="center">
-            <v-card-text class="text-center">ต้องการ "เริ่ม" งาน 20050384</v-card-text>
+            <v-card-text class="text-center"
+              >ต้องการ "เริ่ม" งาน 20050384</v-card-text
+            >
             <v-card-text class="text-center mt-0">ใช่หรือไม่</v-card-text>
           </v-row>
         </v-container>
-
         <v-card-actions>
           <v-spacer></v-spacer>
 
           <v-btn color="red darken-1" @click="isDialogShow = false">ไม่</v-btn>
 
-          <v-btn color="green darken-1" @click="$router.replace('/operating')">ใช่</v-btn>
+          <v-btn color="green darken-1" @click="$router.replace('/operating')"
+            >ใช่</v-btn
+          >
         </v-card-actions>
       </v-card>
+
       <v-footer v-show="input !== ''" fixed>
         <TouchKeyboard @key-press="keyPress"></TouchKeyboard>
       </v-footer>
@@ -112,30 +152,38 @@ import moment from "moment";
 import HomeJobList from "@/components/HomeJobList.vue";
 import Setting from "@/views/Setting.vue";
 import TouchKeyboard from "../components/TouchKeyboard.vue";
+import { mapActions } from "vuex";
 export default {
   components: {
     HomeJobList,
-    TouchKeyboard
+    TouchKeyboard,
   },
   data() {
     return {
       isDialogShow: false,
       dialogInfo: {},
-      datenow: "",
+      datenow: moment().format("DD/M/YYYY"),
+      date: new Date().toISOString().substr(0, 10),
       lists: [],
       drawer: false,
       input: "",
-      workNo: "20050285",
-      length: "1024"
+      workNo: "",
+      length: "",
+      isDatePickerShow: false,
     };
   },
   methods: {
-    date() {
+    dateUpdate() {
       this.datenow = moment().format("DD/M/YYYY");
     },
     showDialog(data) {
       this.isDialogShow = true;
       this.dialogInfo = data;
+      if (this.dialogInfo.type === "edit") {
+        this.workNo = this.dialogInfo.item.workNo;
+        this.length = this.dialogInfo.item.length;
+        this.dialogInfo.item.oldWorkNo = this.dialogInfo.item.workNo;
+      }
     },
     keyPress(key) {
       if (key === "close") {
@@ -144,7 +192,10 @@ export default {
         if (this.input === "workNo") {
           this.workNo = this.workNo.slice(0, -1);
         } else {
-          this.length = this.length.slice(0, -1);
+          this.length = parseInt(this.length.toString().slice(0, -1));
+          if (isNaN(this.length)) {
+            this.length = 0;
+          }
         }
       } else {
         if (this.input === "workNo") {
@@ -153,11 +204,39 @@ export default {
           this.length += key;
         }
       }
-    }
+    },
+    async deleteJobAction() {
+      await this.deleteJob(this.dialogInfo.item.workNo);
+      this.isDialogShow = false;
+    },
+    async editJobAction() {
+      await this.editJob({
+        jobId: this.workNo,
+        length: this.length,
+        workTime: this.date,
+        oldJobId: this.dialogInfo.item.oldWorkNo,
+      });
+      this.isDialogShow = false;
+    },
+    async createJobAction() {
+      await this.createJob({
+        jobId: this.workNo,
+        length: this.length,
+        workTime: this.date,
+      });
+      this.isDialogShow = false;
+    },
+    showCreateDialog() {
+      this.dialogInfo.type = "create";
+      this.workNo = "";
+      this.length = 0;
+      this.date = new Date().toISOString().substr(0, 10);
+      this.isDialogShow = true;
+    },
+    ...mapActions(["deleteJob", "createJob", "editJob"]),
   },
   mounted() {
-    this.datenow = moment().format("DD/M/YYYY");
-    this.interval = setInterval(this.date, 1800000);
+    this.interval = setInterval(this.dateUpdate, 1800000);
   },
   beforeDestroy() {
     clearInterval(this.interval);
@@ -165,7 +244,7 @@ export default {
   watch: {
     isDialogShow(newValue, oldValue) {
       this.input = "";
-    }
-  }
+    },
+  },
 };
 </script>

@@ -5,10 +5,10 @@
       :headers="headers"
       fixed-header
       fixed-footer
-      :items="desserts"
+      :items="getHistoryJoblist"
       item-key="name"
       hide-default-footer
-      :items-per-page="itemsPerPage"
+      :items-per-page="getHistoryJoblist.length"
     >
       <template #top>
         <v-toolbar>
@@ -43,7 +43,7 @@
             color="indigo"
             :datenow="datenow"
             style="padding:5px;"
-            @click=" isDialogShow = true "
+            @click="isDialogShow = true"
           >
             <span style="margin:5px;color:white;">{{ datenow }}</span>
             <v-icon color="white">date_range</v-icon>
@@ -67,7 +67,7 @@
       width="290px"
     >
       <v-date-picker
-        v-if="selectedFillter!='year'"
+        v-if="selectedFillter != 'year'"
         v-model="date"
         :type="selectedFillter"
         scrollable
@@ -88,7 +88,9 @@
         <v-container>
           <v-row>
             <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="isDialogShow = false">Cancel</v-btn>
+            <v-btn text color="primary" @click="isDialogShow = false"
+              >Cancel</v-btn
+            >
             <v-btn text color="primary" @click="isDialogShow = false">OK</v-btn>
           </v-row>
         </v-container>
@@ -99,24 +101,23 @@
 
 <script>
 import moment from "moment";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
       selectedFillter: "date",
-      itemsPerPage: 10,
       headers: [
         {
           text: "ลำดับ",
           align: "center",
-          value: "no"
+          value: "no",
         },
         { text: "หมายเลขงาน", value: "workNo", align: "center" },
         { text: "ความยาว", value: "length", align: "center" },
         { text: "เพิ่ม/ลด", value: "offset", align: "center" },
         { text: "ทั้งหมด", value: "total", align: "center" },
-        { text: "วันที่", value: "workDate", align: "center" }
+        { text: "วันที่", value: "fishedTime", align: "center" },
       ],
-      desserts: [],
       datenow: "",
       isDialogShow: false,
       date: "",
@@ -131,40 +132,22 @@ export default {
         2027,
         2028,
         2029,
-        2030
-      ]
+        2030,
+      ],
     };
   },
   mounted() {
-    for (let i = 1; i < 30; i++) {
-      this.desserts.push({
-        no: i,
-        workNo: 20050384,
-        length: 5864,
-        offset: "+100",
-        total: 5964,
-        workDate: "13/06/2020"
-      });
-    }
-    this.itemsPerPage = this.desserts.length;
     this.datenow = moment().format("DD/M/YYYY");
+    this.getJobList();
   },
   methods: {
-    saveYear(year) {
-      this.$refs.menu.save(year);
-
-      // Reset activePicker to type YEAR
-      this.$refs.picker.activePicker = "YEAR";
-
-      // Close the menu/datepicker
-      this.menu = false;
-    }
+    ...mapActions({
+      getJobList: "getJobList",
+    }),
   },
-  watch: {
-    menu(val) {
-      val && this.$nextTick(() => (this.$refs.picker.activePicker = "YEAR"));
-    }
-  }
+  computed: {
+    ...mapGetters(["getHistoryJoblist"]),
+  },
 };
 </script>
 

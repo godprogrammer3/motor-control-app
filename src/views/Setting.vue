@@ -1,7 +1,10 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon style="color:white" @click="drawer = true"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        style="color:white"
+        @click="drawer = true"
+      ></v-app-bar-nav-icon>
       <v-toolbar-title style="color:white">ตั้งค่า</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
@@ -28,7 +31,11 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <SettingBody :onTop="onTop" :slowModeVelocity="slowModeVelocity" @change-input="changeInput"></SettingBody>
+    <SettingBody
+      :onTop="onTop"
+      :slowModeVelocity="slowModeVelocity"
+      @change-input="changeInput"
+    ></SettingBody>
     <v-footer v-show="input !== ''" fixed>
       <v-card width="100vw">
         <TouchKeyboard @key-press="keyPress"></TouchKeyboard>
@@ -43,14 +50,14 @@ import TouchKeyboard from "../components/TouchKeyboard.vue";
 export default {
   components: {
     SettingBody,
-    TouchKeyboard
+    TouchKeyboard,
   },
   data() {
     return {
       drawer: false,
       onTop: 123,
       slowModeVelocity: 555,
-      input: ""
+      input: "",
     };
   },
   methods: {
@@ -62,9 +69,17 @@ export default {
         this.input = "";
       } else if (key == "del") {
         if (this.input === "onTop") {
-          this.onTop = this.onTop.slice(0, -1);
+          this.onTop = parseInt(this.onTop.toString().slice(0, -1));
+          if (isNaN(this.onTop)) {
+            this.onTop = 0;
+          }
         } else {
-          this.slowModeVelocity = this.slowModeVelocity.slice(0, -1);
+          this.slowModeVelocity = parseInt(
+            this.slowModeVelocity.toString().slice(0, -1)
+          );
+          if (isNaN(this.slowModeVelocity)) {
+            this.slowModeVelocity = 0;
+          }
         }
       } else {
         if (this.input === "onTop") {
@@ -73,8 +88,8 @@ export default {
           this.slowModeVelocity += key;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

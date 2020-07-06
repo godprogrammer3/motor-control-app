@@ -3,10 +3,10 @@
     height="83vh"
     :headers="headers"
     fixed-header
-    :items="desserts"
+    :items="getJoblist"
     item-key="name"
     hide-default-footer
-    :items-per-page="itemsPerPage"
+    :items-per-page="getJoblist.length"
   >
     <template #item.action="{ item }">
       <div class="text-center">
@@ -16,7 +16,7 @@
           fab
           dark
           color="red"
-          @click="$emit('show-dialog',{type:'delete'})"
+          @click="$emit('show-dialog', { type: 'delete', item: item })"
         >
           <v-icon dark>delete</v-icon>
         </v-btn>
@@ -26,7 +26,7 @@
           fab
           dark
           color="indigo"
-          @click="$emit('show-dialog',{type:'edit'})"
+          @click="$emit('show-dialog', { type: 'edit', item: item })"
         >
           <v-icon dark>create</v-icon>
         </v-btn>
@@ -36,7 +36,7 @@
           fab
           dark
           color="green"
-          @click="$emit('show-dialog',{type:'operate'})"
+          @click="$emit('show-dialog', { type: 'operate', item: item })"
         >
           <v-icon dark>play_arrow</v-icon>
         </v-btn>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -54,7 +55,7 @@ export default {
         {
           text: "ลำดับ",
           align: "center",
-          value: "no"
+          value: "no",
         },
         { text: "หมายเลขงาน", value: "workNo", align: "center" },
         { text: "ความยาว", value: "length", align: "center" },
@@ -63,10 +64,10 @@ export default {
           text: "การดำเนินงาน",
           value: "action",
           sortable: false,
-          align: "center"
-        }
+          align: "center",
+        },
       ],
-      desserts: []
+      desserts: [],
     };
   },
   mounted() {
@@ -75,11 +76,20 @@ export default {
         no: i,
         workNo: 20050384,
         length: 5864,
-        workDate: "13/06/2020"
+        workDate: "13/06/2020",
       });
     }
     this.itemsPerPage = this.desserts.length;
-  }
+    this.getJobList();
+  },
+  methods: {
+    ...mapActions({
+      getJobList: "getJobList",
+    }),
+  },
+  computed: {
+    ...mapGetters(["getJoblist"]),
+  },
 };
 </script>
 
