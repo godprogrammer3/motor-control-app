@@ -94,7 +94,7 @@
             @click="isDatePickerShow = true"
           ></v-text-field>
           <v-dialog v-model="isDatePickerShow">
-            <v-date-picker v-model="date" scrollable>
+            <v-date-picker v-model:value="date" scrollable>
               <v-spacer></v-spacer>
               <v-btn text color="primary" @click="isDatePickerShow = false"
                 >OK</v-btn
@@ -183,6 +183,7 @@ export default {
         this.workNo = this.dialogInfo.item.workNo;
         this.length = this.dialogInfo.item.length;
         this.dialogInfo.item.oldWorkNo = this.dialogInfo.item.workNo;
+        this.date = this.dialogInfo.item.workDate;
       }
     },
     keyPress(key) {

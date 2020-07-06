@@ -1,14 +1,14 @@
-import ElectronAdapter from "axios-electron-adapter";
-AxiosStatic.defaults.adapter = ElectronAdapter;
+import axios from "axios";
 class API {
   constructor() {
-    Axios.create({
+    this.instance = axios.create({
       baseURL: "http://localhost:3000",
+      adapter: require("axios/lib/adapters/http"),
     });
   }
   async getAllJobList() {
     try {
-      var result = await Axios.get("/getAllJobList");
+      var result = await this.instance.get("/getAllJobList");
       if (result.status === 200) {
         return result.data;
       } else {
@@ -21,7 +21,7 @@ class API {
 
   async deleteJob(jobId) {
     try {
-      var result = await Axios.delete(`/deleteJob/${jobId}`);
+      var result = await this.instance.delete(`/deleteJob/${jobId}`);
       if (result.status === 200) {
         return result.data;
       } else {
@@ -33,7 +33,7 @@ class API {
   }
   async createJob(job) {
     try {
-      var result = await Axios.post("/createJob", job);
+      var result = await this.instance.post("/createJob", job);
       if (result.status === 200) {
         return result.data;
       } else {
@@ -45,7 +45,7 @@ class API {
   }
   async editJob(job) {
     try {
-      var result = await Axios.put("/editJob", job);
+      var result = await this.instance.put("/editJob", job);
       if (result.status === 200) {
         return result.data;
       } else {
