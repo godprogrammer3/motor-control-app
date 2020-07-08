@@ -41,11 +41,10 @@
           <v-spacer></v-spacer>
           <v-card
             color="indigo"
-            :datenow="datenow"
             style="padding:5px;"
             @click="isDialogShow = true"
           >
-            <span style="margin:5px;color:white;">{{ datenow }}</span>
+            <span style="margin:5px;color:white;">{{ showDate }}</span>
             <v-icon color="white">date_range</v-icon>
           </v-card>
         </v-toolbar>
@@ -59,28 +58,27 @@
         </div>
       </template>
     </v-data-table>
-    <v-dialog
-      ref="dialog"
-      v-model="isDialogShow"
-      :return-value.sync="date"
-      persistent
-      width="290px"
-    >
+    <v-dialog ref="dialog" v-model="isDialogShow" persistent width="290px">
       <v-date-picker
         v-if="selectedFillter != 'year'"
         v-model="date"
         :type="selectedFillter"
         scrollable
+        show-current="false"
       >
         <v-spacer></v-spacer>
         <v-btn text color="primary" @click="isDialogShow = false">Cancel</v-btn>
-        <v-btn text color="primary" @click="isDialogShow = false">OK</v-btn>
+        <v-btn text color="primary" @click="updateDate">OK</v-btn>
       </v-date-picker>
       <v-card v-else elevation="0">
         <v-container>
           <v-row justify="center">
             <v-col cols="10">
-              <v-select :items="yearList" label="ปี"></v-select>
+              <v-select
+                :items="getAllYearInJobList"
+                v-model:item-value="yearValue"
+                label="ปี"
+              ></v-select>
             </v-col>
           </v-row>
         </v-container>
@@ -91,7 +89,7 @@
             <v-btn text color="primary" @click="isDialogShow = false"
               >Cancel</v-btn
             >
-            <v-btn text color="primary" @click="isDialogShow = false">OK</v-btn>
+            <v-btn text color="primary" @click="updateDate">OK</v-btn>
           </v-row>
         </v-container>
       </v-card>
@@ -100,8 +98,8 @@
 </template>
 
 <script>
-import moment from "moment";
-import { mapActions, mapGetters } from "vuex";
+import moment, { locale } from "moment";
+import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -116,37 +114,50 @@ export default {
         { text: "ความยาว", value: "length", align: "center" },
         { text: "เพิ่ม/ลด", value: "offset", align: "center" },
         { text: "ทั้งหมด", value: "total", align: "center" },
-        { text: "วันที่", value: "fishedTime", align: "center" },
+        { text: "วันที่", value: "finishedTime", align: "center" },
       ],
-      datenow: "",
       isDialogShow: false,
-      date: "",
-      yearList: [
-        2020,
-        2021,
-        2022,
-        2023,
-        2024,
-        2025,
-        2026,
-        2027,
-        2028,
-        2029,
-        2030,
-      ],
+      date: new Date().toISOString().substring(0, 10),
+      yearValue: "",
     };
   },
   mounted() {
-    this.datenow = moment().format("DD/M/YYYY");
+    this.getJobListByDate({ type: this.selectedFillter, value: this.date });
     this.getJobList();
   },
   methods: {
-    ...mapActions({
-      getJobList: "getJobList",
-    }),
+    updateDate() {
+      if (this.selectedFillter !== "year") {
+        this.getJobListByDate({ type: this.selectedFillter, value: this.date });
+      } else {
+        this.getJobListByDate({ type: this.selectedFillter, value: this.date });
+      }
+      console.log(this.date);
+      this.isDialogShow = false;
+    },
+    allowedDates: (val) =>
+      this.selectedFillter === "date"
+        ? this.getAllDateInJobList.includes(val)
+        : this.getAllMonthInJobList.includes(val),
+    ...mapActions(["getJobListByDate", "getJobList"]),
   },
   computed: {
-    ...mapGetters(["getHistoryJoblist"]),
+    showDate() {
+      if (this.selectedFillter == "date") {
+        return this.date;
+      } else if (this.selectedFillter == "month") {
+        return this.date.substring(0, 7);
+      } else {
+        return this.date.substring(0, 4);
+      }
+    },
+    ...mapGetters([
+      "getHistoryJoblist",
+      "getJoblist",
+      "getAllDateInJobList",
+      "getAllMonthInJobList",
+      "getAllYearInJobList",
+    ]),
   },
 };
 </script>

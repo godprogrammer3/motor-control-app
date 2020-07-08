@@ -1,16 +1,21 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import API from "./api";
+import moment from "moment";
 const api = new API();
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     allJobList: [],
+    fillterJobList: [],
   },
   mutations: {
     UPDATE_JOBLIST(state, data) {
       state.allJobList = data;
+    },
+    UPDATE_FILLTER_JOBLIST(state, data) {
+      state.fillterJobList = data;
     },
   },
   actions: {
@@ -30,18 +35,25 @@ export default new Vuex.Store({
       let result = await api.editJob(payload);
       await this.dispatch("getJobList");
     },
+    async getJobListByDate({ commit }, payload) {
+      let result = await api.getJobListByDate(payload.type, payload.value);
+      this.commit("UPDATE_FILLTER_JOBLIST", result);
+    },
   },
   getters: {
     getHistoryJoblist: (state) => {
       let result = [];
-      for (var i = 0; i < state.allJobList.length; i++) {
+      for (var i = 0; i < state.fillterJobList.length; i++) {
         result.push({
           no: i + 1,
-          workNo: state.allJobList[i].jobId,
-          length: state.allJobList[i].length,
-          offset: state.allJobList[i].overhead,
-          total: state.allJobList[i].length + state.allJobList[i].overhead,
-          finishedTime: state.allJobList[i].finishedTime,
+          workNo: state.fillterJobList[i].jobId,
+          length: state.fillterJobList[i].length,
+          offset: state.fillterJobList[i].overhead,
+          total:
+            state.fillterJobList[i].length + state.fillterJobList[i].overhead,
+          finishedTime: moment(state.fillterJobList[i].workTime).format(
+            "YYYY-MM-DD"
+          ),
         });
       }
       return result;
@@ -53,9 +65,35 @@ export default new Vuex.Store({
           no: i + 1,
           workNo: state.allJobList[i].jobId,
           length: state.allJobList[i].length,
-          workDate: (state.allJobList[i].workTime + "").substring(0, 10),
+          workDate: moment(state.allJobList[i].workTime + "").format(
+            "YYYY-MM-DD"
+          ),
         });
       }
+      return result;
+    },
+    getAllDateInJobList: (state) => {
+      let set = new Set();
+      for (var i = 0; i < state.allJobList.length; i++) {
+        set.add(moment(state.allJobList[i].workTime + "").format("YYYY-MM-DD"));
+      }
+      let result = Array.from(set);
+      return result;
+    },
+    getAllMonthInJobList: (state) => {
+      let set = new Set();
+      for (var i = 0; i < state.allJobList.length; i++) {
+        set.add(moment(state.allJobList[i].workTime + "").format("YYYY-MM"));
+      }
+      let result = Array.from(set);
+      return result;
+    },
+    getAllYearInJobList: (state) => {
+      let set = new Set();
+      for (var i = 0; i < state.allJobList.length; i++) {
+        set.add(moment(state.allJobList[i].workTime + "").format("YYYY"));
+      }
+      let result = Array.from(set);
       return result;
     },
   },

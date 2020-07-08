@@ -55,5 +55,23 @@ class API {
       console.log(e);
     }
   }
+
+  async getJobListByDate(type, value) {
+    try {
+      var result = await this.instance.get("/getJobListByDate", {
+        params: {
+          type: type,
+          value: value,
+        },
+      });
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 export default API;
