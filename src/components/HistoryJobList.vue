@@ -39,11 +39,7 @@
             <v-card-text class="text-center white--text">ปี</v-card-text>
           </v-card>
           <v-spacer></v-spacer>
-          <v-card
-            color="indigo"
-            style="padding:5px;"
-            @click="isDialogShow = true"
-          >
+          <v-card color="indigo" style="padding:5px;" @click="isDialogShow = true">
             <span style="margin:5px;color:white;">{{ showDate }}</span>
             <v-icon color="white">date_range</v-icon>
           </v-card>
@@ -59,26 +55,24 @@
       </template>
     </v-data-table>
     <v-dialog ref="dialog" v-model="isDialogShow" persistent width="290px">
-      <v-date-picker
-        v-if="selectedFillter != 'year'"
-        v-model="date"
-        :type="selectedFillter"
-        scrollable
-        show-current="false"
-      >
-        <v-spacer></v-spacer>
-        <v-btn text color="primary" @click="isDialogShow = false">Cancel</v-btn>
-        <v-btn text color="primary" @click="updateDate">OK</v-btn>
-      </v-date-picker>
-      <v-card v-else elevation="0">
+      <v-card elevation="0">
         <v-container>
-          <v-row justify="center">
+          <v-row v-if="selectedFillter == 'year'" justify="center">
             <v-col cols="10">
-              <v-select
-                :items="getAllYearInJobList"
-                v-model:item-value="yearValue"
-                label="ปี"
-              ></v-select>
+              <v-select :items="getAllYearInJobList" v-model:item-value="yearValue" label="ปี"></v-select>
+            </v-col>
+          </v-row>
+          <v-row v-else-if="selectedFillter == 'month'" justify="center">
+            <v-col cols="10">
+              <v-select :items="getAllMonthInJobList" v-model:item-value="monthValue" label="เดือน"></v-select>
+              <v-select :items="getAllYearInJobList" v-model:item-value="yearValue" label="ปี"></v-select>
+            </v-col>
+          </v-row>
+          <v-row v-else-if="selectedFillter == 'date'" justify="center">
+            <v-col cols="10">
+              <v-select :items="getAllDateInJobList" v-model:item-value="dateValue" label="วันที่"></v-select>
+              <v-select :items="getAllMonthInJobList" v-model:item-value="monthValue" label="เดือน"></v-select>
+              <v-select :items="getAllYearInJobList" v-model:item-value="yearValue" label="ปี"></v-select>
             </v-col>
           </v-row>
         </v-container>
@@ -86,9 +80,7 @@
         <v-container>
           <v-row>
             <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="isDialogShow = false"
-              >Cancel</v-btn
-            >
+            <v-btn text color="primary" @click="isDialogShow = false">Cancel</v-btn>
             <v-btn text color="primary" @click="updateDate">OK</v-btn>
           </v-row>
         </v-container>
@@ -108,17 +100,19 @@ export default {
         {
           text: "ลำดับ",
           align: "center",
-          value: "no",
+          value: "no"
         },
         { text: "หมายเลขงาน", value: "workNo", align: "center" },
         { text: "ความยาว", value: "length", align: "center" },
         { text: "เพิ่ม/ลด", value: "offset", align: "center" },
         { text: "ทั้งหมด", value: "total", align: "center" },
-        { text: "วันที่", value: "finishedTime", align: "center" },
+        { text: "วันที่", value: "finishedTime", align: "center" }
       ],
       isDialogShow: false,
       date: new Date().toISOString().substring(0, 10),
       yearValue: "",
+      monthValue: "",
+      dateValue: ""
     };
   },
   mounted() {
@@ -135,11 +129,7 @@ export default {
       console.log(this.date);
       this.isDialogShow = false;
     },
-    allowedDates: (val) =>
-      this.selectedFillter === "date"
-        ? this.getAllDateInJobList.includes(val)
-        : this.getAllMonthInJobList.includes(val),
-    ...mapActions(["getJobListByDate", "getJobList"]),
+    ...mapActions(["getJobListByDate", "getJobList"])
   },
   computed: {
     showDate() {
@@ -156,9 +146,9 @@ export default {
       "getJoblist",
       "getAllDateInJobList",
       "getAllMonthInJobList",
-      "getAllYearInJobList",
-    ]),
-  },
+      "getAllYearInJobList"
+    ])
+  }
 };
 </script>
 

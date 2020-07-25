@@ -75,7 +75,7 @@ export default new Vuex.Store({
     getAllDateInJobList: (state) => {
       let set = new Set();
       for (var i = 0; i < state.allJobList.length; i++) {
-        set.add(moment(state.allJobList[i].workTime + "").format("YYYY-MM-DD"));
+        set.add(moment(state.allJobList[i].workTime + "").format("DD"));
       }
       let result = Array.from(set);
       return result;
@@ -83,7 +83,7 @@ export default new Vuex.Store({
     getAllMonthInJobList: (state) => {
       let set = new Set();
       for (var i = 0; i < state.allJobList.length; i++) {
-        set.add(moment(state.allJobList[i].workTime + "").format("YYYY-MM"));
+        set.add(moment(state.allJobList[i].workTime + "").format("MM"));
       }
       let result = Array.from(set);
       return result;
