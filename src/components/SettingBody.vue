@@ -33,6 +33,13 @@
                   <span style="margin-left:20px;">เมตร/นาที</span>
                 </div>
               </v-row>
+              <v-row>
+                <v-btn
+                  style="margin-left:300px;margin-top:20px;"
+                  color="indigo"
+                  @click="$emit('save-setting')"
+                >บันทึก</v-btn>
+              </v-row>
             </v-container>
           </v-row>
         </v-container>
@@ -42,6 +49,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   props: {
     onTop: {
@@ -56,6 +64,9 @@ export default {
       type: String,
       value: ""
     }
+  },
+  computed: {
+    ...mapState(["setting"])
   }
 };
 </script>

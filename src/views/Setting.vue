@@ -1,10 +1,7 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon
-        style="color:white"
-        @click="drawer = true"
-      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon style="color:white" @click="drawer = true"></v-app-bar-nav-icon>
       <v-toolbar-title style="color:white">ตั้งค่า</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
@@ -35,7 +32,25 @@
       :onTop="onTop"
       :slowModeVelocity="slowModeVelocity"
       @change-input="changeInput"
+      @save-setting="saveSetting"
     ></SettingBody>
+    <v-dialog v-model="isSaveDialogShow" max-width="290">
+      <v-card>
+        <v-container class="fill-height">
+          <v-row justify="center" align="center">
+            <v-card-text class="text-center">ยืนยันการบันทึกการตั้งค่า</v-card-text>
+          </v-row>
+        </v-container>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="red darken-1" @click="cancelAction">ยกเลิก</v-btn>
+
+          <v-btn color="green darken-1" @click="saveAction">ยืนยัน</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-footer v-show="input !== ''" fixed>
       <v-card width="100vw">
         <TouchKeyboard @key-press="keyPress"></TouchKeyboard>
@@ -47,22 +62,42 @@
 <script>
 import SettingBody from "@/components/SettingBody.vue";
 import TouchKeyboard from "../components/TouchKeyboard.vue";
+import { mapState, mapActions } from "vuex";
 export default {
   components: {
     SettingBody,
-    TouchKeyboard,
+    TouchKeyboard
   },
   data() {
     return {
       drawer: false,
-      onTop: 123,
-      slowModeVelocity: 555,
+      onTop: 0,
+      slowModeVelocity: 0,
       input: "",
+      isSaveDialogShow: false
     };
+  },
+  created() {
+    this.getSetting();
   },
   methods: {
     changeInput(data) {
       this.input = data;
+    },
+    saveSetting() {
+      this.isSaveDialogShow = true;
+    },
+    saveAction() {
+      this.editSetting({
+        defaultOnTop: this.onTop,
+        defaultSlowModeVelocity: this.slowModeVelocity
+      });
+      this.isSaveDialogShow = false;
+    },
+    cancelAction() {
+      this.onTop = this.setting.defaultOnTop;
+      this.slowModeVelocity = this.setting.defaultSlowModeVelocity;
+      this.isSaveDialogShow = false;
     },
     keyPress(key) {
       if (key == "close") {
@@ -88,8 +123,20 @@ export default {
           this.slowModeVelocity += key;
         }
       }
+      this.onTop = parseInt(this.onTop);
+      this.slowModeVelocity = parseInt(this.slowModeVelocity);
     },
+    ...mapActions(["getSetting", "editSetting"])
   },
+  computed: {
+    ...mapState(["setting"])
+  },
+  watch: {
+    setting(newValue, oldValue) {
+      this.onTop = this.setting.defaultOnTop;
+      this.slowModeVelocity = this.setting.defaultSlowModeVelocity;
+    }
+  }
 };
 </script>
 

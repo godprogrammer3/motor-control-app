@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     allJobList: [],
     fillterJobList: [],
+    setting: {},
   },
   mutations: {
     UPDATE_JOBLIST(state, data) {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
     UPDATE_FILLTER_JOBLIST(state, data) {
       state.fillterJobList = data;
+    },
+    UPDATE_SETTING(state, data) {
+      state.setting = data;
     },
   },
   actions: {
@@ -38,6 +42,14 @@ export default new Vuex.Store({
     async getJobListByDate({ commit }, payload) {
       let result = await api.getJobListByDate(payload.type, payload.value);
       this.commit("UPDATE_FILLTER_JOBLIST", result);
+    },
+    async getSetting({ commit }, payload) {
+      let result = await api.getSetting();
+      this.commit("UPDATE_SETTING", result);
+    },
+    async editSetting({ commit }, payload) {
+      let result = await api.editSetting(payload);
+      this.commit("UPDATE_SETTING", payload);
     },
   },
   getters: {

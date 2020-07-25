@@ -73,5 +73,30 @@ class API {
       console.log(e);
     }
   }
+
+  async getSetting() {
+    try {
+      var result = await this.instance.get("/getSetting");
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async editSetting(setting) {
+    try {
+      var result = await this.instance.put("/editSetting", setting);
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 export default API;
