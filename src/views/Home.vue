@@ -1,18 +1,23 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon
-        style="color:white"
-        @click="drawer = true"
-      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon style="color:white;" @click="drawer = true">
+        <v-icon large>
+          menu
+        </v-icon>
+      </v-app-bar-nav-icon>
 
-      <v-toolbar-title style="color:white">รายการงาน</v-toolbar-title>
+      <v-toolbar-title style="color:white;" class="text-h4"
+        >รายการงาน</v-toolbar-title
+      >
 
       <v-spacer></v-spacer>
 
       <v-card color="indigo darken-1" :date="datenow" style="padding:5px;">
-        <span style="margin:5px;color:white;">{{ datenow }}</span>
-        <v-icon color="white">date_range</v-icon>
+        <span style="margin:20px;color:white;" class="text-h5">{{
+          datenow
+        }}</span>
+        <v-icon large color="white">date_range</v-icon>
       </v-card>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary>

@@ -7,6 +7,7 @@
     item-key="name"
     hide-default-footer
     :items-per-page="getJoblist.length"
+    item-class="text-h1"
   >
     <template #item.action="{ item }">
       <div class="text-center">
@@ -56,15 +57,27 @@ export default {
           text: "ลำดับ",
           align: "center",
           value: "no",
+          class: "text-h6",
         },
-        { text: "หมายเลขงาน", value: "workNo", align: "center" },
-        { text: "ความยาว", value: "length", align: "center" },
-        { text: "วันที่ดำเนินงาน", value: "workDate", align: "center" },
+        {
+          text: "หมายเลขงาน",
+          value: "workNo",
+          align: "center",
+          class: "text-h6",
+        },
+        { text: "ความยาว", value: "length", align: "center", class: "text-h6" },
+        {
+          text: "วันที่ดำเนินงาน",
+          value: "workDate",
+          align: "center",
+          class: "text-h6",
+        },
         {
           text: "การดำเนินงาน",
           value: "action",
           sortable: false,
           align: "center",
+          class: "text-h6",
         },
       ],
       desserts: [],
@@ -92,5 +105,8 @@ export default {
   },
 };
 </script>
-
-<style></style>
+<style scoped>
+.v-data-table th thead {
+  font-size: 1.2em !important;
+}
+</style>
