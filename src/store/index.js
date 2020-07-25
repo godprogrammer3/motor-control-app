@@ -72,24 +72,42 @@ export default new Vuex.Store({
       }
       return result;
     },
-    getAllDateInJobList: (state) => {
-      let set = new Set();
-      for (var i = 0; i < state.allJobList.length; i++) {
-        set.add(moment(state.allJobList[i].workTime + "").format("DD"));
-      }
-      let result = Array.from(set);
-      return result;
+    getAllDateInJobList(state) {
+      var self = this;
+      var set = new Set();
+      return function(month, year) {
+        set.clear();
+        for (var i = 0; i < state.allJobList.length; i++) {
+          let date = moment(state.allJobList[i].workTime);
+
+          if (date.month() + 1 == month && date.year() == year) {
+            set.add(date.format("D"));
+          }
+        }
+        let result = Array.from(set);
+        result.sort();
+        return result;
+      };
     },
-    getAllMonthInJobList: (state) => {
+    getAllMonthInJobList(state) {
+      var self = this;
       let set = new Set();
-      for (var i = 0; i < state.allJobList.length; i++) {
-        set.add(moment(state.allJobList[i].workTime + "").format("MM"));
-      }
-      let result = Array.from(set);
-      return result;
+      return function(year) {
+        set.clear();
+        for (var i = 0; i < state.allJobList.length; i++) {
+          let date = moment(state.allJobList[i].workTime);
+          if (date.year() == year) {
+            set.add(date.format("M"));
+          }
+        }
+        let result = Array.from(set);
+        result.sort();
+        return result;
+      };
     },
     getAllYearInJobList: (state) => {
       let set = new Set();
+      set.clear();
       for (var i = 0; i < state.allJobList.length; i++) {
         set.add(moment(state.allJobList[i].workTime + "").format("YYYY"));
       }

@@ -59,20 +59,52 @@
         <v-container>
           <v-row v-if="selectedFillter == 'year'" justify="center">
             <v-col cols="10">
-              <v-select :items="getAllYearInJobList" v-model:item-value="yearValue" label="ปี"></v-select>
+              <v-select
+                :items="getAllYearInJobList"
+                v-model:item-value="yearValue"
+                label="ปี"
+                @change="updateListValue({type:'year' ,year:yearValue})"
+              ></v-select>
             </v-col>
           </v-row>
           <v-row v-else-if="selectedFillter == 'month'" justify="center">
             <v-col cols="10">
-              <v-select :items="getAllMonthInJobList" v-model:item-value="monthValue" label="เดือน"></v-select>
-              <v-select :items="getAllYearInJobList" v-model:item-value="yearValue" label="ปี"></v-select>
+              <v-select
+                :items="getAllYearInJobList"
+                v-model:item-value="yearValue"
+                label="ปี"
+                @change="updateListValue({type:'year' ,year:yearValue})"
+              ></v-select>
+              <v-select
+                :items="monthListValue"
+                v-model:item-value="monthValue"
+                label="เดือน"
+                @change="updateListValue({type:'month' ,month:monthValue , year:yearValue})"
+                :disabled="yearValue === ''"
+              ></v-select>
             </v-col>
           </v-row>
           <v-row v-else-if="selectedFillter == 'date'" justify="center">
             <v-col cols="10">
-              <v-select :items="getAllDateInJobList" v-model:item-value="dateValue" label="วันที่"></v-select>
-              <v-select :items="getAllMonthInJobList" v-model:item-value="monthValue" label="เดือน"></v-select>
-              <v-select :items="getAllYearInJobList" v-model:item-value="yearValue" label="ปี"></v-select>
+              <v-select
+                :items="getAllYearInJobList"
+                v-model:item-value="yearValue"
+                label="ปี"
+                @change="updateListValue({type:'year' ,year:yearValue})"
+              ></v-select>
+              <v-select
+                :items="monthListValue"
+                v-model:item-value="monthValue"
+                label="เดือน"
+                @change="updateListValue({type:'month' ,month:monthValue , year:yearValue})"
+                :disabled="yearValue === ''"
+              ></v-select>
+              <v-select
+                :items="dateListValue"
+                v-model:item-value="dateValue"
+                label="วันที่"
+                :disabled="monthValue === ''"
+              ></v-select>
             </v-col>
           </v-row>
         </v-container>
@@ -90,7 +122,7 @@
 </template>
 
 <script>
-import moment, { locale } from "moment";
+import moment, { locale, months } from "moment";
 import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   data() {
@@ -111,35 +143,49 @@ export default {
       isDialogShow: false,
       date: new Date().toISOString().substring(0, 10),
       yearValue: "",
+      yearListValue: [],
       monthValue: "",
-      dateValue: ""
+      monthListValue: [],
+      dateValue: "",
+      dateListValue: []
     };
   },
   mounted() {
-    this.getJobListByDate({ type: this.selectedFillter, value: this.date });
     this.getJobList();
+    this.getJobListByDate({ type: this.selectedFillter, value: this.date });
   },
   methods: {
     updateDate() {
-      if (this.selectedFillter !== "year") {
-        this.getJobListByDate({ type: this.selectedFillter, value: this.date });
+      if (this.selectedFillter === "year") {
+        this.date = this.yearValue;
+      } else if (this.selectedFillter === "month") {
+        this.date = this.yearValue + "-" + this.monthValue;
       } else {
-        this.getJobListByDate({ type: this.selectedFillter, value: this.date });
+        this.date =
+          this.yearValue + "-" + this.monthValue + "-" + this.dateValue;
       }
-      console.log(this.date);
+      this.getJobListByDate({
+        type: this.selectedFillter,
+        value: this.date
+      });
       this.isDialogShow = false;
+    },
+    updateListValue(param) {
+      if (param.type === "year") {
+        this.monthListValue = this.getAllMonthInJobList(this.yearValue);
+        this.dateListValue = [];
+      } else if (param.type === "month") {
+        this.dateListValue = this.getAllDateInJobList(
+          this.monthValue,
+          this.yearValue
+        );
+      }
     },
     ...mapActions(["getJobListByDate", "getJobList"])
   },
   computed: {
     showDate() {
-      if (this.selectedFillter == "date") {
-        return this.date;
-      } else if (this.selectedFillter == "month") {
-        return this.date.substring(0, 7);
-      } else {
-        return this.date.substring(0, 4);
-      }
+      return this.date;
     },
     ...mapGetters([
       "getHistoryJoblist",
@@ -147,7 +193,8 @@ export default {
       "getAllDateInJobList",
       "getAllMonthInJobList",
       "getAllYearInJobList"
-    ])
+    ]),
+    ...mapState(["fillterJobList"])
   }
 };
 </script>
