@@ -49,11 +49,12 @@
       color="indigo"
       dark
       absolute
+      x-large
       bottom
-      :style="{ left: '50%', transform: 'translateX(-50%)' }"
+      :style="{ left: '50%', transform: 'translateX(-50%)', fontSize: '1.3em' }"
       @click="showCreateDialog"
     >
-      <v-icon>control_point</v-icon>เพิ่มงาน
+      <v-icon large>control_point</v-icon>เพิ่มงาน
     </v-btn>
     <v-dialog v-model="isDialogShow" max-width="290">
       <v-card v-if="dialogInfo.type === 'delete'">
@@ -200,7 +201,7 @@ export default {
         } else {
           this.length = parseInt(this.length.toString().slice(0, -1));
           if (isNaN(this.length)) {
-            this.length = 0;
+            this.length = "";
           }
         }
       } else {

@@ -1,11 +1,14 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon
-        style="color:white"
-        @click="drawer = true"
-      ></v-app-bar-nav-icon>
-      <v-toolbar-title style="color:white">ประวัติการดำเนินงาน</v-toolbar-title>
+      <v-app-bar-nav-icon style="color:white" @click="drawer = true">
+        <v-icon large>
+          menu
+        </v-icon></v-app-bar-nav-icon
+      >
+      <v-toolbar-title style="color:white" class="text-h4"
+        >ประวัติการดำเนินงาน</v-toolbar-title
+      >
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
       <v-list nav dense>

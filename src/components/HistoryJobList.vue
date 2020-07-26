@@ -18,7 +18,11 @@
             link
             @click="selectedFillter = 'date'"
           >
-            <v-card-text class="text-center white--text">วัน</v-card-text>
+            <v-card-text
+              class="text-center white--text"
+              style="font-size:1.3em;"
+              >วัน</v-card-text
+            >
           </v-card>
           <v-divider class="mx-1" inset vertical></v-divider>
           <v-card
@@ -27,7 +31,11 @@
             link
             @click="selectedFillter = 'month'"
           >
-            <v-card-text class="text-center white--text">เดือน</v-card-text>
+            <v-card-text
+              class="text-center white--text"
+              style="font-size:1.3em;"
+              >เดือน</v-card-text
+            >
           </v-card>
           <v-divider class="mx-1" inset vertical></v-divider>
           <v-card
@@ -36,12 +44,22 @@
             link
             @click="selectedFillter = 'year'"
           >
-            <v-card-text class="text-center white--text">ปี</v-card-text>
+            <v-card-text
+              class="text-center white--text"
+              style="font-size:1.3em;"
+              >ปี</v-card-text
+            >
           </v-card>
           <v-spacer></v-spacer>
-          <v-card color="indigo" style="padding:5px;" @click="isDialogShow = true">
-            <span style="margin:5px;color:white;">{{ showDate }}</span>
-            <v-icon color="white">date_range</v-icon>
+          <v-card
+            color="indigo"
+            style="padding:5px;"
+            @click="isDialogShow = true"
+          >
+            <span style="margin:5px;color:white;font-size:1.3em;">{{
+              showDate
+            }}</span>
+            <v-icon color="white" large>date_range</v-icon>
           </v-card>
         </v-toolbar>
       </template>
@@ -63,7 +81,7 @@
                 :items="getAllYearInJobList"
                 v-model:item-value="yearValue"
                 label="ปี"
-                @change="updateListValue({type:'year' ,year:yearValue})"
+                @change="updateListValue({ type: 'year', year: yearValue })"
               ></v-select>
             </v-col>
           </v-row>
@@ -73,13 +91,19 @@
                 :items="getAllYearInJobList"
                 v-model:item-value="yearValue"
                 label="ปี"
-                @change="updateListValue({type:'year' ,year:yearValue})"
+                @change="updateListValue({ type: 'year', year: yearValue })"
               ></v-select>
               <v-select
                 :items="monthListValue"
                 v-model:item-value="monthValue"
                 label="เดือน"
-                @change="updateListValue({type:'month' ,month:monthValue , year:yearValue})"
+                @change="
+                  updateListValue({
+                    type: 'month',
+                    month: monthValue,
+                    year: yearValue,
+                  })
+                "
                 :disabled="yearValue === ''"
               ></v-select>
             </v-col>
@@ -90,13 +114,19 @@
                 :items="getAllYearInJobList"
                 v-model:item-value="yearValue"
                 label="ปี"
-                @change="updateListValue({type:'year' ,year:yearValue})"
+                @change="updateListValue({ type: 'year', year: yearValue })"
               ></v-select>
               <v-select
                 :items="monthListValue"
                 v-model:item-value="monthValue"
                 label="เดือน"
-                @change="updateListValue({type:'month' ,month:monthValue , year:yearValue})"
+                @change="
+                  updateListValue({
+                    type: 'month',
+                    month: monthValue,
+                    year: yearValue,
+                  })
+                "
                 :disabled="yearValue === ''"
               ></v-select>
               <v-select
@@ -112,7 +142,9 @@
         <v-container>
           <v-row>
             <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="isDialogShow = false">Cancel</v-btn>
+            <v-btn text color="primary" @click="isDialogShow = false"
+              >Cancel</v-btn
+            >
             <v-btn text color="primary" @click="updateDate">OK</v-btn>
           </v-row>
         </v-container>
@@ -132,13 +164,29 @@ export default {
         {
           text: "ลำดับ",
           align: "center",
-          value: "no"
+          value: "no",
+          class: "text-h6",
         },
-        { text: "หมายเลขงาน", value: "workNo", align: "center" },
-        { text: "ความยาว", value: "length", align: "center" },
-        { text: "เพิ่ม/ลด", value: "offset", align: "center" },
-        { text: "ทั้งหมด", value: "total", align: "center" },
-        { text: "วันที่", value: "finishedTime", align: "center" }
+        {
+          text: "หมายเลขงาน",
+          value: "workNo",
+          align: "center",
+          class: "text-h6",
+        },
+        { text: "ความยาว", value: "length", align: "center", class: "text-h6" },
+        {
+          text: "เพิ่ม/ลด",
+          value: "offset",
+          align: "center",
+          class: "text-h6",
+        },
+        { text: "ทั้งหมด", value: "total", align: "center", class: "text-h6" },
+        {
+          text: "วันที่",
+          value: "finishedTime",
+          align: "center",
+          class: "text-h6",
+        },
       ],
       isDialogShow: false,
       date: new Date().toISOString().substring(0, 10),
@@ -147,7 +195,7 @@ export default {
       monthValue: "",
       monthListValue: [],
       dateValue: "",
-      dateListValue: []
+      dateListValue: [],
     };
   },
   mounted() {
@@ -166,7 +214,7 @@ export default {
       }
       this.getJobListByDate({
         type: this.selectedFillter,
-        value: this.date
+        value: this.date,
       });
       this.isDialogShow = false;
     },
@@ -181,7 +229,7 @@ export default {
         );
       }
     },
-    ...mapActions(["getJobListByDate", "getJobList"])
+    ...mapActions(["getJobListByDate", "getJobList"]),
   },
   computed: {
     showDate() {
@@ -192,10 +240,10 @@ export default {
       "getJoblist",
       "getAllDateInJobList",
       "getAllMonthInJobList",
-      "getAllYearInJobList"
+      "getAllYearInJobList",
     ]),
-    ...mapState(["fillterJobList"])
-  }
+    ...mapState(["fillterJobList"]),
+  },
 };
 </script>
 

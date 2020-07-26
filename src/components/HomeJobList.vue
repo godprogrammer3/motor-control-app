@@ -7,39 +7,39 @@
     item-key="name"
     hide-default-footer
     :items-per-page="getJoblist.length"
-    item-class="text-h1"
+    :item-class="row_class"
   >
     <template #item.action="{ item }">
       <div class="text-center">
         <v-btn
           class="mx-2"
-          small
+          medium
           fab
           dark
           color="red"
           @click="$emit('show-dialog', { type: 'delete', item: item })"
         >
-          <v-icon dark>delete</v-icon>
+          <v-icon dark large>delete</v-icon>
         </v-btn>
         <v-btn
           class="mx-2"
-          small
+          medium
           fab
           dark
           color="indigo"
           @click="$emit('show-dialog', { type: 'edit', item: item })"
         >
-          <v-icon dark>create</v-icon>
+          <v-icon dark large>create</v-icon>
         </v-btn>
         <v-btn
           class="mx-2"
-          small
+          medium
           fab
           dark
           color="green"
           @click="$emit('show-dialog', { type: 'operate', item: item })"
         >
-          <v-icon dark>play_arrow</v-icon>
+          <v-icon dark large>play_arrow</v-icon>
         </v-btn>
       </div>
     </template>
@@ -99,14 +99,15 @@ export default {
     ...mapActions({
       getJobList: "getJobList",
     }),
+    row_class() {
+      let classes = [];
+      classes.push("text-h2");
+      return classes;
+    },
   },
   computed: {
     ...mapGetters(["getJoblist"]),
   },
 };
 </script>
-<style scoped>
-.v-data-table th thead {
-  font-size: 1.2em !important;
-}
-</style>
+<style scoped></style>
