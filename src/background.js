@@ -24,7 +24,7 @@ function createWindow() {
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      nodeIntegration: true,
     },
   });
 
@@ -73,6 +73,22 @@ app.on("ready", async () => {
     }
   }
   createWindow();
+  const mariadb = require("mariadb");
+  var pool = mariadb.createPool({
+    host: "localhost",
+    user: "godprogrammer",
+    password: "gly33140",
+    database: "MotorControl",
+    connectionLimit: 50,
+  });
+
+  ipcMain.on("test-ipc-main", async function(event, arg) {
+    console.log("received message from renderrer :" + arg);
+    let conn = await pool.getConnection();
+    let result = await conn.query("SELECT * FROM JobList;");
+    conn.release();
+    win.webContents.send("test-ipc-renderer", result);
+  });
 });
 
 // Exit cleanly on request from parent process in development mode.

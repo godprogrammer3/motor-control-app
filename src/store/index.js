@@ -126,6 +126,12 @@ export default new Vuex.Store({
       let result = Array.from(set);
       return result;
     },
+    getSumaryHistoryJob: (state) => {
+      let total = 0,
+        sumLength = 0,
+        sumOffet = 0,
+        summary = 0;
+    },
   },
   modules: {},
 });
