@@ -14,8 +14,11 @@
   "dependencies": {
     "axios": "https://github.com/ArnaudValensi/axios.git#37c7730a2917b1d8e0a6396d1295a8c20a1d3c1a",
     "axios-electron-adapter": "^1.0.2",
+    "body-parser": "^1.19.0",
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "mariadb": "^2.4.1",
     "moment": "^2.27.0",
     "typeface-roboto": "^0.0.75",

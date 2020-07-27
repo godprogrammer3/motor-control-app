@@ -5,6 +5,8 @@ import {
   createProtocol,
   installVueDevtools,
 } from "vue-cli-plugin-electron-builder/lib";
+import Backend from "./backend";
+
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -73,15 +75,6 @@ app.on("ready", async () => {
     }
   }
   createWindow();
-  const mariadb = require("mariadb");
-  var pool = mariadb.createPool({
-    host: "localhost",
-    user: "godprogrammer",
-    password: "gly33140",
-    database: "MotorControl",
-    connectionLimit: 50,
-  });
-
   ipcMain.on("test-ipc-main", async function(event, arg) {
     console.log("received message from renderrer :" + arg);
     let conn = await pool.getConnection();
@@ -89,6 +82,8 @@ app.on("ready", async () => {
     conn.release();
     win.webContents.send("test-ipc-renderer", result);
   });
+  let backend = new Backend();
+  backend.init();
 });
 
 // Exit cleanly on request from parent process in development mode.
