@@ -1,7 +1,10 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon style="color:white" @click="drawer = true"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        style="color:white"
+        @click="drawer = true"
+      ></v-app-bar-nav-icon>
       <v-toolbar-title style="color:white">ตั้งค่า</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
@@ -11,7 +14,7 @@
             <v-list-item-icon>
               <v-icon>format_list_numbered</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>รายการงาน</v-list-item-title>
+            <v-list-item-title>แผนการดำเนินงาน</v-list-item-title>
           </v-list-item>
           <v-list-item @click="$router.replace('history')">
             <v-list-item-icon>
@@ -38,7 +41,9 @@
       <v-card>
         <v-container class="fill-height">
           <v-row justify="center" align="center">
-            <v-card-text class="text-center">ยืนยันการบันทึกการตั้งค่า</v-card-text>
+            <v-card-text class="text-center"
+              >ยืนยันการบันทึกการตั้งค่า</v-card-text
+            >
           </v-row>
         </v-container>
 
@@ -66,7 +71,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   components: {
     SettingBody,
-    TouchKeyboard
+    TouchKeyboard,
   },
   data() {
     return {
@@ -74,7 +79,7 @@ export default {
       onTop: 0,
       slowModeVelocity: 0,
       input: "",
-      isSaveDialogShow: false
+      isSaveDialogShow: false,
     };
   },
   created() {
@@ -90,7 +95,7 @@ export default {
     saveAction() {
       this.editSetting({
         defaultOnTop: this.onTop,
-        defaultSlowModeVelocity: this.slowModeVelocity
+        defaultSlowModeVelocity: this.slowModeVelocity,
       });
       this.isSaveDialogShow = false;
     },
@@ -126,17 +131,17 @@ export default {
       this.onTop = parseInt(this.onTop);
       this.slowModeVelocity = parseInt(this.slowModeVelocity);
     },
-    ...mapActions(["getSetting", "editSetting"])
+    ...mapActions(["getSetting", "editSetting"]),
   },
   computed: {
-    ...mapState(["setting"])
+    ...mapState(["setting"]),
   },
   watch: {
     setting(newValue, oldValue) {
       this.onTop = this.setting.defaultOnTop;
       this.slowModeVelocity = this.setting.defaultSlowModeVelocity;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -8,7 +8,7 @@
       </v-app-bar-nav-icon>
 
       <v-toolbar-title style="color:white;" class="text-h4"
-        >รายการงาน</v-toolbar-title
+        >แผนการดำเนินงาน</v-toolbar-title
       >
 
       <v-spacer></v-spacer>
@@ -27,7 +27,7 @@
             <v-list-item-icon>
               <v-icon>format_list_numbered</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>รายการงาน</v-list-item-title>
+            <v-list-item-title>แผนการดำเนินงาน</v-list-item-title>
           </v-list-item>
           <v-list-item @click="$router.replace('history')">
             <v-list-item-icon>

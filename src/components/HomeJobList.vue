@@ -9,39 +9,57 @@
     :items-per-page="getJoblist.length"
     :item-class="row_class"
   >
-    <template #item.action="{ item }">
-      <div class="text-center">
-        <v-btn
-          class="mx-2"
-          medium
-          fab
-          dark
-          color="red"
-          @click="$emit('show-dialog', { type: 'delete', item: item })"
-        >
-          <v-icon dark large>delete</v-icon>
-        </v-btn>
-        <v-btn
-          class="mx-2"
-          medium
-          fab
-          dark
-          color="indigo"
-          @click="$emit('show-dialog', { type: 'edit', item: item })"
-        >
-          <v-icon dark large>create</v-icon>
-        </v-btn>
-        <v-btn
-          class="mx-2"
-          medium
-          fab
-          dark
-          color="green"
-          @click="$emit('show-dialog', { type: 'operate', item: item })"
-        >
-          <v-icon dark large>play_arrow</v-icon>
-        </v-btn>
-      </div>
+    <template #header.text="{ header }">
+      <tr>
+        <td class="text-h5">{{ header.text }}</td>
+        <td class="text-h5">{{ header.text }}</td>
+        <td class="text-h5">{{ header.text }}</td>
+        <td class="text-h5">{{ header.text }}</td>
+        <td class="text-h5">{{ header.text }}</td>
+        <td></td>
+      </tr>
+    </template>
+    <template #item="{ item }">
+      <tr>
+        <td class="text-h5">{{ item.no }}</td>
+        <td class="text-h5">{{ item.workNo }}</td>
+        <td class="text-h5">{{ item.length }}</td>
+        <td class="text-h5">{{ item.workDate }}</td>
+        <td class="my-5">
+          <div class="text-center">
+            <v-btn
+              class="ma-2"
+              medium
+              fab
+              dark
+              color="red"
+              @click="$emit('show-dialog', { type: 'delete', item: item })"
+            >
+              <v-icon dark large>delete</v-icon>
+            </v-btn>
+            <v-btn
+              class="ma-2"
+              medium
+              fab
+              dark
+              color="indigo"
+              @click="$emit('show-dialog', { type: 'edit', item: item })"
+            >
+              <v-icon dark large>create</v-icon>
+            </v-btn>
+            <v-btn
+              class="ma-2"
+              medium
+              fab
+              dark
+              color="green"
+              @click="$emit('show-dialog', { type: 'operate', item: item })"
+            >
+              <v-icon dark large>play_arrow</v-icon>
+            </v-btn>
+          </div>
+        </td>
+      </tr>
     </template>
   </v-data-table>
 </template>
@@ -55,29 +73,29 @@ export default {
       headers: [
         {
           text: "ลำดับ",
-          align: "center",
+          align: "start",
           value: "no",
-          class: "text-h6",
+          class: "text-h5",
         },
         {
           text: "หมายเลขงาน",
           value: "workNo",
-          align: "center",
-          class: "text-h6",
+          align: "start",
+          class: "text-h5",
         },
-        { text: "ความยาว", value: "length", align: "center", class: "text-h6" },
+        { text: "ความยาว", value: "length", align: "start", class: "text-h5" },
         {
           text: "วันที่ดำเนินงาน",
           value: "workDate",
-          align: "center",
-          class: "text-h6",
+          align: "start",
+          class: "text-h5",
         },
         {
           text: "การดำเนินงาน",
           value: "action",
           sortable: false,
           align: "center",
-          class: "text-h6",
+          class: "text-h5",
         },
       ],
       desserts: [],

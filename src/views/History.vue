@@ -17,7 +17,7 @@
             <v-list-item-icon>
               <v-icon>format_list_numbered</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>รายการงาน</v-list-item-title>
+            <v-list-item-title>แผนการดำเนินงาน</v-list-item-title>
           </v-list-item>
           <v-list-item @click="drawer = false">
             <v-list-item-icon>
