@@ -75,15 +75,8 @@ app.on("ready", async () => {
     }
   }
   createWindow();
-  ipcMain.on("test-ipc-main", async function(event, arg) {
-    console.log("received message from renderrer :" + arg);
-    let conn = await pool.getConnection();
-    let result = await conn.query("SELECT * FROM JobList;");
-    conn.release();
-    win.webContents.send("test-ipc-renderer", result);
-  });
   let backend = new Backend();
-  backend.init();
+  backend.init(win);
 });
 
 // Exit cleanly on request from parent process in development mode.
