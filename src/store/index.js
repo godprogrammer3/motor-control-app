@@ -63,9 +63,13 @@ export default new Vuex.Store({
           offset: state.fillterJobList[i].overhead,
           total:
             state.fillterJobList[i].length + state.fillterJobList[i].overhead,
-          finishedTime: moment(state.fillterJobList[i].workTime).format(
+          startedTime: moment(state.fillterJobList[i].startedTime).format(
             "YYYY-MM-DD"
           ),
+          usedTime:
+            moment(state.fillterJobList[i].startedTime).format("HH:mm") +
+            "-" +
+            moment(state.fillterJobList[i].finishedTime).format("HH:mm"),
         });
       }
       return result;
@@ -131,6 +135,18 @@ export default new Vuex.Store({
         sumLength = 0,
         sumOffet = 0,
         summary = 0;
+      for (var i = 0; i < state.fillterJobList.length; i++) {
+        sumLength += state.fillterJobList[i].length;
+        sumOffet += state.fillterJobList[i].overhead;
+      }
+      summary = sumLength + sumOffet;
+      total = state.fillterJobList.length;
+      return {
+        total: total,
+        sumLength: sumLength,
+        sumOffet: sumOffet,
+        summary: summary,
+      };
     },
   },
   modules: {},

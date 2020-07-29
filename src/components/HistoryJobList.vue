@@ -63,12 +63,35 @@
           </v-card>
         </v-toolbar>
       </template>
+      <template #item="{ item }">
+        <tr>
+          <td class="text-h5">{{ item.no }}</td>
+          <td class="text-h5">{{ item.workNo }}</td>
+          <td class="text-h5">{{ item.length }}</td>
+          <td class="text-h5">{{ item.offset }}</td>
+          <td class="text-h5">{{ item.total }}</td>
+          <td class="text-h5">{{ item.startedTime }}</td>
+          <td class="text-h5">{{ item.usedTime }}</td>
+        </tr>
+      </template>
       <template #footer>
         <div>
-          <span style="margin-left:180px;">รวม 13 งาน</span>
-          <span style="margin-left:100px;">63542 เมตร</span>
-          <span style="margin-left:80px;">+1214 เมตร</span>
-          <span style="margin-left:50px;">64756 เมตร</span>
+          <span style="margin-left:180px;"
+            >รวม {{ getSumaryHistoryJob.total }} งาน</span
+          >
+          <span style="margin-left:100px;"
+            >{{ getSumaryHistoryJob.sumLength }} เมตร</span
+          >
+          <span style="margin-left:80px;"
+            >{{
+              (getSumaryHistoryJob.sumOffet >= 0 ? "+" : "-") +
+                getSumaryHistoryJob.sumOffet
+            }}
+            เมตร</span
+          >
+          <span style="margin-left:50px;"
+            >{{ getSumaryHistoryJob.summary }} เมตร</span
+          >
         </div>
       </template>
     </v-data-table>
@@ -163,28 +186,34 @@ export default {
       headers: [
         {
           text: "ลำดับ",
-          align: "center",
+          align: "start",
           value: "no",
           class: "text-h6",
         },
         {
           text: "หมายเลขงาน",
           value: "workNo",
-          align: "center",
+          align: "start",
           class: "text-h6",
         },
-        { text: "ความยาว", value: "length", align: "center", class: "text-h6" },
+        { text: "ความยาว", value: "length", align: "start", class: "text-h6" },
         {
           text: "เพิ่ม/ลด",
           value: "offset",
-          align: "center",
+          align: "start",
           class: "text-h6",
         },
-        { text: "ทั้งหมด", value: "total", align: "center", class: "text-h6" },
+        { text: "ทั้งหมด", value: "total", align: "start", class: "text-h6" },
         {
-          text: "วันที่",
-          value: "finishedTime",
-          align: "center",
+          text: "วันที่ดำเนินงาน",
+          value: "startedTime",
+          align: "start",
+          class: "text-h6",
+        },
+        {
+          text: "เวลาดำเนินงาน",
+          value: "usedTime",
+          align: "start",
           class: "text-h6",
         },
       ],
@@ -241,8 +270,8 @@ export default {
       "getAllDateInJobList",
       "getAllMonthInJobList",
       "getAllYearInJobList",
+      "getSumaryHistoryJob",
     ]),
-    ...mapState(["fillterJobList"]),
   },
 };
 </script>
