@@ -39,9 +39,9 @@
                   >
                 </div>
               </v-row>
-              <v-row>
+              <v-row align="center" justify="center">
                 <v-btn
-                  style="margin-left:300px;margin-top:20px;margin-top:4vh;"
+                  style="margin-top:4vh;"
                   color="indigo"
                   class="white--text text-h4"
                   width="20vw"
