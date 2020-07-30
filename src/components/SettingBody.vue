@@ -22,24 +22,30 @@
                 </div>
               </v-row>
               <v-row>
-                <div style="margin-left:154px;">
-                  <span style="margin-right:20px;">ความเร็วในโหมดช้า :</span>
+                <div style="margin-top:2vh;">
+                  <span class="text-h4" style="margin-right:6px;"
+                    >ความเร็วในโหมดช้า :</span
+                  >
                   <input
-                    class="rounded-lg"
+                    class="rounded-lg text-h4"
                     type="text"
-                    style="background-color:#3F51B5;text-align:center;color:white;"
+                    style="background-color:#3F51B5;text-align:center;color:white;width:33.5vw;"
                     :value="slowModeVelocity"
                     @click="$emit('change-input', 'slowModeVelocity')"
                     id="slowModeVelocity"
                   />
-                  <span style="margin-left:20px;">เมตร/นาที</span>
+                  <span style="margin-left:20px;" class="text-h4"
+                    >เมตร/นาที</span
+                  >
                 </div>
               </v-row>
               <v-row>
                 <v-btn
-                  style="margin-left:300px;margin-top:20px;"
+                  style="margin-left:300px;margin-top:20px;margin-top:4vh;"
                   color="indigo"
-                  class="white--text"
+                  class="white--text text-h4"
+                  width="20vw"
+                  height="8vh"
                   @click="$emit('save-setting')"
                   >บันทึก</v-btn
                 >
