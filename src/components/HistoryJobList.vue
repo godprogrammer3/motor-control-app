@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-data-table
-      height="79vh"
+      height="70vh"
       :headers="headers"
       fixed-header
       fixed-footer
@@ -74,27 +74,33 @@
           <td class="text-h5">{{ item.usedTime }}</td>
         </tr>
       </template>
-      <template #footer>
-        <div>
-          <span style="margin-left:180px;"
-            >รวม {{ getSumaryHistoryJob.total }} งาน</span
+    </v-data-table>
+    <v-footer fixed elevation="0">
+      <v-card width="100vw">
+        <v-row align="start" justify="space-around" class="pa-4">
+          <span class="text-h6">
+            ทั้งหมด {{ getSumaryHistoryJob.total }} งาน</span
           >
-          <span style="margin-left:100px;"
-            >{{ getSumaryHistoryJob.sumLength }} เมตร</span
+          <v-divider vertical></v-divider>
+          <span class="text-h6"
+            >รวมความยาว {{ getSumaryHistoryJob.sumLength }} เมตร</span
           >
-          <span style="margin-left:80px;"
-            >{{
+          <v-divider vertical></v-divider>
+          <span class="text-h6"
+            >รวมเพิ่ม/ลด
+            {{
               (getSumaryHistoryJob.sumOffet >= 0 ? "+" : "-") +
                 getSumaryHistoryJob.sumOffet
             }}
             เมตร</span
           >
-          <span style="margin-left:50px;"
-            >{{ getSumaryHistoryJob.summary }} เมตร</span
+          <v-divider vertical></v-divider>
+          <span class="text-h6"
+            >รวมทั้งหมด {{ getSumaryHistoryJob.summary }} เมตร</span
           >
-        </div>
-      </template>
-    </v-data-table>
+        </v-row>
+      </v-card>
+    </v-footer>
     <v-dialog ref="dialog" v-model="isDialogShow" persistent width="290px">
       <v-card elevation="0">
         <v-container>

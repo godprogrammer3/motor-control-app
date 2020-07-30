@@ -1,22 +1,24 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
-      <v-card width="80vw" height="80vh" class="justify-center">
+      <v-card width="90vw" height="80vh" class="justify-center">
         <v-container fill-height>
           <v-row align="center" justify="center">
             <v-container>
               <v-row class="mb-5">
-                <div style="margin-left:150px;">
-                  <span style="margin-right:34px;">ค่า On Top เริ่มต้น :</span>
+                <div>
+                  <span style="margin-right:34px;" class="text-h4"
+                    >ค่า On Top เริ่มต้น :</span
+                  >
                   <input
-                    class="rounded-lg"
+                    class="rounded-lg text-h4"
                     type="text"
                     style="background-color:#3F51B5;text-align:center;color:white;"
                     :value="onTop"
                     @click="$emit('change-input', 'onTop')"
                     id="onTop"
                   />
-                  <span style="margin-left:20px;">เมตร</span>
+                  <span style="margin-left:20px;" class="text-h4">เมตร</span>
                 </div>
               </v-row>
               <v-row>
@@ -37,16 +39,9 @@
                 <v-btn
                   style="margin-left:300px;margin-top:20px;"
                   color="indigo"
+                  class="white--text"
                   @click="$emit('save-setting')"
                   >บันทึก</v-btn
-                >
-              </v-row>
-              <v-row>
-                <v-btn
-                  style="margin-left:300px;margin-top:20px;"
-                  color="indigo"
-                  @click="testIpc"
-                  >test ipc</v-btn
                 >
               </v-row>
             </v-container>
@@ -59,7 +54,6 @@
 
 <script>
 import { mapState } from "vuex";
-const { ipcRenderer } = window.require("electron");
 export default {
   props: {
     onTop: {
@@ -75,22 +69,11 @@ export default {
       value: "",
     },
   },
-  mounted() {
-    ipcRenderer.on("test-ipc-renderer", function(event, arg) {
-      console.log("received message from main :");
-      for (let i = 0; i < arg.length; i++) {
-        console.log(arg[i]);
-      }
-    });
-  },
+  mounted() {},
   computed: {
     ...mapState(["setting"]),
   },
-  methods: {
-    testIpc() {
-      ipcRenderer.send("test-ipc-main", "helloIPC");
-    },
-  },
+  methods: {},
 };
 </script>
 
