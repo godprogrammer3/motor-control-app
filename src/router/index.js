@@ -26,6 +26,10 @@ const routes = [
     path: "/operating",
     name: "Operating",
     component: Operating,
+    props: (route) => ({
+      workNo: route.query.workNo,
+      length: route.query.length,
+    }),
   },
 ];
 

@@ -3,19 +3,26 @@
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
       <v-toolbar-title class="white--text">กำลังดำเนินงาน...</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn class="mx-2" small fab dark color="indigo darken-1" @click="isCloseDialogShow = true">
+      <v-btn
+        class="mx-2"
+        small
+        fab
+        dark
+        color="indigo darken-1"
+        @click="isCloseDialogShow = true"
+      >
         <v-icon dark>close</v-icon>
       </v-btn>
     </v-app-bar>
     <v-toolbar>
       <span>หมายเลขงาน</span>
       <v-card width="15vw" class="ma-5 text-center">
-        <span>20050384</span>
+        <span>{{ workNo }}</span>
       </v-card>
       <v-divider class="mx-1" inset vertical></v-divider>
       <span>ความยาว</span>
       <v-card width="15vw" class="ma-5 text-center">
-        <span>3684</span>
+        <span>{{ length }}</span>
       </v-card>
       <span>เมตร</span>
     </v-toolbar>
@@ -26,7 +33,11 @@
             <v-row align="center" justify="center">
               <v-container class="fill-height">
                 <v-row justify="center">
-                  <v-card class="text-center ma-5 white--text" width="20vw" color="teal accent-4">
+                  <v-card
+                    class="text-center ma-5 white--text"
+                    width="20vw"
+                    color="teal accent-4"
+                  >
                     <v-container class="fill-height">
                       <v-row justify="center" align="center">
                         <v-card-text>
@@ -37,7 +48,11 @@
                       </v-row>
                     </v-container>
                   </v-card>
-                  <v-card class="text-center ma-5 white--text" width="20vw" color="light-blue">
+                  <v-card
+                    class="text-center ma-5 white--text"
+                    width="20vw"
+                    color="light-blue"
+                  >
                     <v-container class="fill-height">
                       <v-row justify="center" align="center">
                         <v-card-text>
@@ -48,7 +63,11 @@
                       </v-row>
                     </v-container>
                   </v-card>
-                  <v-card class="text-center ma-5 white--text" width="20vw" color="blue accent-4">
+                  <v-card
+                    class="text-center ma-5 white--text"
+                    width="20vw"
+                    color="blue accent-4"
+                  >
                     <v-container class="fill-height">
                       <v-row justify="center" align="center">
                         <v-card-text>
@@ -69,7 +88,11 @@
                       <v-row justify="center" align="center">
                         <v-card-text>
                           <p style="font-size:2em;">เพิ่ม/ลด</p>
-                          <p style="font-size:3em;">{{offsetValue>=0?'+'+offsetValue:offsetValue}}</p>
+                          <p style="font-size:3em;">
+                            {{
+                              offsetValue >= 0 ? "+" + offsetValue : offsetValue
+                            }}
+                          </p>
                           <p style="font-size:1.5em;">เมตร</p>
                         </v-card-text>
                       </v-row>
@@ -77,13 +100,19 @@
                     <v-footer color="transparent" absolute>
                       <v-row justify="space-between">
                         <v-spacer></v-spacer>
-                        <v-icon large right @click="showEditDialog('offset')">create</v-icon>
+                        <v-icon large right @click="showEditDialog('offset')"
+                          >create</v-icon
+                        >
                       </v-row>
                     </v-footer>
                   </v-card>
                 </v-row>
                 <v-row justify="center">
-                  <v-card class="text-center ma-5 white--text" width="20vw" color="red lighten-2">
+                  <v-card
+                    class="text-center ma-5 white--text"
+                    width="20vw"
+                    color="red lighten-2"
+                  >
                     <v-container class="fill-height">
                       <v-row justify="center" align="center">
                         <v-card-text>
@@ -103,7 +132,7 @@
                       <v-row justify="center" align="center">
                         <v-card-text>
                           <p style="font-size:2em;">On Top</p>
-                          <p style="font-size:3em;">{{onTopValue}}</p>
+                          <p style="font-size:3em;">{{ onTopValue }}</p>
                           <p style="font-size:1.5em;">เมตร</p>
                         </v-card-text>
                       </v-row>
@@ -111,7 +140,9 @@
                     <v-footer color="transparent" absolute>
                       <v-row justify="space-between">
                         <v-spacer></v-spacer>
-                        <v-icon large right @click="showEditDialog('onTop')">create</v-icon>
+                        <v-icon large right @click="showEditDialog('onTop')"
+                          >create</v-icon
+                        >
                       </v-row>
                     </v-footer>
                   </v-card>
@@ -155,13 +186,17 @@
         <v-container class="fill-height">
           <v-row justify="center" align="center">
             <v-icon x-large>note</v-icon>
-            <v-card-text class="text-center mt-0">กรุณาใส่กระดาษก่อนกดปุ่ม "เริ่มดำเนินงาน"</v-card-text>
+            <v-card-text class="text-center mt-0"
+              >กรุณาใส่กระดาษก่อนกดปุ่ม "เริ่มดำเนินงาน"</v-card-text
+            >
           </v-row>
         </v-container>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="indigo white--text" @click="isShowInserPaper = false">เริ่มดำเนินการ</v-btn>
+          <v-btn color="indigo white--text" @click="process"
+            >เริ่มดำเนินการ</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -169,17 +204,31 @@
       <v-card>
         <v-container class="fill-height">
           <v-row justify="center" align="center">
-            <v-card-text class="text-center">ต้องการ "ยกเลิก" งาน 20050384</v-card-text>
-            <v-card-text class="text-center mt-0">ใช่หรือไม่</v-card-text>
+            <v-card-text class="text-center text-h5"
+              >ต้องการ "ยกเลิก" งาน {{ workNo }}</v-card-text
+            >
+            <v-card-text class="text-center mt-0 text=h5"
+              >ใช่หรือไม่</v-card-text
+            >
           </v-row>
         </v-container>
 
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="red darken-1" @click="isCloseDialogShow = false">ไม่</v-btn>
+          <v-btn
+            color="red darken-1"
+            @click="isCloseDialogShow = false"
+            class="text-h6 white--text"
+            >ไม่</v-btn
+          >
 
-          <v-btn color="green darken-1" @click="$router.replace('/')">ใช่</v-btn>
+          <v-btn
+            color="green darken-1"
+            @click="stop"
+            class="text-h6 white--text"
+            >ใช่</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -201,13 +250,18 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="red darken-1" @click="isEditDialogShow= false">ยกเลิก</v-btn>
+          <v-btn color="red darken-1" @click="isEditDialogShow = false"
+            >ยกเลิก</v-btn
+          >
 
           <v-btn color="green darken-1" @click="saveValue">บันทึก</v-btn>
         </v-card-actions>
       </v-card>
       <v-footer fixed v-show="input != ''">
-        <TouchKeyboard :hasSign="input === 'offset'" @key-press="keyPress"></TouchKeyboard>
+        <TouchKeyboard
+          :hasSign="input === 'offset'"
+          @key-press="keyPress"
+        ></TouchKeyboard>
       </v-footer>
     </v-dialog>
   </div>
@@ -215,9 +269,10 @@
 
 <script>
 import TouchKeyboard from "../components/TouchKeyboard.vue";
+import { mapActions } from "vuex";
 export default {
   components: {
-    TouchKeyboard
+    TouchKeyboard,
   },
   data() {
     return {
@@ -231,7 +286,7 @@ export default {
       editType: "",
       offsetValue: 100,
       onTopValue: 30,
-      displayLable: ""
+      displayLable: "",
     };
   },
   methods: {
@@ -271,15 +326,34 @@ export default {
         this.onTopValue = this.editValue;
       }
       this.isEditDialogShow = false;
-    }
+    },
+    process() {
+      this.processWork();
+      this.isShowInserPaper = false;
+    },
+    stop() {
+      this.stopWork();
+      this.$router.replace("/");
+    },
+    ...mapActions(["processWork", "stopWork"]),
   },
   watch: {
     isEditDialogShow(newValue, oldValue) {
       if (!newValue) {
         this.input = "";
       }
-    }
-  }
+    },
+  },
+  props: {
+    workNo: {
+      type: String,
+      default: "",
+    },
+    length: {
+      type: String,
+      default: "0",
+    },
+  },
 };
 </script>
 

@@ -51,6 +51,24 @@ export default new Vuex.Store({
       let result = await api.editSetting(payload);
       this.commit("UPDATE_SETTING", payload);
     },
+    startWork({ commit }, payload) {
+      api.startWork(payload);
+    },
+    processWork({ commit }, payload) {
+      api.processWork(payload);
+    },
+    stopWork({ commit }, payload) {
+      api.stopWork(payload);
+    },
+    changeTargetWork({ commit }, payload) {
+      api.changeTargetWork(payload);
+    },
+    setModeWork({ commit }, payload) {
+      api.setModeWork(payload);
+    },
+    setSlowWork({ commit }, payload) {
+      api.setSlowWork(payload);
+    },
   },
   getters: {
     getHistoryJoblist: (state) => {

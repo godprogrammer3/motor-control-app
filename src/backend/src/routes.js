@@ -88,20 +88,6 @@ router.get("/getJobListByDate", async (req, res) => {
   }
 });
 
-router.post("/start", (req, res) => {
-  em.emit("start", { onTop: 3, target: 20 });
-  res.sendStatus(200);
-});
-router.post("/process", (req, res) => {
-  console.log("Process");
-  em.emit("process");
-  res.sendStatus(200);
-});
-router.post("/stop", (req, res) => {
-  em.emit("stop");
-  res.sendStatus(200);
-});
-
 router.get("/getSetting", async (req, res) => {
   let conn = await pool.getConnection();
   let result = await conn.query("SELECT * FROM Setting;");
@@ -120,6 +106,38 @@ router.put("/editSetting", async (req, res) => {
   let result = await conn.query(sql);
   conn.release();
   res.status(200).send("edit success");
+});
+
+router.post("/start", (req, res) => {
+  em.emit("start", { onTop: 3, target: 20 });
+  res.sendStatus(200);
+});
+router.post("/process", (req, res) => {
+  console.log("Process");
+  em.emit("process");
+  res.sendStatus(200);
+});
+router.post("/stop", (req, res) => {
+  em.emit("stop");
+  console.log("stopxxx");
+  res.sendStatus(200);
+});
+
+router.put("/changeTarget", (req, res) => {
+  em.emit("changeTarget", req.body.target);
+  res.sendStatus(200);
+});
+router.put("/changeOnTop", (req, res) => {
+  em.emit("changeOnTop", req.body.onTop);
+  res.sendStatus(200);
+});
+router.put("/setMode", (req, res) => {
+  em.emit("setMode", req.body.mode); //"auto" or "manual"
+  res.sendStatus(200);
+});
+router.put("/setSlow", (req, res) => {
+  em.on("ModeSlow", req.body.slow); // true or false
+  res.sendStatus(200);
 });
 
 module.exports = router;

@@ -98,5 +98,27 @@ class API {
       console.log(e);
     }
   }
+
+  startWork(work) {
+    this.instance.post("/start", work);
+  }
+  processWork(work) {
+    this.instance.post("/process", work);
+  }
+  stopWork(work) {
+    this.instance.post("/stop", work);
+  }
+  changeTargetWork(target) {
+    this.instance.put("/chnageTarger", target);
+  }
+  changeOnTopWork(onTop) {
+    this.instance.put("/changeOnTop", onTop);
+  }
+  setModeWork(mode) {
+    this.instance.put("/setMode", mode);
+  }
+  setSlowWork(isSlow) {
+    this.instance.put("/setSlow", isSlow);
+  }
 }
 export default API;

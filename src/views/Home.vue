@@ -62,10 +62,10 @@
       <v-card v-if="dialogInfo.type === 'delete'">
         <v-container class="fill-height">
           <v-row justify="center" align="center">
-            <v-card-text class="text-center text-h4"
+            <v-card-text class="text-center text-h5"
               >ต้องการ "ลบ" งาน {{ workNo }}</v-card-text
             >
-            <v-card-text class="text-center mt-0 text-h4"
+            <v-card-text class="text-center mt-0 text-h5"
               >ใช่หรือไม่</v-card-text
             >
           </v-row>
@@ -77,7 +77,7 @@
           <v-btn
             color="red darken-1"
             @click="isDialogShow = false"
-            class="text-h5 white--text"
+            class="text-h6 white--text"
             width="7vw"
             height="7vh"
             >ไม่</v-btn
@@ -86,7 +86,7 @@
           <v-btn
             color="green darken-1"
             @click="deleteJobAction"
-            class="text-h5 white--text"
+            class="text-h6 white--text"
             width="7vw"
             height="7vh"
             >ใช่</v-btn
@@ -175,18 +175,28 @@
       <v-card v-else-if="dialogInfo.type === 'operate'">
         <v-container class="fill-height">
           <v-row justify="center" align="center">
-            <v-card-text class="text-center"
-              >ต้องการ "เริ่ม" งาน 20050384</v-card-text
+            <v-card-text class="text-center text-h5"
+              >ต้องการ "เริ่ม" งาน {{ workNo }}</v-card-text
             >
-            <v-card-text class="text-center mt-0">ใช่หรือไม่</v-card-text>
+            <v-card-text class="text-center mt-0 text-h5"
+              >ใช่หรือไม่</v-card-text
+            >
           </v-row>
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="red darken-1" @click="isDialogShow = false">ไม่</v-btn>
+          <v-btn
+            color="red darken-1"
+            @click="isDialogShow = false"
+            class="text-h6 white--text"
+            >ไม่</v-btn
+          >
 
-          <v-btn color="green darken-1" @click="$router.replace('/operating')"
+          <v-btn
+            color="green darken-1"
+            @click="beginWork"
+            class="text-h6  white--text"
             >ใช่</v-btn
           >
         </v-card-actions>
@@ -298,7 +308,13 @@ export default {
       this.date = new Date().toISOString().substr(0, 10);
       this.isDialogShow = true;
     },
-    ...mapActions(["deleteJob", "createJob", "editJob"]),
+    beginWork() {
+      this.startWork();
+      this.$router.replace(
+        "/operating?workNo=" + this.workNo + "&length=" + this.length
+      );
+    },
+    ...mapActions(["deleteJob", "createJob", "editJob", "startWork"]),
   },
   computed: {
     form() {
