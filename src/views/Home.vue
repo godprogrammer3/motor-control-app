@@ -58,51 +58,92 @@
     >
       <v-icon large>control_point</v-icon>เพิ่มงาน
     </v-btn>
-    <v-dialog v-model="isDialogShow" max-width="290">
+    <v-dialog v-model="isDialogShow" max-width="400">
       <v-card v-if="dialogInfo.type === 'delete'">
         <v-container class="fill-height">
           <v-row justify="center" align="center">
-            <v-card-text class="text-center"
-              >ต้องการ "ลบ" งาน 20050384</v-card-text
+            <v-card-text class="text-center text-h4"
+              >ต้องการ "ลบ" งาน {{ workNo }}</v-card-text
             >
-            <v-card-text class="text-center mt-0">ใช่หรือไม่</v-card-text>
+            <v-card-text class="text-center mt-0 text-h4"
+              >ใช่หรือไม่</v-card-text
+            >
           </v-row>
         </v-container>
 
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="red darken-1" @click="isDialogShow = false">ไม่</v-btn>
+          <v-btn
+            color="red darken-1"
+            @click="isDialogShow = false"
+            class="text-h5 white--text"
+            width="7vw"
+            height="7vh"
+            >ไม่</v-btn
+          >
 
-          <v-btn color="green darken-1" @click="deleteJobAction">ใช่</v-btn>
+          <v-btn
+            color="green darken-1"
+            @click="deleteJobAction"
+            class="text-h5 white--text"
+            width="7vw"
+            height="7vh"
+            >ใช่</v-btn
+          >
         </v-card-actions>
       </v-card>
       <v-card
         v-else-if="dialogInfo.type === 'edit' || dialogInfo.type === 'create'"
       >
-        <v-card class="pa-5" elevation="0">
+        <v-card class="pa-5" elevation="0" ref="form">
           <v-text-field
             id="workNo"
-            label="หมายเลขงาน"
             v-model:value="workNo"
             @focus="input = 'workNo'"
-          ></v-text-field>
+            class="text-h5"
+            ref="workNo"
+            :rules="[() => !!workNo || 'กรุณาใส่ข้อมูล']"
+            required
+          >
+            <template #label>
+              <span style="font-size:1.2em">หมายเลขงาน</span>
+            </template>
+          </v-text-field>
           <v-text-field
             id="length"
-            label="ความยาว"
             v-model:value="length"
             suffix="เมตร"
             @focus="input = 'length'"
-          ></v-text-field>
+            class="text-h5"
+            ref="length"
+            :rules="[() => !!length || 'กรุณาใส่ข้อมูล']"
+            required
+          >
+            <template #label>
+              <span style="font-size:1.2em">ความยาว</span>
+            </template>
+          </v-text-field>
           <v-text-field
             v-model="date"
-            label="วันที่ดำเนินงาน"
             prepend-icon="event"
             readonly
             @click="isDatePickerShow = true"
-          ></v-text-field>
+            class="text-h5"
+          >
+            <template #label>
+              <div style="padding-top:4px">
+                <span style="font-size:1.1em;">วันที่ดำเนินงาน</span>
+              </div>
+            </template>
+          </v-text-field>
           <v-dialog v-model="isDatePickerShow">
-            <v-date-picker v-model:value="date" scrollable>
+            <v-date-picker
+              v-model:value="date"
+              scrollable
+              locale="th"
+              style="font-size:1.5em;"
+            >
               <v-spacer></v-spacer>
               <v-btn text color="primary" @click="isDatePickerShow = false"
                 >OK</v-btn
@@ -114,7 +155,10 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="red darken-1 white--text" @click="isDialogShow = false"
+          <v-btn
+            color="red darken-1 white--text"
+            @click="isDialogShow = false"
+            class="text-h5"
             >ยกเลิก</v-btn
           >
 
@@ -123,6 +167,7 @@
             @click="
               dialogInfo.type === 'create' ? createJobAction() : editJobAction()
             "
+            class="text-h5"
             >บันทึก</v-btn
           >
         </v-card-actions>
@@ -192,6 +237,9 @@ export default {
         this.length = this.dialogInfo.item.length;
         this.dialogInfo.item.oldWorkNo = this.dialogInfo.item.workNo;
         this.date = this.dialogInfo.item.workDate;
+      } else {
+        this.workNo = this.dialogInfo.item.workNo;
+        this.length = this.dialogInfo.item.length;
       }
     },
     keyPress(key) {
@@ -219,13 +267,21 @@ export default {
       this.isDialogShow = false;
     },
     async editJobAction() {
-      await this.editJob({
-        jobId: this.workNo,
-        length: this.length,
-        workTime: this.date,
-        oldJobId: this.dialogInfo.item.oldWorkNo,
+      this.formHasErrors = false;
+      Object.keys(this.form).forEach((f) => {
+        if (!this.form[f]) this.formHasErrors = true;
+
+        this.$refs[f].validate(true);
       });
-      this.isDialogShow = false;
+      if (!this.formHasErrors) {
+        await this.editJob({
+          jobId: this.workNo,
+          length: this.length,
+          workTime: this.date,
+          oldJobId: this.dialogInfo.item.oldWorkNo,
+        });
+        this.isDialogShow = false;
+      }
     },
     async createJobAction() {
       await this.createJob({
@@ -243,6 +299,14 @@ export default {
       this.isDialogShow = true;
     },
     ...mapActions(["deleteJob", "createJob", "editJob"]),
+  },
+  computed: {
+    form() {
+      return {
+        workNo: this.workNo,
+        length: this.length,
+      };
+    },
   },
   mounted() {
     this.interval = setInterval(this.dateUpdate, 1800000);

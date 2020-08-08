@@ -1,5 +1,9 @@
 {
-    "host_1" : "192.168.1.3",
-    "host_2" : "192.168.1.4",
-    "radius" : "6.35" 
+    "host_1" : "161.246.5.53",
+    "host_2" : "161.246.5.54",
+    "radius" : 6.35 ,
+    "LenghtDownSpeed" : 3,
+    "slowSpeed" : 30,
+    "xSlow" : 1,
+    "xSpeed" : 40
 }
