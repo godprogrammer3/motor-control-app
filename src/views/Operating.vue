@@ -287,6 +287,7 @@ export default {
       offsetValue: 100,
       onTopValue: 30,
       displayLable: "",
+      speed: 0,
     };
   },
   methods: {
@@ -353,6 +354,11 @@ export default {
       type: String,
       default: "0",
     },
+  },
+  mounted() {
+    // socket.on("Speed2", function(msg) {
+    //   this.speed = msg;
+    // });
   },
 };
 </script>

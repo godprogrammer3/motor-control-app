@@ -11,6 +11,9 @@ var pool = mariadb.createPool({
   database: "MotorControl",
   connectionLimit: 50,
 });
+router.get("/", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});
 router.get("/getAllJobList", async (req, res) => {
   let conn = await pool.getConnection();
   let result = await conn.query("SELECT * FROM JobList;");
@@ -119,7 +122,6 @@ router.post("/process", (req, res) => {
 });
 router.post("/stop", (req, res) => {
   em.emit("stop");
-  console.log("stopxxx");
   res.sendStatus(200);
 });
 

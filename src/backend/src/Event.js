@@ -46,18 +46,24 @@ socket1.on("connect", async function() {
     await client1.writeMultipleRegisters(3, [0, 0]);
     await client1.writeMultipleCoils(0, [0, 0, 0, 0]);
   } catch (e) {
+    console.log("xxxxxxxxxxxxxxxxx1");
     console.log(e);
   }
   intervalRead1 = setInterval(async function() {
-    let resp = await client1.readHoldingRegisters(3, 2);
-    encoder1 = resp.response.body.valuesAsArray[1];
-    Lenght1 = ((encoder1 / 100) * (2 * Math.PI * process.env.radius)) / 100;
-    speed1 =
-      (((parseInt(encoder1) - tempEncoder1) * 10) / 100) *
-      (2 * Math.PI * process.env.radius); //.toFixed(2);
-    tempEncoder1 = encoder1;
+    try {
+      let resp = await client1.readHoldingRegisters(3, 2);
+      encoder1 = resp.response.body.valuesAsArray[1];
+      Lenght1 = ((encoder1 / 100) * (2 * Math.PI * process.env.radius)) / 100;
+      speed1 =
+        (((parseInt(encoder1) - tempEncoder1) * 10) / 100) *
+        (2 * Math.PI * process.env.radius); //.toFixed(2);
+      tempEncoder1 = encoder1;
 
-    client1.writeMultipleCoils(2, [boolR, boolY, boolG]);
+      client1.writeMultipleCoils(2, [boolR, boolY, boolG]);
+    } catch (e) {
+      console.log("xxxxxxxxxxxxxxxxxxxxxx4");
+      console.log(e);
+    }
   }, 100);
 });
 socket2.on("connect", async function() {
@@ -66,19 +72,25 @@ socket2.on("connect", async function() {
     await client2.writeMultipleRegisters(3, [0, 0]);
     await client2.writeMultipleCoils(0, [0, 0, 0, 0]);
   } catch (e) {
+    console.log("xxxxxxxxxxxxxxxxx2");
     console.log(e);
   }
 
   intervalRead2 = setInterval(async function() {
-    let resp = await client2.readHoldingRegisters(3, 2);
-    encoder2 = resp.response.body.valuesAsArray[1];
-    Lenght2 = ((encoder2 / 100) * (2 * Math.PI * process.env.radius)) / 100;
-    speed2 =
-      (((parseInt(encoder2) - tempEncoder2) * 10) / 100) *
-      (2 * Math.PI * process.env.radius); //.toFixed(2);
-    tempEncoder2 = encoder2;
+    try {
+      let resp = await client2.readHoldingRegisters(3, 2);
+      encoder2 = resp.response.body.valuesAsArray[1];
+      Lenght2 = ((encoder2 / 100) * (2 * Math.PI * process.env.radius)) / 100;
+      speed2 =
+        (((parseInt(encoder2) - tempEncoder2) * 10) / 100) *
+        (2 * Math.PI * process.env.radius); //.toFixed(2);
+      tempEncoder2 = encoder2;
 
-    client2.writeMultipleCoils(1, [boolR, boolY, boolG]);
+      client2.writeMultipleCoils(1, [boolR, boolY, boolG]);
+    } catch (e) {
+      console.log("xxxxxxxxxxxxxxxxx3");
+      console.log(e);
+    }
   }, 100);
 });
 
