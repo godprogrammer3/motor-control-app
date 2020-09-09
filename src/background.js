@@ -5,7 +5,6 @@ import {
   createProtocol,
   installVueDevtools,
 } from "vue-cli-plugin-electron-builder/lib";
-import Backend from "./backend";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -75,8 +74,6 @@ app.on("ready", async () => {
     }
   }
   createWindow();
-  let backend = new Backend();
-  backend.init(win);
 });
 
 // Exit cleanly on request from parent process in development mode.
