@@ -109,7 +109,7 @@ class API {
     this.instance.post("/stop", work);
   }
   changeTargetWork(target) {
-    this.instance.put("/chnageTarger", target);
+    this.instance.put("/changeTarger", target);
   }
   changeOnTopWork(onTop) {
     this.instance.put("/changeOnTop", onTop);
