@@ -46,7 +46,10 @@
                         v-for="(sub_item, sub_index) in item.data"
                         :key="sub_index"
                       >
-                        <td class="text-center text-h6 nocopy handle">
+                        <td
+                          v-if="mode == 'reorder'"
+                          class="text-center text-h6 nocopy handle"
+                        >
                           <v-icon x-large> reorder </v-icon>
                         </td>
                         <td class="text-center text-h6 nocopy">
@@ -67,11 +70,21 @@
                         <td class="text-center text-h6 nocopy">
                           {{ sub_item.job_work_date }}
                         </td>
+                        <td
+                          v-if="mode == 'manage-member'"
+                          class="text-center text-h6 nocopy"
+                        >
+                          <v-row
+                            ><v-checkbox
+                              v-model="sub_item.isSelected"
+                              style="transform: scale(1.5);"
+                            ></v-checkbox
+                          ></v-row>
+                        </td>
                       </tr>
                     </draggable>
-                  </template>
-                </v-simple-table></v-col
-              >
+                  </template> </v-simple-table
+              ></v-col>
             </v-row>
           </v-container>
         </v-card>
@@ -98,31 +111,24 @@ export default {
       headers: [
         {
           text: "จัดลำดับ",
-          col_size: 1,
         },
         {
           text: "ลำดับ",
-          col_size: 1,
         },
         {
           text: "หมายเลขงาน",
-          col_size: 2,
         },
         {
           text: "กว้าง",
-          col_size: 2,
         },
         {
           text: "ยาว",
-          col_size: 2,
         },
         {
           text: "จำนวนแผ่น",
-          col_size: 2,
         },
         {
           text: "วันที่ดำเนินงาน",
-          col_size: 2,
         },
       ],
       items: [
@@ -135,6 +141,7 @@ export default {
               job_width: 5,
               job_height: 10,
               job_sheet: 10,
+              isSelected: true,
             },
             {
               job_id: 127,
@@ -143,6 +150,7 @@ export default {
               job_width: 5,
               job_height: 10,
               job_sheet: 10,
+              isSelected: true,
             },
             {
               job_id: 127,
@@ -151,19 +159,7 @@ export default {
               job_width: 5,
               job_height: 10,
               job_sheet: 10,
-            },
-          ],
-          isContinue: true,
-        },
-        {
-          data: [
-            {
-              job_id: 127,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              job_width: 5,
-              job_height: 10,
-              job_sheet: 10,
+              isSelected: true,
             },
           ],
           isContinue: true,
@@ -177,6 +173,21 @@ export default {
               job_width: 5,
               job_height: 10,
               job_sheet: 10,
+              isSelected: true,
+            },
+          ],
+          isContinue: true,
+        },
+        {
+          data: [
+            {
+              job_id: 127,
+              job_length: 500,
+              job_work_date: "5/09/63",
+              job_width: 5,
+              job_height: 10,
+              job_sheet: 10,
+              isSelected: true,
             },
             {
               job_id: 127,
@@ -185,12 +196,15 @@ export default {
               job_width: 5,
               job_height: 10,
               job_sheet: 10,
+              isSelected: true,
             },
           ],
           isContinue: false,
         },
       ],
       isDragableDisabled: false,
+      mode: "manage-member",
+      ingroup: "",
     };
   },
   mounted() {
@@ -208,6 +222,83 @@ export default {
   },
   computed: {
     ...mapGetters(["getJoblist"]),
+  },
+  watch: {
+    mode(newValue, oldValue) {
+      if (newValue == "reorder") {
+        this.headers = [
+          {
+            text: "จัดลำดับ",
+          },
+          {
+            text: "ลำดับ",
+          },
+          {
+            text: "หมายเลขงาน",
+          },
+          {
+            text: "กว้าง",
+          },
+          {
+            text: "ยาว",
+          },
+          {
+            text: "จำนวนแผ่น",
+          },
+          {
+            text: "วันที่ดำเนินงาน",
+          },
+        ];
+      } else if (newValue == "manage-member") {
+        this.headers = [
+          {
+            text: "ลำดับ",
+          },
+          {
+            text: "หมายเลขงาน",
+          },
+          {
+            text: "กว้าง",
+          },
+          {
+            text: "ยาว",
+          },
+          {
+            text: "จำนวนแผ่น",
+          },
+          {
+            text: "วันที่ดำเนินงาน",
+          },
+          {
+            text: "การเลือก",
+          },
+        ];
+      } else {
+        this.headers = [
+          {
+            text: "จัดลำดับ",
+          },
+          {
+            text: "ลำดับ",
+          },
+          {
+            text: "หมายเลขงาน",
+          },
+          {
+            text: "กว้าง",
+          },
+          {
+            text: "ยาว",
+          },
+          {
+            text: "จำนวนแผ่น",
+          },
+          {
+            text: "วันที่ดำเนินงาน",
+          },
+        ];
+      }
+    },
   },
 };
 </script>
