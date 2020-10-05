@@ -1,24 +1,18 @@
 <template>
   <div>
-    <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-app-bar-nav-icon style="color:white;" @click="drawer = true">
-        <v-icon large>
-          menu
-        </v-icon>
+    <v-app-bar color="indigo darken-4" style="height: 70px" flat>
+      <v-app-bar-nav-icon style="color: white" @click="drawer = true">
+        <v-icon large> menu </v-icon>
       </v-app-bar-nav-icon>
 
-      <v-toolbar-title style="color:white;" class="text-h4"
+      <v-toolbar-title style="color: white" class="text-h4"
         >แผนการดำเนินงาน</v-toolbar-title
       >
 
       <v-spacer></v-spacer>
-
-      <v-card color="indigo darken-1" :date="datenow" style="padding:5px;">
-        <span style="margin:20px;color:white;" class="text-h5">{{
-          datenow
-        }}</span>
-        <v-icon large color="white">date_range</v-icon>
-      </v-card>
+      <span style="margin: 20px; color: white" class="text-h5">{{
+        datenow
+      }}</span>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary width="30vw">
       <v-list nav>
@@ -46,18 +40,40 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <HomeJobList @show-dialog="showDialog"></HomeJobList>
-    <v-btn
-      color="indigo"
-      dark
-      absolute
-      x-large
-      bottom
-      :style="{ left: '50%', transform: 'translateX(-50%)', fontSize: '1.3em' }"
-      @click="showCreateDialog"
-    >
-      <v-icon large>control_point</v-icon>เพิ่มงาน
-    </v-btn>
+    <!-- <HomeJobList @show-dialog="showDialog"></HomeJobList> -->
+    <HomeJobListManage></HomeJobListManage>
+    <v-container>
+      <v-row align="end">
+        <v-spacer> </v-spacer>
+        <v-col cols="2">
+          <v-btn
+            color="indigo"
+            dark
+            absolute
+            x-large
+            bottom
+            @click="showCreateDialog"
+            class="text-h5"
+          >
+            จัดการกลุ่ม
+          </v-btn>
+        </v-col>
+        <v-col cols="2">
+          <v-btn
+            color="indigo"
+            dark
+            absolute
+            x-large
+            bottom
+            @click="showCreateDialog"
+            class="text-h5"
+          >
+            เพิ่มงาน
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+
     <v-dialog v-model="isDialogShow" max-width="400">
       <v-card v-if="dialogInfo.type === 'delete'">
         <v-container class="fill-height">
@@ -107,7 +123,7 @@
             required
           >
             <template #label>
-              <span style="font-size:1.2em">หมายเลขงาน</span>
+              <span style="font-size: 1.2em">หมายเลขงาน</span>
             </template>
           </v-text-field>
           <v-text-field
@@ -121,7 +137,7 @@
             required
           >
             <template #label>
-              <span style="font-size:1.2em">ความยาว</span>
+              <span style="font-size: 1.2em">ความยาว</span>
             </template>
           </v-text-field>
           <v-text-field
@@ -132,8 +148,8 @@
             class="text-h5"
           >
             <template #label>
-              <div style="padding-top:4px">
-                <span style="font-size:1.1em;">วันที่ดำเนินงาน</span>
+              <div style="padding-top: 4px">
+                <span style="font-size: 1.1em">วันที่ดำเนินงาน</span>
               </div>
             </template>
           </v-text-field>
@@ -142,7 +158,7 @@
               v-model:value="date"
               scrollable
               locale="th"
-              style="font-size:1.5em;"
+              style="font-size: 1.5em"
             >
               <v-spacer></v-spacer>
               <v-btn text color="primary" @click="isDatePickerShow = false"
@@ -196,7 +212,7 @@
           <v-btn
             color="green darken-1"
             @click="beginWork"
-            class="text-h6  white--text"
+            class="text-h6 white--text"
             >ใช่</v-btn
           >
         </v-card-actions>
@@ -216,10 +232,12 @@ import HomeJobList from "@/components/HomeJobList.vue";
 import Setting from "@/views/Setting.vue";
 import TouchKeyboard from "../components/TouchKeyboard.vue";
 import { mapActions } from "vuex";
+import HomeJobListManage from "@/components/HomeJobListManage.vue";
 export default {
   components: {
     HomeJobList,
     TouchKeyboard,
+    HomeJobListManage,
   },
   data() {
     return {
@@ -280,7 +298,6 @@ export default {
       this.formHasErrors = false;
       Object.keys(this.form).forEach((f) => {
         if (!this.form[f]) this.formHasErrors = true;
-
         this.$refs[f].validate(true);
       });
       if (!this.formHasErrors) {

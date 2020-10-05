@@ -17,4 +17,9 @@ export default {
 </script>
 <style lang="sass">
 @import '../node_modules/typeface-roboto/index.css'
+.nocopy
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
 </style>

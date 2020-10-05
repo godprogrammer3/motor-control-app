@@ -1,116 +1,159 @@
 <template>
-  <v-data-table
-    height="83vh"
-    :headers="headers"
-    fixed-header
-    :items="getJoblist"
-    item-key="name"
-    hide-default-footer
-    :items-per-page="getJoblist.length"
-    :item-class="row_class"
-  >
-    <template #header.text="{ header }">
-      <tr>
-        <td class="text-h5">{{ header.text }}</td>
-        <td class="text-h5">{{ header.text }}</td>
-        <td class="text-h5">{{ header.text }}</td>
-        <td class="text-h5">{{ header.text }}</td>
-        <td class="text-h5">{{ header.text }}</td>
-        <td></td>
-      </tr>
-    </template>
-    <template #item="{ item }">
-      <tr>
-        <td class="text-h5">{{ item.no }}</td>
-        <td class="text-h5">{{ item.workNo }}</td>
-        <td class="text-h5">{{ item.length }}</td>
-        <td class="text-h5">{{ item.workDate }}</td>
-        <td class="my-5">
-          <div class="text-center">
-            <v-btn
-              class="ma-2"
-              medium
-              fab
-              dark
-              color="red"
-              @click="$emit('show-dialog', { type: 'delete', item: item })"
+  <v-container fluid class="pa-0">
+    <v-row class="elevation-2 pl-10">
+      <v-col v-for="(col, index) in headers" :key="index" :cols="col.col_size">
+        <span class="text-h6"> {{ col.text }}</span>
+      </v-col>
+    </v-row>
+    <v-list v-dragscroll.y="true" class="mt-3 list-class">
+      <draggable
+        v-model="items"
+        :disabled="isDragableDisabled"
+        handle=".handle"
+      >
+        <v-list-item v-for="(item, index) in items" :key="index">
+          <v-card width="100%" class="mb-5 rounded-xl">
+            <v-toolbar
+              :color="item.isContinue ? 'indigo' : 'orange'"
+              height="95"
             >
-              <v-icon dark large>delete</v-icon>
-            </v-btn>
-            <v-btn
-              class="ma-2"
-              medium
-              fab
-              dark
-              color="indigo"
-              @click="$emit('show-dialog', { type: 'edit', item: item })"
-            >
-              <v-icon dark large>create</v-icon>
-            </v-btn>
-            <v-btn
-              class="ma-2"
-              medium
-              fab
-              dark
-              color="green"
-              @click="$emit('show-dialog', { type: 'operate', item: item })"
-            >
-              <v-icon dark large>play_arrow</v-icon>
-            </v-btn>
-          </div>
-        </td>
-      </tr>
-    </template>
-  </v-data-table>
+              <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
+                >กลุ่มที่ {{ index + 1 }}</v-toolbar-title
+              >
+              <v-spacer></v-spacer>
+              <v-btn x-large fab dark color="green" class="mb-4">
+                <v-icon dark large>play_arrow</v-icon>
+              </v-btn>
+            </v-toolbar>
+            <v-container fluid fill-height>
+              <v-row align="center" justify="center">
+                <v-col justify="center" align="center" cols="1" class="handle">
+                  <v-spacer></v-spacer>
+                  <v-icon x-large> reorder </v-icon>
+                  <v-spacer></v-spacer>
+                </v-col>
+                <v-col cols="11">
+                  <v-simple-table>
+                    <template v-slot:default>
+                      <tbody>
+                        <tr
+                          v-for="(sub_item, sub_index) in item.data"
+                          :key="sub_index"
+                        >
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_index + 1 }}
+                          </td>
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_item.job_id }}
+                          </td>
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_item.job_length }}
+                          </td>
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_item.job_work_date }}
+                          </td>
+                          <td>
+                            <div class="text-center">
+                              <v-btn
+                                x-large
+                                fab
+                                dark
+                                color="red"
+                                class="mr-2 mb-2"
+                              >
+                                <v-icon dark large>delete</v-icon>
+                              </v-btn>
+                              <v-btn
+                                x-large
+                                fab
+                                dark
+                                color="orange"
+                                class="mb-4"
+                              >
+                                <v-icon dark large>create</v-icon>
+                              </v-btn>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table></v-col
+                >
+              </v-row>
+            </v-container>
+          </v-card>
+        </v-list-item>
+      </draggable>
+    </v-list>
+  </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import HomeJobListElement from "@/components/HomeJobListElement.vue";
+import draggable from "vuedraggable";
+import { dragscroll } from "vue-dragscroll";
 export default {
+  directives: {
+    dragscroll,
+  },
+  components: {
+    HomeJobListElement,
+    draggable,
+  },
   data() {
     return {
-      itemsPerPage: 10,
       headers: [
         {
+          text: "จัดลำดับ",
+          col_size: 1,
+        },
+        {
           text: "ลำดับ",
-          align: "start",
-          value: "no",
-          class: "text-h5",
+          col_size: 1,
         },
         {
           text: "หมายเลขงาน",
-          value: "workNo",
-          align: "start",
-          class: "text-h5",
+          col_size: 2,
         },
-        { text: "ความยาว", value: "length", align: "start", class: "text-h5" },
+        {
+          text: "ความยาว",
+          col_size: 2,
+        },
         {
           text: "วันที่ดำเนินงาน",
-          value: "workDate",
-          align: "start",
-          class: "text-h5",
+          col_size: 3,
         },
         {
           text: "การดำเนินงาน",
-          value: "action",
-          sortable: false,
-          align: "center",
-          class: "text-h5",
+          col_size: 3,
         },
       ],
-      desserts: [],
+      items: [
+        {
+          data: [
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+          ],
+          isContinue: true,
+        },
+        {
+          data: [{ job_id: 127, job_length: 500, job_work_date: "5/09/63" }],
+          isContinue: true,
+        },
+        {
+          data: [
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+          ],
+          isContinue: false,
+        },
+      ],
+      isDragableDisabled: false,
     };
   },
   mounted() {
-    for (let i = 1; i < 30; i++) {
-      this.desserts.push({
-        no: i,
-        workNo: 20050384,
-        length: 5864,
-        workDate: "13/06/2020",
-      });
-    }
-    this.itemsPerPage = this.desserts.length;
     this.getJobList();
   },
   methods: {
@@ -128,4 +171,12 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.list-class {
+  height: 75vh;
+  overflow: auto;
+}
+.handle {
+  width: auto;
+}
+</style>
