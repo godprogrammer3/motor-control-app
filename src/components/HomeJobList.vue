@@ -5,86 +5,122 @@
         <span class="text-h6"> {{ col.text }}</span>
       </v-col>
     </v-row>
-    <v-list v-dragscroll.y="true" class="mt-3 list-class">
-      <draggable
-        v-model="items"
-        :disabled="isDragableDisabled"
-        handle=".handle"
-      >
-        <v-list-item v-for="(item, index) in items" :key="index">
-          <v-card width="100%" class="mb-5 rounded-xl">
-            <v-toolbar
-              :color="item.isContinue ? 'indigo' : 'orange'"
-              height="95"
-            >
-              <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
-                >กลุ่มที่ {{ index + 1 }}</v-toolbar-title
+    <v-row justify="center" align="center">
+      <v-list v-dragscroll.y="true" class="mt-3 list-class">
+        <draggable
+          v-model="items"
+          :disabled="isDragableDisabled"
+          handle=".handle"
+        >
+          <v-list-item v-for="(item, index) in items" :key="index">
+            <v-card width="100%" class="mb-5 rounded-xl">
+              <v-toolbar
+                :color="item.isContinue ? 'indigo' : 'orange'"
+                height="95"
               >
-              <v-spacer></v-spacer>
-              <v-btn x-large fab dark color="green" class="mb-4">
-                <v-icon dark large>play_arrow</v-icon>
-              </v-btn>
-            </v-toolbar>
-            <v-container fluid fill-height>
-              <v-row align="center" justify="center">
-                <v-col justify="center" align="center" cols="1" class="handle">
-                  <v-spacer></v-spacer>
-                  <v-icon x-large> reorder </v-icon>
-                  <v-spacer></v-spacer>
-                </v-col>
-                <v-col cols="11">
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <tbody>
-                        <tr
-                          v-for="(sub_item, sub_index) in item.data"
-                          :key="sub_index"
-                        >
-                          <td class="text-center text-h6 nocopy">
-                            {{ sub_index + 1 }}
-                          </td>
-                          <td class="text-center text-h6 nocopy">
-                            {{ sub_item.job_id }}
-                          </td>
-                          <td class="text-center text-h6 nocopy">
-                            {{ sub_item.job_length }}
-                          </td>
-                          <td class="text-center text-h6 nocopy">
-                            {{ sub_item.job_work_date }}
-                          </td>
-                          <td>
-                            <div class="text-center">
-                              <v-btn
-                                x-large
-                                fab
-                                dark
-                                color="red"
-                                class="mr-2 mb-2"
-                              >
-                                <v-icon dark large>delete</v-icon>
-                              </v-btn>
-                              <v-btn
-                                x-large
-                                fab
-                                dark
-                                color="orange"
-                                class="mb-4"
-                              >
-                                <v-icon dark large>create</v-icon>
-                              </v-btn>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table></v-col
+                <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
+                  >กลุ่มที่ {{ index + 1 }}</v-toolbar-title
                 >
-              </v-row>
-            </v-container>
-          </v-card>
-        </v-list-item>
-      </draggable>
-    </v-list>
+                <v-spacer></v-spacer>
+                <v-btn x-large fab dark color="green" class="mb-4">
+                  <v-icon dark large>play_arrow</v-icon>
+                </v-btn>
+              </v-toolbar>
+              <v-container fluid fill-height>
+                <v-row align="center" justify="center">
+                  <v-col cols="12">
+                    <v-simple-table>
+                      <template v-slot:default>
+                        <tbody>
+                          <tr
+                            v-for="(sub_item, sub_index) in item.data"
+                            :key="sub_index"
+                          >
+                            <td class="text-center text-h6 nocopy">
+                              {{ sub_index + 1 }}
+                            </td>
+                            <td class="text-center text-h6 nocopy">
+                              {{ sub_item.job_id }}
+                            </td>
+                            <td class="text-center text-h6 nocopy">
+                              {{ sub_item.job_length }}
+                            </td>
+                            <td class="text-center text-h6 nocopy">
+                              {{ sub_item.job_work_date }}
+                            </td>
+                            <td>
+                              <div class="text-center">
+                                <v-btn
+                                  x-large
+                                  fab
+                                  dark
+                                  color="red"
+                                  class="mr-2 mb-2"
+                                >
+                                  <v-icon dark large>delete</v-icon>
+                                </v-btn>
+                                <v-btn
+                                  x-large
+                                  fab
+                                  dark
+                                  color="orange"
+                                  class="mb-4"
+                                >
+                                  <v-icon dark large>create</v-icon>
+                                </v-btn>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table></v-col
+                  >
+                </v-row>
+              </v-container>
+            </v-card>
+          </v-list-item>
+        </draggable>
+      </v-list></v-row
+    >
+    <v-row align="end">
+      <v-spacer> </v-spacer>
+      <v-col cols="2">
+        <v-btn
+          color="indigo"
+          dark
+          absolute
+          x-large
+          bottom
+          @click="
+            $emit('handle-event', {
+              type: 'change_mode',
+              value: 'home_manage_group',
+            })
+          "
+          class="text-h5"
+        >
+          จัดการกลุ่ม
+        </v-btn>
+      </v-col>
+      <v-col cols="2">
+        <v-btn
+          color="indigo"
+          dark
+          absolute
+          x-large
+          bottom
+          @click="
+            $emit('handle-event', {
+              type: 'show_dialog',
+              value: { type: 'create' },
+            })
+          "
+          class="text-h5"
+        >
+          เพิ่มงาน
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -104,10 +140,6 @@ export default {
   data() {
     return {
       headers: [
-        {
-          text: "จัดลำดับ",
-          col_size: 1,
-        },
         {
           text: "ลำดับ",
           col_size: 1,
@@ -173,7 +205,8 @@ export default {
 </script>
 <style scoped>
 .list-class {
-  height: 75vh;
+  height: 73vh;
+  width: 95%;
   overflow: auto;
 }
 .handle {

@@ -1,57 +1,67 @@
 <template>
-  <v-container class="fill-height">
-    <v-row v-if="hasSign" justify="center">
-      <v-card
-        v-for="(sign,index) in signs"
-        :key="'sign'+index"
-        class="ma-5"
-        @click="$emit('key-press',sign)"
+  <v-container fluid>
+    <v-row
+      ><v-col style=""
+        ><v-card><span>1</span></v-card></v-col
+      ><v-col
+        ><v-card><span>1</span></v-card></v-col
+      ><v-col
+        ><v-card><span>1</span></v-card></v-col
+      ></v-row
+    >
+    <v-row
+      ><v-col
+        ><v-card><span>4</span></v-card></v-col
+      ><v-col
+        ><v-card><span>8</span></v-card></v-col
+      ><v-col
+        ><v-card><span>7</span></v-card></v-col
+      ></v-row
+    >
+    <v-row
+      ><v-col
+        ><v-card><span>1</span></v-card></v-col
+      ><v-col
+        ><v-card><span>2</span></v-card></v-col
+      ><v-col
+        ><v-card><span>3</span></v-card></v-col
+      ></v-row
+    >
+    <v-row
+      ><v-col
+        ><v-card><span>0</span></v-card></v-col
+      ><v-col
+        ><v-card><span>.</span></v-card></v-col
+      ><v-col
+        ><v-card><v-icon>backspace</v-icon></v-card></v-col
+      ></v-row
+    >
+    <v-row align="end" justify="end">
+      <v-col>
+        <v-btn
+          color="green darken-1"
+          @click="deleteJobAction"
+          class="text-h6 white--text"
+          width="7vw"
+          height="7vh"
+          >บันทึก</v-btn
+        ></v-col
       >
-        <v-card-text>{{ sign}}</v-card-text>
-      </v-card>
-    </v-row>
-    <v-row justify="space-around">
-      <v-card
-        v-for="(digit,index) in digits"
-        :key="'digit'+index"
-        @click="$emit('key-press',digit)"
-      >
-        <v-card-text>{{digit}}</v-card-text>
-      </v-card>
-      <v-card @click="$emit('key-press','del')">
-        <v-card-text>
-          <v-icon>backspace</v-icon>
-        </v-card-text>
-      </v-card>
-      <v-card @click="$emit('key-press','close')">
-        <v-card-text>
-          <v-icon>cancel</v-icon>
-        </v-card-text>
-      </v-card>
-    </v-row>
+      <v-col><v-btn
+          color="green darken-1"
+          @click="deleteJobAction"
+          class="text-h6 white--text"
+          width="7vw"
+          height="7vh"
+          >ยกเลิก</v-btn
+        ></v-col</v-col>
+      ></v-row
+    >
   </v-container>
 </template>
 
 <script>
-export default {
-  props: {
-    hasSign: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      signs: ["+", "-"],
-      digits: []
-    };
-  },
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.digits.push(i + "");
-    }
-  }
-};
+export default {};
 </script>
 
 <style>

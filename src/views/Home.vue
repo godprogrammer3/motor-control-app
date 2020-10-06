@@ -40,39 +40,15 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <!-- <HomeJobList @show-dialog="showDialog"></HomeJobList> -->
-    <HomeJobListManage></HomeJobListManage>
-    <v-container>
-      <v-row align="end">
-        <v-spacer> </v-spacer>
-        <v-col cols="2">
-          <v-btn
-            color="indigo"
-            dark
-            absolute
-            x-large
-            bottom
-            @click="showCreateDialog"
-            class="text-h5"
-          >
-            จัดการกลุ่ม
-          </v-btn>
-        </v-col>
-        <v-col cols="2">
-          <v-btn
-            color="indigo"
-            dark
-            absolute
-            x-large
-            bottom
-            @click="showCreateDialog"
-            class="text-h5"
-          >
-            เพิ่มงาน
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
+
+    <HomeJobList
+      @handle-event="handleEvent"
+      v-if="mode == 'home'"
+    ></HomeJobList>
+    <HomeJobListManage
+      @handle-event="handleEvent"
+      v-else-if="mode == 'home_manage_group'"
+    ></HomeJobListManage>
 
     <v-dialog v-model="isDialogShow" max-width="400">
       <v-card v-if="dialogInfo.type === 'delete'">
@@ -251,9 +227,15 @@ export default {
       workNo: "",
       length: "",
       isDatePickerShow: false,
+      mode: "home",
     };
   },
   methods: {
+    handleEvent(data) {
+      if (data.type === "change_mode") {
+        this.mode = data.value;
+      }
+    },
     dateUpdate() {
       this.datenow = moment().format("DD/M/YYYY");
     },
