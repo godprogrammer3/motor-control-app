@@ -63,7 +63,7 @@
     </v-dialog>
     <v-footer v-show="input !== ''" fixed>
       <v-card width="100vw">
-        <TouchKeyboard @key-press="keyPress"></TouchKeyboard>
+        <TouchKeyboard @keyboard-event="keyboardEventHandler"></TouchKeyboard>
       </v-card>
     </v-footer>
   </div>
@@ -137,6 +137,9 @@ export default {
       this.slowModeVelocity = parseInt(this.slowModeVelocity);
     },
     ...mapActions(["getSetting", "editSetting"]),
+    keyboardEventHandler(event) {
+      console.log(`Event Type: ${event.type} , Value : ${event.value}`);
+    },
   },
   computed: {
     ...mapState(["setting"]),

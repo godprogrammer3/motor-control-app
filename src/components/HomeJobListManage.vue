@@ -25,7 +25,7 @@
                 (mode != 'manage-member-ingroup' ||
                   item.data.length == 1 ||
                   index == currentSelectedGroup) &&
-                (mode != 'add-group' || item.data.length == 1)
+                  (mode != 'add-group' || item.data.length == 1)
               "
             >
               <v-toolbar
@@ -33,7 +33,7 @@
                 height="95"
                 v-if="
                   (mode != 'manage-member-ingroup' || item.data.length != 1) &&
-                  mode != 'add-group'
+                    mode != 'add-group'
                 "
               >
                 <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
@@ -114,7 +114,7 @@
                           handle=".handle"
                           v-else-if="
                             mode == 'manage-member-ingroup' ||
-                            mode == 'add-group'
+                              mode == 'add-group'
                           "
                         >
                           <tr
@@ -161,7 +161,7 @@
     ></v-row>
     <v-row align="end">
       <v-spacer> </v-spacer>
-      <v-col cols="2" v-if="mode === 'group-reorder'">
+      <v-col v-if="mode === 'group-reorder'">
         <v-btn
           color="indigo"
           dark
@@ -174,7 +174,7 @@
           เพิ่มกลุ่ม
         </v-btn>
       </v-col>
-      <v-col cols="2">
+      <v-col>
         <v-btn
           color="indigo"
           dark
@@ -187,7 +187,7 @@
           บันทึก
         </v-btn>
       </v-col>
-      <v-col cols="2">
+      <v-col>
         <v-btn
           color="indigo"
           dark
@@ -206,7 +206,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import HomeJobListElement from "@/components/HomeJobListElement.vue";
 import draggable from "vuedraggable";
 import { dragscroll } from "vue-dragscroll";
 export default {
@@ -214,7 +213,6 @@ export default {
     dragscroll,
   },
   components: {
-    HomeJobListElement,
     draggable,
   },
   data() {
@@ -388,7 +386,7 @@ export default {
 </script>
 <style scoped>
 .list-class {
-  height: 73vh;
+  height: 70vh;
   width: 95%;
   overflow: auto;
 }

@@ -84,7 +84,7 @@
     >
     <v-row align="end">
       <v-spacer> </v-spacer>
-      <v-col cols="2">
+      <v-col>
         <v-btn
           color="indigo"
           dark
@@ -97,12 +97,12 @@
               value: 'home_manage_group',
             })
           "
-          class="text-h5"
+          class="text-h5 mr-5"
         >
           จัดการกลุ่ม
         </v-btn>
       </v-col>
-      <v-col cols="2">
+      <v-col>
         <v-btn
           color="indigo"
           dark
@@ -126,7 +126,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import HomeJobListElement from "@/components/HomeJobListElement.vue";
 import draggable from "vuedraggable";
 import { dragscroll } from "vue-dragscroll";
 export default {
@@ -134,7 +133,6 @@ export default {
     dragscroll,
   },
   components: {
-    HomeJobListElement,
     draggable,
   },
   data() {
@@ -205,7 +203,7 @@ export default {
 </script>
 <style scoped>
 .list-class {
-  height: 73vh;
+  height: 70vh;
   width: 95%;
   overflow: auto;
 }

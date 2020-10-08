@@ -1,8 +1,39 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row>
-      <v-col cols="6"></v-col>
-      <v-col clos="6"><TouchKeyboard></TouchKeyboard></v-col>
+  <v-container fluid fill-height>
+    <v-row align="center" justify="center">
+      <v-col align="center" justify="center">
+        <v-card width="40vw" height="80vh" style="padding-top:20vh;">
+          <v-col align="center" justify="center">
+            <v-row
+              align="center"
+              justify="center"
+              style="padding-left:15vw;padding-right:15vw;"
+            >
+              <v-text-field
+                label="ค่า ONTOP"
+                value="20"
+                suffix="เมตร"
+                style="transform:scale(3);"
+              >
+              </v-text-field
+            ></v-row>
+            <v-row
+              align="center"
+              justify="center"
+              style="padding-left:15vw;padding-right:15vw;margin-top:15vh;"
+            >
+              <v-text-field
+                label="ความเร็วโหมดช้า"
+                value="30"
+                suffix="%"
+                style="transform:scale(3);"
+              >
+              </v-text-field
+            ></v-row>
+          </v-col>
+        </v-card>
+      </v-col>
+      <v-col><TouchKeyboard></TouchKeyboard></v-col>
     </v-row>
   </v-container>
 </template>
@@ -36,4 +67,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="css" scoped></style>

@@ -1,68 +1,144 @@
 <template>
-  <v-container fluid>
-    <v-row
-      ><v-col style=""
-        ><v-card><span>1</span></v-card></v-col
-      ><v-col
-        ><v-card><span>1</span></v-card></v-col
-      ><v-col
-        ><v-card><span>1</span></v-card></v-col
-      ></v-row
-    >
-    <v-row
-      ><v-col
-        ><v-card><span>4</span></v-card></v-col
-      ><v-col
-        ><v-card><span>8</span></v-card></v-col
-      ><v-col
-        ><v-card><span>7</span></v-card></v-col
-      ></v-row
-    >
-    <v-row
-      ><v-col
-        ><v-card><span>1</span></v-card></v-col
-      ><v-col
-        ><v-card><span>2</span></v-card></v-col
-      ><v-col
-        ><v-card><span>3</span></v-card></v-col
-      ></v-row
-    >
-    <v-row
-      ><v-col
-        ><v-card><span>0</span></v-card></v-col
-      ><v-col
-        ><v-card><span>.</span></v-card></v-col
-      ><v-col
-        ><v-card><v-icon>backspace</v-icon></v-card></v-col
-      ></v-row
-    >
-    <v-row align="end" justify="end">
-      <v-col>
+  <v-card class="pa-1" width="40vw">
+    <v-row align="center" justify="center"
+      ><v-col align="center" justify="center"
+        ><v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '7' })"
+          >7</v-btn
+        ></v-col
+      >
+      <v-col align="center" justify="center"
+        ><v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '8' })"
+          >8</v-btn
+        ></v-col
+      >
+      <v-col align="center" justify="center">
         <v-btn
-          color="green darken-1"
-          @click="deleteJobAction"
-          class="text-h6 white--text"
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '9' })"
+          >9</v-btn
+        >
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col align="center" justify="center"
+        ><v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '4' })"
+          >4</v-btn
+        ></v-col
+      >
+      <v-col align="center" justify="center"
+        ><v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '5' })"
+          >5</v-btn
+        ></v-col
+      >
+      <v-col align="center" justify="center">
+        <v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          >6</v-btn
+        >
+      </v-col></v-row
+    >
+    <v-row>
+      <v-col align="center" justify="center"
+        ><v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '1' })"
+          >1</v-btn
+        ></v-col
+      >
+      <v-col align="center" justify="center"
+        ><v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '2' })"
+          >2</v-btn
+        ></v-col
+      >
+      <v-col align="center" justify="center">
+        <v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '3' })"
+          >3</v-btn
+        >
+      </v-col></v-row
+    >
+    <v-row>
+      <v-col align="center" justify="center"
+        ><v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: auto ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '0' })"
+          >0</v-btn
+        ></v-col
+      >
+      <v-col align="center" justify="center"
+        ><v-btn
+          class="text-h1"
+          style=" height: auto ;
+  width: 0.95em ;"
+          @click="$emit('keyboard-event', { type: 'letter', value: '.' })"
+          >.</v-btn
+        ></v-col
+      >
+      <v-col align="center" justify="center">
+        <v-btn style="width:6.5em;height:8.20em;"
+          ><v-icon x-large>backspace</v-icon></v-btn
+        >
+      </v-col>
+    </v-row>
+    <v-row align="center" justify="center">
+      <v-col align="center" justify="center">
+        <v-btn
+          color="indigo darken-4"
+          class="text-h4 white--text "
           width="7vw"
           height="7vh"
+          style="height:auto; width:auto;"
+          @click="$emit('keyboard-event', { type: 'action', value: 'save' })"
           >บันทึก</v-btn
         ></v-col
       >
-      <v-col><v-btn
-          color="green darken-1"
-          @click="deleteJobAction"
-          class="text-h6 white--text"
+      <v-col align="center" justify="center"
+        ><v-btn
+          color="indigo darken-4"
+          class="text-h4 white--text"
           width="7vw"
           height="7vh"
+          style="height:auto; width:auto;"
+          @click="$emit('keyboard-event', { type: 'action', value: 'cancel' })"
           >ยกเลิก</v-btn
-        ></v-col</v-col>
-      ></v-row
-    >
-  </v-container>
+        ></v-col
+      >
+    </v-row>
+  </v-card>
 </template>
 
 <script>
 export default {};
 </script>
-
-<style>
-</style>
+<style scoped></style>
