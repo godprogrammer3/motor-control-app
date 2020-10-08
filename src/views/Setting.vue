@@ -36,36 +36,7 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <SettingBody
-      :onTop="onTop"
-      :slowModeVelocity="slowModeVelocity"
-      @change-input="changeInput"
-      @save-setting="saveSetting"
-    ></SettingBody>
-    <v-dialog v-model="isSaveDialogShow" max-width="290">
-      <v-card>
-        <v-container class="fill-height">
-          <v-row justify="center" align="center">
-            <v-card-text class="text-center"
-              >ยืนยันการบันทึกการตั้งค่า</v-card-text
-            >
-          </v-row>
-        </v-container>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn color="red darken-1" @click="cancelAction">ยกเลิก</v-btn>
-
-          <v-btn color="green darken-1" @click="saveAction">ยืนยัน</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-footer v-show="input !== ''" fixed>
-      <v-card width="100vw">
-        <TouchKeyboard @keyboard-event="keyboardEventHandler"></TouchKeyboard>
-      </v-card>
-    </v-footer>
+    <SettingBody></SettingBody>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-1" width="40vw">
+  <v-card class="" width="40vw">
     <v-row align="center" justify="center"
       ><v-col align="center" justify="center"
         ><v-btn
@@ -106,7 +106,9 @@
         ></v-col
       >
       <v-col align="center" justify="center">
-        <v-btn style="width:6.5em;height:8.20em;"
+        <v-btn
+          style="width:6.5em;height:8.20em;"
+          @click="$emit('keyboard-event', { type: 'action', value: 'delete' })"
           ><v-icon x-large>backspace</v-icon></v-btn
         >
       </v-col>
