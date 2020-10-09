@@ -1,284 +1,161 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <v-toolbar-title class="white--text">กำลังดำเนินงาน...</v-toolbar-title>
+      <v-toolbar-title class="white--text text-h4"
+        >กำลังดำเนินงาน...</v-toolbar-title
+      >
+      <span class="white--text text-h4 ml-5">80%</span>
       <v-spacer></v-spacer>
       <v-btn
         class="mx-2"
-        small
-        fab
+        medium
         dark
-        color="indigo darken-1"
-        @click="isCloseDialogShow = true"
+        fab
+        color="red darken-2"
+        @click="cancelJob()"
       >
-        <v-icon dark>close</v-icon>
+        <v-icon x-large dark>close</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-toolbar>
-      <span>หมายเลขงาน</span>
-      <v-card width="15vw" class="ma-5 text-center">
-        <span>{{ workNo }}</span>
-      </v-card>
-      <v-divider class="mx-1" inset vertical></v-divider>
-      <span>ความยาว</span>
-      <v-card width="15vw" class="ma-5 text-center">
-        <span>{{ length }}</span>
-      </v-card>
-      <span>เมตร</span>
-    </v-toolbar>
-    <v-container class="fill-height" fluid>
-      <v-row align="center" justify="center">
-        <v-card width="100%" height="70vh" class="justify-center" elevation="0">
-          <v-container class="fill-height">
-            <v-row align="center" justify="center">
-              <v-container class="fill-height">
-                <v-row justify="center">
-                  <v-card
-                    class="text-center ma-5 white--text"
-                    width="20vw"
-                    color="teal accent-4"
-                  >
-                    <v-container class="fill-height">
-                      <v-row justify="center" align="center">
-                        <v-card-text>
-                          <p style="font-size:2em;">เสร็จสิ้น</p>
-                          <p style="font-size:3em;">989</p>
-                          <p style="font-size:1.5em;">เมตร</p>
-                        </v-card-text>
-                      </v-row>
-                    </v-container>
-                  </v-card>
-                  <v-card
-                    class="text-center ma-5 white--text"
-                    width="20vw"
-                    color="light-blue"
-                  >
-                    <v-container class="fill-height">
-                      <v-row justify="center" align="center">
-                        <v-card-text>
-                          <p style="font-size:2em;">คงเหลือ</p>
-                          <p style="font-size:3em;">2695</p>
-                          <p style="font-size:1.5em;">เมตร</p>
-                        </v-card-text>
-                      </v-row>
-                    </v-container>
-                  </v-card>
-                  <v-card
-                    class="text-center ma-5 white--text"
-                    width="20vw"
-                    color="blue accent-4"
-                  >
-                    <v-container class="fill-height">
-                      <v-row justify="center" align="center">
-                        <v-card-text>
-                          <p style="font-size:2em;">ทั้งหมด</p>
-                          <p style="font-size:3em;">989</p>
-                          <p style="font-size:1.5em;">เมตร</p>
-                        </v-card-text>
-                      </v-row>
-                    </v-container>
-                  </v-card>
-                  <v-card
-                    class="text-center ma-5 white--text"
-                    width="20vw"
-                    height="20vh"
-                    color="deep-purple lighten-2"
-                  >
-                    <v-container class="fill-height">
-                      <v-row justify="center" align="center">
-                        <v-card-text>
-                          <p style="font-size:2em;">เพิ่ม/ลด</p>
-                          <p style="font-size:3em;">
-                            {{
-                              offsetValue >= 0 ? "+" + offsetValue : offsetValue
-                            }}
-                          </p>
-                          <p style="font-size:1.5em;">เมตร</p>
-                        </v-card-text>
-                      </v-row>
-                    </v-container>
-                    <v-footer color="transparent" absolute>
-                      <v-row justify="space-between">
-                        <v-spacer></v-spacer>
-                        <v-icon large right @click="showEditDialog('offset')"
-                          >create</v-icon
-                        >
-                      </v-row>
-                    </v-footer>
-                  </v-card>
-                </v-row>
-                <v-row justify="center">
-                  <v-card
-                    class="text-center ma-5 white--text"
-                    width="20vw"
-                    color="red lighten-2"
-                  >
-                    <v-container class="fill-height">
-                      <v-row justify="center" align="center">
-                        <v-card-text>
-                          <p style="font-size:2em;">ความเร็ว</p>
-                          <p style="font-size:3em;">65</p>
-                          <p style="font-size:1.5em;">เมตร/นาที</p>
-                        </v-card-text>
-                      </v-row>
-                    </v-container>
-                  </v-card>
-                  <v-card
-                    class="text-center ma-5 white--text"
-                    width="20vw"
-                    color="deep-orange lighten-1"
-                  >
-                    <v-container class="fill-height">
-                      <v-row justify="center" align="center">
-                        <v-card-text>
-                          <p style="font-size:2em;">On Top</p>
-                          <p style="font-size:3em;">{{ onTopValue }}</p>
-                          <p style="font-size:1.5em;">เมตร</p>
-                        </v-card-text>
-                      </v-row>
-                    </v-container>
-                    <v-footer color="transparent" absolute>
-                      <v-row justify="space-between">
-                        <v-spacer></v-spacer>
-                        <v-icon large right @click="showEditDialog('onTop')"
-                          >create</v-icon
-                        >
-                      </v-row>
-                    </v-footer>
-                  </v-card>
-                </v-row>
-              </v-container>
-            </v-row>
-          </v-container>
-        </v-card>
+    <v-container fluid class="pa-0">
+      <v-row class="elevation-2 pl-10">
+        <v-col
+          v-for="(col, index) in headers"
+          :key="index"
+          :cols="col.col_size"
+        >
+          <span class="text-h6"> {{ col.text + "  " + col.data }}</span>
+        </v-col>
       </v-row>
-    </v-container>
-    <v-footer v-show="input == ''" color="transparent" fixed>
       <v-container>
-        <v-row justify="space-between">
-          <v-card
-            class="rounded-xl ma-5"
-            :color="isSlowMode ? 'indigo' : 'grey darken-4'"
-            @click="isSlowMode = !isSlowMode"
+        <v-row align="center" justify="center"
+          ><v-col
+            ><v-card color="green" class="text-h4 white--text"
+              ><v-col align="center" justify="center"
+                ><v-row align="center" justify="center">เสร็จสิ้น</v-row
+                ><v-row align="center" justify="center">189</v-row
+                ><v-row align="center" justify="center">เมตร</v-row></v-col
+              ></v-card
+            ></v-col
+          ><v-col
+            ><v-card color="indigo darken-4" class="text-h4 white--text"
+              ><v-col align="center" justify="center"
+                ><v-row align="center" justify="center">คงเหลือ</v-row
+                ><v-row align="center" justify="center">2659</v-row
+                ><v-row align="center" justify="center">เมตร</v-row></v-col
+              ></v-card
+            ></v-col
+          ><v-col
+            ><v-card color="purple" class="text-h4 white--text"
+              ><v-col align="center" justify="center"
+                ><v-row align="center" justify="center">ทั้งหมด</v-row
+                ><v-row align="center" justify="center">3348</v-row
+                ><v-row align="center" justify="center">เมตร</v-row></v-col
+              ></v-card
+            ></v-col
+          ></v-row
+        >
+        <v-row align="center" justify="center"
+          ><v-col
+            ><v-card color="red" class="text-h4 white--text"
+              ><v-col align="center" justify="center"
+                ><v-row align="center" justify="center">ความเร็ว</v-row
+                ><v-row align="center" justify="center">65</v-row
+                ><v-row align="center" justify="center">เมตร/นาที</v-row></v-col
+              ></v-card
+            ></v-col
           >
-            <v-card-text class="white--text">โหมดช้า</v-card-text>
-          </v-card>
-          <v-spacer></v-spacer>
-          <v-card
-            class="rounded-xl ma-5"
-            :color="isAutoMode ? 'indigo' : 'grey darken-4'"
-            @click="isAutoMode = true"
+          <v-col
+            ><v-card color="orange" class="text-h4 white--text"
+              ><v-col align="center" justify="center"
+                ><v-row align="center" justify="center">ON TOP</v-row
+                ><v-row align="center" justify="center">30</v-row
+                ><v-row align="center" justify="center"
+                  ><span class="mr-5">เมตร</span>
+                  <v-icon x-large color="white">
+                    create
+                  </v-icon></v-row
+                ></v-col
+              ></v-card
+            ></v-col
           >
-            <v-card-text class="white--text">โหมดอัตโนมัติ</v-card-text>
-          </v-card>
-          <v-card
-            class="rounded-xl ma-5"
-            :color="!isAutoMode ? 'indigo' : 'grey darken-4'"
-            @click="isAutoMode = false"
-          >
-            <v-card-text class="white--text">โหมดควบคุมเอง</v-card-text>
-          </v-card>
-        </v-row>
+          <v-col
+            ><v-card color="yellow" class="text-h4 white--text"
+              ><v-col align="center" justify="center"
+                ><v-row align="center" justify="center">เพิ่ม/ลด</v-row
+                ><v-row align="center" justify="center">+100</v-row
+                ><v-row align="center" justify="center"
+                  ><span class="mr-5">เมตร</span>
+                  <v-icon x-large color="white">
+                    create
+                  </v-icon></v-row
+                ></v-col
+              ></v-card
+            ></v-col
+          ></v-row
+        >
       </v-container>
-    </v-footer>
-    <v-dialog v-model="isShowInserPaper" max-width="290">
-      <v-card>
-        <v-container class="fill-height">
-          <v-row justify="center" align="center">
-            <v-icon x-large>note</v-icon>
-            <v-card-text class="text-center mt-0"
-              >กรุณาใส่กระดาษก่อนกดปุ่ม "เริ่มดำเนินงาน"</v-card-text
-            >
-          </v-row>
-        </v-container>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="indigo white--text" @click="process"
-            >เริ่มดำเนินการ</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="isCloseDialogShow" max-width="290">
-      <v-card>
-        <v-container class="fill-height">
-          <v-row justify="center" align="center">
-            <v-card-text class="text-center text-h5"
-              >ต้องการ "ยกเลิก" งาน {{ workNo }}</v-card-text
-            >
-            <v-card-text class="text-center mt-0 text=h5"
-              >ใช่หรือไม่</v-card-text
-            >
-          </v-row>
-        </v-container>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
+      <v-row align="center" justify="center" class="pl-10">
+        <v-col justify="center" style="width;100%;">
           <v-btn
-            color="red darken-1"
-            @click="isCloseDialogShow = false"
-            class="text-h6 white--text"
-            >ไม่</v-btn
+            color="indigo"
+            dark
+            x-large
+            bottom
+            @click="
+              $emit('handle-event', {
+                type: 'change_mode',
+                value: 'home_manage_group',
+              })
+            "
+            class="text-h5"
           >
-
-          <v-btn
-            color="green darken-1"
-            @click="stop"
-            class="text-h6 white--text"
-            >ใช่</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="isEditDialogShow" max-width="290">
-      <v-card>
-        <v-container class="fill-height">
-          <v-row justify="center" align="center">
-            <v-card-text>
-              <v-text-field
-                :id="editType"
-                :label="displayLable"
-                :value="editValue"
-                @focus="input = editType"
-              ></v-text-field>
-            </v-card-text>
-          </v-row>
-        </v-container>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn color="red darken-1" @click="isEditDialogShow = false"
-            >ยกเลิก</v-btn
-          >
-
-          <v-btn color="green darken-1" @click="saveValue">บันทึก</v-btn>
-        </v-card-actions>
-      </v-card>
-      <v-footer fixed v-show="input != ''">
-        <TouchKeyboard
-          :hasSign="input === 'offset'"
-          @key-press="keyPress"
-        ></TouchKeyboard>
-      </v-footer>
-    </v-dialog>
+            ดูหน้าหลัก
+          </v-btn>
+        </v-col>
+        <v-col justify="center" style="width;100%;">
+          <v-switch
+            style="transform:scale(1.3);"
+            v-model="isNotSlowMode"
+            inset
+            :label="isNotSlowMode ? 'โหมดเร็ว' : 'โหมดช้า'"
+            color="green"
+          ></v-switch>
+        </v-col>
+        <v-col justify="center" style="width;100%;">
+          <v-switch
+            style="transform:scale(1.3);"
+            v-model="isAutoMode"
+            inset
+            :label="isAutoMode ? 'โหมดอัตโนมัติ' : 'โหมดแมนนวล'"
+            color="green"
+          ></v-switch>
+        </v-col>
+      </v-row>
+      <v-dialog v-model="isDialogShow" elevation="0">
+        <Popup
+          :type="dialogType"
+          :value="dialogValue"
+          @popup-event="popupEventHandler"
+        ></Popup>
+      </v-dialog>
+    </v-container>
   </div>
 </template>
 
 <script>
-import TouchKeyboard from "../components/TouchKeyboard.vue";
 import { mapActions } from "vuex";
+import Popup from "@/components/Popup.vue";
 export default {
   components: {
-    TouchKeyboard,
+    Popup,
   },
   data() {
     return {
       isSlowMode: false,
       isAutoMode: true,
-      isShowInserPaper: true,
+      isNotSlowMode: true,
+      isAutoMode: true,
       isCloseDialogShow: false,
       input: "",
       isEditDialogShow: false,
@@ -288,6 +165,59 @@ export default {
       onTopValue: 30,
       displayLable: "",
       speed: 0,
+
+      headers: [
+        {
+          text: "หมายเลขงาน",
+          col_size: 3,
+          data: "1234",
+        },
+        {
+          text: "กว้าง",
+          col_size: 2,
+          data: "20",
+        },
+        {
+          text: "ยาว",
+          col_size: 2,
+          data: "30",
+        },
+        {
+          text: "จำนวนแผ่น",
+          col_size: 2,
+          data: "50",
+        },
+        {
+          text: "ความยาวรวม",
+          col_size: 3,
+          data: "300",
+        },
+      ],
+      items: [
+        {
+          data: [
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+          ],
+          isContinue: true,
+        },
+        {
+          data: [{ job_id: 127, job_length: 500, job_work_date: "5/09/63" }],
+          isContinue: true,
+        },
+        {
+          data: [
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
+          ],
+          isContinue: false,
+        },
+      ],
+      isDragableDisabled: false,
+      isDialogShow: false,
+      dialogType: "",
+      dialogValue: "",
     };
   },
   methods: {
@@ -335,6 +265,20 @@ export default {
     stop() {
       this.stopWork();
       this.$router.replace("/");
+    },
+    cancelJob() {
+      this.dialogType = "confirm";
+      this.dialogValue = { str: "cancelJob" };
+      this.isDialogShow = true;
+    },
+    popupEventHandler(event) {
+      if (event.type == "confirm-cancel-job") {
+        if (event.value == "cancel") {
+          this.isDialogShow = false;
+        } else if (event.value == "yes") {
+          this.$router.replace("/");
+        }
+      }
     },
     ...mapActions(["processWork", "stopWork"]),
   },

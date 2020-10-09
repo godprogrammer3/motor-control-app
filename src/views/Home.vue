@@ -49,155 +49,6 @@
       @handle-event="handleEvent"
       v-else-if="mode == 'home_manage_group'"
     ></HomeJobListManage>
-
-    <v-dialog v-model="isDialogShow" max-width="400">
-      <v-card v-if="dialogInfo.type === 'delete'">
-        <v-container class="fill-height">
-          <v-row justify="center" align="center">
-            <v-card-text class="text-center text-h5"
-              >ต้องการ "ลบ" งาน {{ workNo }}</v-card-text
-            >
-            <v-card-text class="text-center mt-0 text-h5"
-              >ใช่หรือไม่</v-card-text
-            >
-          </v-row>
-        </v-container>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            color="red darken-1"
-            @click="isDialogShow = false"
-            class="text-h6 white--text"
-            width="7vw"
-            height="7vh"
-            >ไม่</v-btn
-          >
-
-          <v-btn
-            color="green darken-1"
-            @click="deleteJobAction"
-            class="text-h6 white--text"
-            width="7vw"
-            height="7vh"
-            >ใช่</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-      <v-card
-        v-else-if="dialogInfo.type === 'edit' || dialogInfo.type === 'create'"
-      >
-        <v-card class="pa-5" elevation="0" ref="form">
-          <v-text-field
-            id="workNo"
-            v-model:value="workNo"
-            @focus="input = 'workNo'"
-            class="text-h5"
-            ref="workNo"
-            :rules="[() => !!workNo || 'กรุณาใส่ข้อมูล']"
-            required
-          >
-            <template #label>
-              <span style="font-size: 1.2em">หมายเลขงาน</span>
-            </template>
-          </v-text-field>
-          <v-text-field
-            id="length"
-            v-model:value="length"
-            suffix="เมตร"
-            @focus="input = 'length'"
-            class="text-h5"
-            ref="length"
-            :rules="[() => !!length || 'กรุณาใส่ข้อมูล']"
-            required
-          >
-            <template #label>
-              <span style="font-size: 1.2em">ความยาว</span>
-            </template>
-          </v-text-field>
-          <v-text-field
-            v-model="date"
-            prepend-icon="event"
-            readonly
-            @click="isDatePickerShow = true"
-            class="text-h5"
-          >
-            <template #label>
-              <div style="padding-top: 4px">
-                <span style="font-size: 1.1em">วันที่ดำเนินงาน</span>
-              </div>
-            </template>
-          </v-text-field>
-          <v-dialog v-model="isDatePickerShow">
-            <v-date-picker
-              v-model:value="date"
-              scrollable
-              locale="th"
-              style="font-size: 1.5em"
-            >
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="isDatePickerShow = false"
-                >OK</v-btn
-              >
-            </v-date-picker>
-          </v-dialog>
-        </v-card>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            color="red darken-1 white--text"
-            @click="isDialogShow = false"
-            class="text-h5"
-            >ยกเลิก</v-btn
-          >
-
-          <v-btn
-            color="green darken-1 white--text"
-            @click="
-              dialogInfo.type === 'create' ? createJobAction() : editJobAction()
-            "
-            class="text-h5"
-            >บันทึก</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-      <v-card v-else-if="dialogInfo.type === 'operate'">
-        <v-container class="fill-height">
-          <v-row justify="center" align="center">
-            <v-card-text class="text-center text-h5"
-              >ต้องการ "เริ่ม" งาน {{ workNo }}</v-card-text
-            >
-            <v-card-text class="text-center mt-0 text-h5"
-              >ใช่หรือไม่</v-card-text
-            >
-          </v-row>
-        </v-container>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            color="red darken-1"
-            @click="isDialogShow = false"
-            class="text-h6 white--text"
-            >ไม่</v-btn
-          >
-
-          <v-btn
-            color="green darken-1"
-            @click="beginWork"
-            class="text-h6 white--text"
-            >ใช่</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-
-      <v-footer v-show="input !== ''" fixed>
-        <TouchKeyboard @key-press="keyPress"></TouchKeyboard>
-      </v-footer>
-    </v-dialog>
   </div>
 </template>
 
@@ -205,14 +56,12 @@
 // @ is an alias to /src
 import moment from "moment";
 import HomeJobList from "@/components/HomeJobList.vue";
-import Setting from "@/views/Setting.vue";
-import TouchKeyboard from "../components/TouchKeyboard.vue";
 import { mapActions } from "vuex";
 import HomeJobListManage from "@/components/HomeJobListManage.vue";
+
 export default {
   components: {
     HomeJobList,
-    TouchKeyboard,
     HomeJobListManage,
   },
   data() {
@@ -336,3 +185,9 @@ export default {
   },
 };
 </script>
+<style lang="css">
+.v-dialog {
+  box-shadow: none !important;
+  overflow-y: hidden !important;
+}
+</style>

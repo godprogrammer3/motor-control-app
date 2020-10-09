@@ -22,7 +22,14 @@
                   >กลุ่มที่ {{ index + 1 }}</v-toolbar-title
                 >
                 <v-spacer></v-spacer>
-                <v-btn x-large fab dark color="green" class="mb-4">
+                <v-btn
+                  x-large
+                  fab
+                  dark
+                  color="green"
+                  class="mb-4"
+                  @click="startJob(index)"
+                >
                   <v-icon dark large>play_arrow</v-icon>
                 </v-btn>
               </v-toolbar>
@@ -56,6 +63,7 @@
                                   dark
                                   color="red"
                                   class="mr-2 mb-2"
+                                  @click="deleteJob(sub_item.job_id)"
                                 >
                                   <v-icon dark large>delete</v-icon>
                                 </v-btn>
@@ -65,6 +73,7 @@
                                   dark
                                   color="orange"
                                   class="mb-4"
+                                  @click="editJob(sub_item)"
                                 >
                                   <v-icon dark large>create</v-icon>
                                 </v-btn>
@@ -109,18 +118,20 @@
           absolute
           x-large
           bottom
-          @click="
-            $emit('handle-event', {
-              type: 'show_dialog',
-              value: { type: 'create' },
-            })
-          "
+          @click="showDialog('createJob')"
           class="text-h5"
         >
           เพิ่มงาน
         </v-btn>
       </v-col>
     </v-row>
+    <v-dialog v-model="isDialogShow" elevation="0">
+      <Popup
+        :type="dialogType"
+        :value="dialogValue"
+        @popup-event="popupEventHandler"
+      ></Popup>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -128,12 +139,14 @@
 import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
 import { dragscroll } from "vue-dragscroll";
+import Popup from "@/components/Popup.vue";
 export default {
   directives: {
     dragscroll,
   },
   components: {
     draggable,
+    Popup,
   },
   data() {
     return {
@@ -181,6 +194,9 @@ export default {
         },
       ],
       isDragableDisabled: false,
+      isDialogShow: false,
+      dialogType: "",
+      dialogValue: "",
     };
   },
   mounted() {
@@ -190,10 +206,47 @@ export default {
     ...mapActions({
       getJobList: "getJobList",
     }),
-    row_class() {
-      let classes = [];
-      classes.push("text-h2");
-      return classes;
+
+    popupEventHandler(event) {
+      if (event.type == "action") {
+        if (event.value == "cancel" || event.value == "save") {
+          this.isDialogShow = false;
+        }
+      } else if (event.type == "confirm-delete-job") {
+        if (event.value == "cancel" || event.value == "yes") {
+          this.isDialogShow = false;
+        }
+      } else if (event.type == "confirm-start-job") {
+        if (event.value == "cancel") {
+          this.isDialogShow = false;
+        } else if (event.value == "yes") {
+          this.$router.replace("operating");
+        }
+      }
+    },
+    deleteJob(jobId) {
+      this.dialogType = "confirm";
+      this.dialogValue = { str: "deleteJob" };
+      this.isDialogShow = true;
+    },
+    editJob(jobData) {
+      this.dialogType = "editJob";
+      this.dialogValue = jobData;
+      this.isDialogShow = true;
+    },
+    showDialog(type) {
+      if (type == "confirmDelete") {
+        this.dialogType = "confirm";
+        this.dialogValue = { str: "delete" };
+      } else {
+        this.dialogType = type;
+      }
+      this.isDialogShow = true;
+    },
+    startJob(groupId) {
+      this.dialogType = "confirm";
+      this.dialogValue = { str: "startJob", data: groupId };
+      this.isDialogShow = true;
     },
   },
   computed: {

@@ -64,7 +64,6 @@ export default {
   },
   methods: {
     keyboardEventHandler(event) {
-      // console.log(`Event : ${event.type} , Value : ${event.value}`);
       if (event.type == "letter" && event.value != ".") {
         if (this.currentInput == "onTop") {
           this.onTop += event.value;
