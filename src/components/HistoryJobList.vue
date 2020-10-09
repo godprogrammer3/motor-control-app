@@ -1,285 +1,347 @@
 <template>
-  <div>
-    <v-data-table
-      height="70vh"
-      :headers="headers"
-      fixed-header
-      fixed-footer
-      :items="getHistoryJoblist"
-      item-key="name"
-      hide-default-footer
-      :items-per-page="getHistoryJoblist.length"
+  <v-container fluid class="pa-0">
+    <v-row
+      class="elevation-0 pl-10 ma-0"
+      style="background-color:white;"
+      align="center"
     >
-      <template #top>
-        <v-toolbar>
-          <v-card
-            width="10vw"
-            :color="selectedFillter == 'date' ? 'blue' : 'indigo'"
-            link
-            @click="selectedFillter = 'date'"
-          >
-            <v-card-text
-              class="text-center white--text"
-              style="font-size:1.3em;"
-              >วัน</v-card-text
+      <v-btn
+        style="width:9vw;height:9vh;"
+        class="ma-2 white--text"
+        :color="searchBy == 'day' ? 'indigo' : 'grey'"
+        @click="searchBy = 'day'"
+        ><span class="text-h5">วัน</span></v-btn
+      >
+      <v-btn
+        style="width:9vw;height:9vh;"
+        class="ma-2"
+        :color="searchBy == 'month' ? 'indigo' : 'grey'"
+        @click="searchBy = 'month'"
+        ><span class="text-h5 white--text">เดือน</span></v-btn
+      >
+      <v-btn
+        style="width:9vw;height:9vh;"
+        class="ma-2"
+        :color="searchBy == 'year' ? 'indigo' : 'grey'"
+        @click="searchBy = 'year'"
+        ><span class="text-h5 white--text">ปี</span></v-btn
+      >
+      <v-spacer></v-spacer>
+      <v-btn
+        style="width:auto;height:auto;"
+        class="ma-2 pl-6 pr-6 pt-4 pb-4 white--text"
+        color="indigo"
+        ><v-row align="center" justify="center"
+          ><v-icon x-large>date_range</v-icon
+          ><span class="text-h5">{{ searchDateShow }}</span></v-row
+        ></v-btn
+      >
+    </v-row>
+    <v-row class="elevation-2 pl-10 ma-0" style="background-color:white;">
+      <v-col v-for="(col, index) in headers" :key="index">
+        <span class="text-h7"> {{ col.text }}</span>
+      </v-col>
+    </v-row>
+    <v-row justify="center" align="center">
+      <v-list
+        v-dragscroll.y="true"
+        class="mt-3 list-class"
+        :style="{ height: '60vh' }"
+      >
+        <v-list-item v-for="(item, index) in items" :key="index">
+          <v-card width="100%" class="mb-5 rounded-xl">
+            <v-toolbar
+              :color="item.isContinue ? 'indigo' : 'orange'"
+              height="95"
             >
+              <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
+                >กลุ่มที่ {{ index + 1 }}</v-toolbar-title
+              >
+              <span class="text-h5 ml-5 white--text">{{
+                item.isContinue ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
+              }}</span>
+              <v-spacer></v-spacer>
+              <v-btn
+                v-if="isJobRunning != true"
+                large
+                fab
+                dark
+                color="blue"
+                @click="startJob(index)"
+              >
+                <v-icon dark large>search</v-icon>
+              </v-btn>
+            </v-toolbar>
+            <v-container fluid fill-height>
+              <v-row align="center" justify="center">
+                <v-col cols="12">
+                  <v-simple-table>
+                    <template v-slot:default>
+                      <tbody>
+                        <tr
+                          v-for="(sub_item, sub_index) in item.data"
+                          :key="sub_index"
+                        >
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_index + 1 }}
+                          </td>
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_item.job_id }}
+                          </td>
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_item.job_length }}
+                          </td>
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_item.offset }}
+                          </td>
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_item.amount }}
+                          </td>
+                          <td class="text-center text-h6 nocopy">
+                            {{ sub_item.job_work_date }}
+                          </td>
+                          <td class="text-center text-h6 nocopy">
+                            <v-btn
+                              v-if="isJobRunning != true"
+                              small
+                              fab
+                              dark
+                              elevation="2"
+                              color="blue"
+                              @click="startJob(index)"
+                            >
+                              <v-icon dark large>search</v-icon>
+                            </v-btn>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table></v-col
+                >
+              </v-row>
+            </v-container>
           </v-card>
-          <v-divider class="mx-1" inset vertical></v-divider>
-          <v-card
-            width="10vw"
-            :color="selectedFillter == 'month' ? 'blue' : 'indigo'"
-            link
-            @click="selectedFillter = 'month'"
-          >
-            <v-card-text
-              class="text-center white--text"
-              style="font-size:1.3em;"
-              >เดือน</v-card-text
-            >
-          </v-card>
-          <v-divider class="mx-1" inset vertical></v-divider>
-          <v-card
-            width="10vw"
-            :color="selectedFillter == 'year' ? 'blue' : 'indigo'"
-            link
-            @click="selectedFillter = 'year'"
-          >
-            <v-card-text
-              class="text-center white--text"
-              style="font-size:1.3em;"
-              >ปี</v-card-text
-            >
-          </v-card>
-          <v-spacer></v-spacer>
-          <v-card
-            color="indigo"
-            style="padding:5px;"
-            @click="isDialogShow = true"
-          >
-            <span style="margin:5px;color:white;font-size:1.3em;">{{
-              showDate
-            }}</span>
-            <v-icon color="white" large>date_range</v-icon>
-          </v-card>
-        </v-toolbar>
-      </template>
-      <template #item="{ item }">
-        <tr>
-          <td class="text-h5">{{ item.no }}</td>
-          <td class="text-h5">{{ item.workNo }}</td>
-          <td class="text-h5">{{ item.length }}</td>
-          <td class="text-h5">{{ item.offset }}</td>
-          <td class="text-h5">{{ item.total }}</td>
-          <td class="text-h5">{{ item.startedTime }}</td>
-          <td class="text-h5">{{ item.usedTime }}</td>
-        </tr>
-      </template>
-    </v-data-table>
-    <v-footer fixed elevation="0">
-      <v-card width="100vw">
-        <v-row align="start" justify="space-around" class="pa-4">
-          <span class="text-h6">
-            ทั้งหมด {{ getSumaryHistoryJob.total }} งาน</span
-          >
-          <v-divider vertical></v-divider>
-          <span class="text-h6"
-            >รวมความยาว {{ getSumaryHistoryJob.sumLength }} เมตร</span
-          >
-          <v-divider vertical></v-divider>
-          <span class="text-h6"
-            >รวมเพิ่ม/ลด
-            {{
-              (getSumaryHistoryJob.sumOffet >= 0 ? "+" : "-") +
-                getSumaryHistoryJob.sumOffet
-            }}
-            เมตร</span
-          >
-          <v-divider vertical></v-divider>
-          <span class="text-h6"
-            >รวมทั้งหมด {{ getSumaryHistoryJob.summary }} เมตร</span
-          >
-        </v-row>
-      </v-card>
+        </v-list-item>
+      </v-list></v-row
+    >
+    <v-footer absolute>
+      <v-row align="center" class="text-h6 pl-10 elevation-2">
+        <v-col
+          ><span>จำนวนงาน</span><span class="ml-2 mr-2">100</span
+          ><span>งาน</span></v-col
+        >
+        <v-col
+          ><span>ความยาวรวม</span><span class="ml-2 mr-2">100</span
+          ><span>เมตร</span></v-col
+        >
+        <v-col
+          ><span>เพิ่ม/ลดรวม</span><span class="ml-2 mr-2">100</span
+          ><span>เมตร</span></v-col
+        >
+        <v-col
+          ><span>รวมทั้งหมด</span><span class="ml-2 mr-2">100</span
+          ><span>เมตร</span></v-col
+        >
+      </v-row>
     </v-footer>
-    <v-dialog ref="dialog" v-model="isDialogShow" persistent width="290px">
-      <v-card elevation="0">
-        <v-container>
-          <v-row v-if="selectedFillter == 'year'" justify="center">
-            <v-col cols="10">
-              <v-select
-                :items="getAllYearInJobList"
-                v-model:item-value="yearValue"
-                label="ปี"
-                @change="updateListValue({ type: 'year', year: yearValue })"
-              ></v-select>
-            </v-col>
-          </v-row>
-          <v-row v-else-if="selectedFillter == 'month'" justify="center">
-            <v-col cols="10">
-              <v-select
-                :items="getAllYearInJobList"
-                v-model:item-value="yearValue"
-                label="ปี"
-                @change="updateListValue({ type: 'year', year: yearValue })"
-              ></v-select>
-              <v-select
-                :items="monthListValue"
-                v-model:item-value="monthValue"
-                label="เดือน"
-                @change="
-                  updateListValue({
-                    type: 'month',
-                    month: monthValue,
-                    year: yearValue,
-                  })
-                "
-                :disabled="yearValue === ''"
-              ></v-select>
-            </v-col>
-          </v-row>
-          <v-row v-else-if="selectedFillter == 'date'" justify="center">
-            <v-col cols="10">
-              <v-select
-                :items="getAllYearInJobList"
-                v-model:item-value="yearValue"
-                label="ปี"
-                @change="updateListValue({ type: 'year', year: yearValue })"
-              ></v-select>
-              <v-select
-                :items="monthListValue"
-                v-model:item-value="monthValue"
-                label="เดือน"
-                @change="
-                  updateListValue({
-                    type: 'month',
-                    month: monthValue,
-                    year: yearValue,
-                  })
-                "
-                :disabled="yearValue === ''"
-              ></v-select>
-              <v-select
-                :items="dateListValue"
-                v-model:item-value="dateValue"
-                label="วันที่"
-                :disabled="monthValue === ''"
-              ></v-select>
-            </v-col>
-          </v-row>
-        </v-container>
 
-        <v-container>
-          <v-row>
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="isDialogShow = false"
-              >Cancel</v-btn
-            >
-            <v-btn text color="primary" @click="updateDate">OK</v-btn>
-          </v-row>
-        </v-container>
-      </v-card>
+    <v-dialog v-model="isDialogShow" elevation="0">
+      <Popup
+        :type="dialogType"
+        :value="dialogValue"
+        @popup-event="popupEventHandler"
+      ></Popup>
     </v-dialog>
-  </div>
+  </v-container>
 </template>
 
 <script>
-import moment, { locale, months } from "moment";
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import { dragscroll } from "vue-dragscroll";
+import Popup from "@/components/Popup.vue";
 export default {
+  name: "HomeJobList",
+  props: {
+    isJobRunning: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  directives: {
+    dragscroll,
+  },
+  components: {
+    Popup,
+  },
   data() {
     return {
-      selectedFillter: "date",
       headers: [
         {
           text: "ลำดับ",
-          align: "start",
-          value: "no",
-          class: "text-h6",
+          col_size: 1,
         },
         {
           text: "หมายเลขงาน",
-          value: "workNo",
-          align: "start",
-          class: "text-h6",
+          col_size: 2,
         },
-        { text: "ความยาว", value: "length", align: "start", class: "text-h6" },
+        {
+          text: "ความยาว",
+          col_size: 2,
+        },
         {
           text: "เพิ่ม/ลด",
-          value: "offset",
-          align: "start",
-          class: "text-h6",
+          col_size: 3,
         },
-        { text: "ทั้งหมด", value: "total", align: "start", class: "text-h6" },
+        {
+          text: "ทั้งหมด",
+          col_size: 3,
+        },
         {
           text: "วันที่ดำเนินงาน",
-          value: "startedTime",
-          align: "start",
-          class: "text-h6",
+          col_size: 3,
         },
         {
-          text: "เวลาดำเนินงาน",
-          value: "usedTime",
-          align: "start",
-          class: "text-h6",
+          text: "รายละเอียด",
+          col_size: 3,
+        },
+      ],
+      items: [
+        {
+          data: [
+            {
+              job_id: 127,
+              job_length: 500,
+              offset: 100,
+              amount: 600,
+              job_work_date: "5/09/63",
+            },
+            {
+              job_id: 127,
+              job_length: 500,
+              job_work_date: "5/09/63",
+              offset: -100,
+              amount: 400,
+            },
+            {
+              job_id: 127,
+              job_length: 500,
+              job_work_date: "5/09/63",
+              offset: 100,
+              amount: 600,
+            },
+          ],
+          isContinue: true,
+        },
+        {
+          data: [
+            {
+              job_id: 127,
+              job_length: 500,
+              job_work_date: "5/09/63",
+              offset: 100,
+              amount: 600,
+            },
+          ],
+          isContinue: true,
+        },
+        {
+          data: [
+            {
+              job_id: 127,
+              job_length: 500,
+              job_work_date: "5/09/63",
+              offset: 100,
+              amount: 600,
+            },
+            {
+              job_id: 127,
+              job_length: 500,
+              job_work_date: "5/09/63",
+              offset: 100,
+              amount: 600,
+            },
+          ],
+          isContinue: false,
         },
       ],
       isDialogShow: false,
-      date: new Date().toISOString().substring(0, 10),
-      yearValue: "",
-      yearListValue: [],
-      monthValue: "",
-      monthListValue: [],
-      dateValue: "",
-      dateListValue: [],
+      dialogType: "",
+      dialogValue: "",
+      searchBy: "day",
+      searchDate: "10/10/2563",
     };
   },
   mounted() {
     this.getJobList();
-    this.getJobListByDate({ type: this.selectedFillter, value: this.date });
   },
   methods: {
-    updateDate() {
-      if (this.selectedFillter === "year") {
-        this.date = this.yearValue;
-      } else if (this.selectedFillter === "month") {
-        this.date = this.yearValue + "-" + this.monthValue;
+    ...mapActions({
+      getJobList: "getJobList",
+    }),
+
+    popupEventHandler(event) {
+      if (event.type == "action") {
+        if (event.value == "cancel" || event.value == "save") {
+          this.isDialogShow = false;
+        }
+      } else if (event.type == "confirm-delete-job") {
+        if (event.value == "cancel" || event.value == "yes") {
+          this.isDialogShow = false;
+        }
+      } else if (event.type == "confirm-start-job") {
+        if (event.value == "cancel") {
+          this.isDialogShow = false;
+        } else if (event.value == "yes") {
+          this.$router.replace("operating");
+        }
+      }
+    },
+    deleteJob(jobId) {
+      this.dialogType = "confirm";
+      this.dialogValue = { str: "deleteJob" };
+      this.isDialogShow = true;
+    },
+    editJob(jobData) {
+      this.dialogType = "editJob";
+      this.dialogValue = jobData;
+      this.isDialogShow = true;
+    },
+    showDialog(type) {
+      if (type == "confirmDelete") {
+        this.dialogType = "confirm";
+        this.dialogValue = { str: "delete" };
       } else {
-        this.date =
-          this.yearValue + "-" + this.monthValue + "-" + this.dateValue;
+        this.dialogType = type;
       }
-      this.getJobListByDate({
-        type: this.selectedFillter,
-        value: this.date,
-      });
-      this.isDialogShow = false;
+      this.isDialogShow = true;
     },
-    updateListValue(param) {
-      if (param.type === "year") {
-        this.monthListValue = this.getAllMonthInJobList(this.yearValue);
-        this.dateListValue = [];
-      } else if (param.type === "month") {
-        this.dateListValue = this.getAllDateInJobList(
-          this.monthValue,
-          this.yearValue
-        );
-      }
+    startJob(groupId) {
+      this.dialogType = "confirm";
+      this.dialogValue = { str: "startJob", data: groupId };
+      this.isDialogShow = true;
     },
-    ...mapActions(["getJobListByDate", "getJobList"]),
   },
   computed: {
-    showDate() {
-      return this.date;
+    ...mapGetters(["getJoblist"]),
+    searchDateShow() {
+      var dateSplilt = this.searchDate.split("/");
+      if (this.searchBy == "day") {
+        return dateSplilt[0] + "/" + dateSplilt[1] + "/" + dateSplilt[2];
+      } else if (this.searchBy == "month") {
+        return dateSplilt[1] + "/" + dateSplilt[2];
+      } else if (this.searchBy == "year") {
+        return dateSplilt[2];
+      }
     },
-    ...mapGetters([
-      "getHistoryJoblist",
-      "getJoblist",
-      "getAllDateInJobList",
-      "getAllMonthInJobList",
-      "getAllYearInJobList",
-      "getSumaryHistoryJob",
-    ]),
   },
 };
 </script>
-
-<style scoped></style>
+<style scoped>
+.list-class {
+  width: 95%;
+  overflow: auto;
+}
+.handle {
+  width: auto;
+}
+</style>

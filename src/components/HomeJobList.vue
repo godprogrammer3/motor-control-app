@@ -32,7 +32,6 @@
                   fab
                   dark
                   color="green"
-                  class="mb-4"
                   @click="startJob(index)"
                 >
                   <v-icon dark large>play_arrow</v-icon>
