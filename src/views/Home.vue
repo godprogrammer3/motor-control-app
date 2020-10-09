@@ -40,7 +40,6 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-
     <HomeJobList
       @handle-event="handleEvent"
       v-if="mode == 'home'"

@@ -1,10 +1,12 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
+      <span class="white--text text-h4 mr-5">กลุ่มที่ 1</span>
       <v-toolbar-title class="white--text text-h4"
         >กำลังดำเนินงาน...</v-toolbar-title
       >
       <span class="white--text text-h4 ml-5">80%</span>
+      <span class="white--text text-h4 ml-5">(8/10 งาน)</span>
       <v-spacer></v-spacer>
       <v-btn
         class="mx-2"
@@ -66,7 +68,10 @@
             ></v-col
           >
           <v-col
-            ><v-card color="orange" class="text-h4 white--text"
+            ><v-card
+              color="orange"
+              class="text-h4 white--text"
+              @click="editOnTop"
               ><v-col align="center" justify="center"
                 ><v-row align="center" justify="center">ON TOP</v-row
                 ><v-row align="center" justify="center">30</v-row
@@ -80,7 +85,10 @@
             ></v-col
           >
           <v-col
-            ><v-card color="yellow" class="text-h4 white--text"
+            ><v-card
+              color="blue"
+              class="text-h4 white--text"
+              @click="editOffset"
               ><v-col align="center" justify="center"
                 ><v-row align="center" justify="center">เพิ่ม/ลด</v-row
                 ><v-row align="center" justify="center">+100</v-row
@@ -102,15 +110,10 @@
             dark
             x-large
             bottom
-            @click="
-              $emit('handle-event', {
-                type: 'change_mode',
-                value: 'home_manage_group',
-              })
-            "
+            @click="isShowHomePopup = true"
             class="text-h5"
           >
-            ดูหน้าหลัก
+            แผนการดำเนินงาน
           </v-btn>
         </v-col>
         <v-col justify="center" style="width;100%;">
@@ -132,12 +135,29 @@
           ></v-switch>
         </v-col>
       </v-row>
+      <footer class="elevation-2 pl-10" fixed absolute>
+        <v-row align="center" justify="center"
+          ><span class="text-h6">งานต่อไป</span></v-row
+        >
+        <v-row>
+          <v-col
+            v-for="(col, index) in headers"
+            :key="index"
+            :cols="col.col_size"
+          >
+            <span class="text-h6"> {{ col.text + "  " + col.data + "1" }}</span>
+          </v-col></v-row
+        >
+      </footer>
       <v-dialog v-model="isDialogShow" elevation="0">
         <Popup
           :type="dialogType"
           :value="dialogValue"
           @popup-event="popupEventHandler"
         ></Popup>
+      </v-dialog>
+      <v-dialog v-model="isShowHomePopup" elevation="0">
+        <PopupHome @popup-event="popupEventHandler"></PopupHome>
       </v-dialog>
     </v-container>
   </div>
@@ -146,9 +166,11 @@
 <script>
 import { mapActions } from "vuex";
 import Popup from "@/components/Popup.vue";
+import PopupHome from "@/components/PopupHome.vue";
 export default {
   components: {
     Popup,
+    PopupHome,
   },
   data() {
     return {
@@ -165,7 +187,6 @@ export default {
       onTopValue: 30,
       displayLable: "",
       speed: 0,
-
       headers: [
         {
           text: "หมายเลขงาน",
@@ -218,6 +239,9 @@ export default {
       isDialogShow: false,
       dialogType: "",
       dialogValue: "",
+      onTop: 30,
+      offset: 100,
+      isShowHomePopup: false,
     };
   },
   methods: {
@@ -278,7 +302,30 @@ export default {
         } else if (event.value == "yes") {
           this.$router.replace("/");
         }
+      } else if (event.type == "action") {
+        if (event.value == "save" || event.value == "cancel") {
+          this.isDialogShow = false;
+        }
+      } else if (event.type == "popup-home") {
+        if (event.value == "close") {
+          this.isShowHomePopup = false;
+        }
       }
+    },
+    editOnTop() {
+      this.dialogType = "editOnTop";
+      this.dialogValue = { onTop: this.onTop };
+      this.isDialogShow = true;
+    },
+    editOffset() {
+      this.dialogType = "editOffset";
+      this.dialogValue = { offset: this.offset };
+      this.isDialogShow = true;
+    },
+    openPopupHome() {
+      this.dialogType = "openPopupHome";
+      this.dialogValue = null;
+      this.isDialogShow = true;
     },
     ...mapActions(["processWork", "stopWork"]),
   },
@@ -290,13 +337,9 @@ export default {
     },
   },
   props: {
-    workNo: {
+    groupId: {
       type: String,
       default: "",
-    },
-    length: {
-      type: String,
-      default: "0",
     },
   },
   mounted() {

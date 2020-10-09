@@ -15,6 +15,7 @@
                 :value="onTop"
                 suffix="เมตร"
                 style="transform:scale(2);"
+                placeholder="กรอกค่า"
                 @click="textFieldFocusHandler('onTop')"
               >
               </v-text-field
@@ -30,6 +31,7 @@
                 :value="slowModeSpeed"
                 suffix="%"
                 style="transform:scale(2);"
+                placeholder="กรอกค่า"
                 @click="textFieldFocusHandler('slowModeSpeed')"
               >
               </v-text-field

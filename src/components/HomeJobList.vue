@@ -1,12 +1,16 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-row class="elevation-2 pl-10">
+    <v-row class="elevation-2 pl-10 ma-0" style="background-color:white;">
       <v-col v-for="(col, index) in headers" :key="index" :cols="col.col_size">
-        <span class="text-h6"> {{ col.text }}</span>
+        <span class="text-h7"> {{ col.text }}</span>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
-      <v-list v-dragscroll.y="true" class="mt-3 list-class">
+      <v-list
+        v-dragscroll.y="true"
+        class="mt-3 list-class"
+        :style="{ height: isJobRunning ? '60vh' : '70vh' }"
+      >
         <draggable
           v-model="items"
           :disabled="isDragableDisabled"
@@ -23,6 +27,7 @@
                 >
                 <v-spacer></v-spacer>
                 <v-btn
+                  v-if="isJobRunning != true"
                   x-large
                   fab
                   dark
@@ -62,7 +67,8 @@
                                   fab
                                   dark
                                   color="red"
-                                  class="mr-2 mb-2"
+                                  class="ma-1"
+                                  elevation="1"
                                   @click="deleteJob(sub_item.job_id)"
                                 >
                                   <v-icon dark large>delete</v-icon>
@@ -72,7 +78,8 @@
                                   fab
                                   dark
                                   color="orange"
-                                  class="mb-4"
+                                  class="ma-1"
+                                  elevation="1"
                                   @click="editJob(sub_item)"
                                 >
                                   <v-icon dark large>create</v-icon>
@@ -91,13 +98,12 @@
         </draggable>
       </v-list></v-row
     >
-    <v-row align="end">
+    <v-row align="center" style="height:10vh;">
       <v-spacer> </v-spacer>
       <v-col>
         <v-btn
           color="indigo"
           dark
-          absolute
           x-large
           bottom
           @click="
@@ -115,7 +121,6 @@
         <v-btn
           color="indigo"
           dark
-          absolute
           x-large
           bottom
           @click="showDialog('createJob')"
@@ -141,6 +146,13 @@ import draggable from "vuedraggable";
 import { dragscroll } from "vue-dragscroll";
 import Popup from "@/components/Popup.vue";
 export default {
+  name: "HomeJobList",
+  props: {
+    isJobRunning: {
+      type: Boolean,
+      default: false,
+    },
+  },
   directives: {
     dragscroll,
   },
@@ -256,7 +268,6 @@ export default {
 </script>
 <style scoped>
 .list-class {
-  height: 70vh;
   width: 95%;
   overflow: auto;
 }

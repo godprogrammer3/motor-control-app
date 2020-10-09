@@ -11,7 +11,11 @@
       </v-col>
     </v-row>
     <v-row align="center" justify="center"
-      ><v-list v-dragscroll.y="true" class="mt-3 list-class">
+      ><v-list
+        v-dragscroll.y="true"
+        class="mt-3 list-class"
+        :style="{ height: isJobRunning ? '60vh' : '70vh' }"
+      >
         <draggable
           v-model="items"
           :disabled="isDragableDisabled"
@@ -43,6 +47,7 @@
                 <v-switch
                   v-model="item.isContinue"
                   inset
+                  hide-details
                   color="white"
                   style="transform: scale(1.3); margin-right: 100px"
                   v-if="mode == 'group-reorder'"
@@ -60,7 +65,6 @@
                   fab
                   dark
                   color="orange"
-                  class="mb-4"
                   @click="manageMemberInGroup(index)"
                   v-if="mode == 'group-reorder'"
                 >
@@ -159,13 +163,12 @@
             </v-card> </v-list-item
         ></draggable> </v-list
     ></v-row>
-    <v-row align="end">
+    <v-row>
       <v-spacer> </v-spacer>
-      <v-col v-if="mode === 'group-reorder'">
+      <v-col v-if="mode === 'group-reorder'" class="pa-1">
         <v-btn
           color="indigo"
           dark
-          absolute
           x-large
           bottom
           @click="mode = 'add-group'"
@@ -174,11 +177,10 @@
           เพิ่มกลุ่ม
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col class="pa-1">
         <v-btn
           color="indigo"
           dark
-          absolute
           x-large
           bottom
           @click="handleSaveButton"
@@ -187,11 +189,10 @@
           บันทึก
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col class="pa-1">
         <v-btn
           color="indigo"
           dark
-          absolute
           x-large
           bottom
           @click="handleCancelButton"
@@ -209,6 +210,12 @@ import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
 import { dragscroll } from "vue-dragscroll";
 export default {
+  props: {
+    isJobRunning: {
+      type: Boolean,
+      default: false,
+    },
+  },
   directives: {
     dragscroll,
   },
@@ -377,6 +384,7 @@ export default {
         this.mode = "group-reorder";
       }
     },
+    list() {},
   },
   computed: {
     ...mapGetters(["getJoblist"]),
@@ -386,7 +394,6 @@ export default {
 </script>
 <style scoped>
 .list-class {
-  height: 70vh;
   width: 95%;
   overflow: auto;
 }
