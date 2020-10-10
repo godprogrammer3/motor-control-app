@@ -1,56 +1,124 @@
+import axios from "axios";
 class API {
   constructor() {
-    this.allJobList = [];
-    this.setting = {
-      defaultOnTop: 20,
-      defaultSlowModeVelocity: 30,
-    };
+    this.instance = axios.create({
+      baseURL: "http://192.168.1.2:3000",
+      adapter: require("axios/lib/adapters/http"),
+    });
   }
-  getAllJobList() {
-    return this.allJobList;
-  }
-
-  deleteJob(jobId) {
-    this.allJobList = this.allJobList.filter((value) => value.jobId !== jobId);
-  }
-  createJob(job) {
-    job.onTop = 20;
-    job.overhead = 0;
-    this.allJobList.push(job);
-  }
-  editJob(job) {
-    for (let i = 0; i < this.allJobList.length; i++) {
-      if (this.allJobList[i].jobId === job.oldJobId) {
-        const tmp = {
-          jobId: job.jobId,
-          length: job.length,
-          workTime: job.workTime,
-        };
-        this.allJobList[i] = tmp;
+  async getAllJobList() {
+    try {
+      var result = await this.instance.get("/getAllJobList");
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
       }
+    } catch (e) {
+      console.log(e);
     }
   }
 
-  getJobListByDate(type, value) {
-    let result = [];
-    if (type === "date") {
-      result = this.allJobList.filter((item) => item.workTime == value);
-    } else if (type === "month") {
-      result = this.allJobList.filter(
-        (item) => item.workTime.substring(0, 7) == value
-      );
-    } else {
-      result = this.allJobList.filter(
-        (item) => item.workTime.substring(0, 4) == value
-      );
+  async deleteJob(jobId) {
+    try {
+      var result = await this.instance.delete(`/deleteJob/${jobId}`);
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
     }
-    return result;
   }
-  getSetting() {
-    return this.setting;
+  async createJob(job) {
+    try {
+      var result = await this.instance.post("/createJob", job);
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
-  editSetting(setting) {
-    this.setting = setting;
+  async editJob(job) {
+    try {
+      var result = await this.instance.put("/editJob", job);
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getJobListByDate(type, value) {
+    try {
+      var result = await this.instance.get("/getJobListByDate", {
+        params: {
+          type: type,
+          value: value,
+        },
+      });
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getSetting() {
+    try {
+      var result = await this.instance.get("/getSetting");
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async editSetting(setting) {
+    try {
+      var result = await this.instance.put("/editSetting", setting);
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  startWork(work) {
+    this.instance.post("/start", work);
+  }
+  processWork(work) {
+    this.instance.post("/process", work);
+  }
+  stopWork(work) {
+    this.instance.post("/stop", work);
+  }
+  changeTargetWork(target) {
+    this.instance.put("/changeTarger", target);
+  }
+  changeOnTopWork(onTop) {
+    this.instance.put("/changeOnTop", onTop);
+  }
+  setModeWork(mode) {
+    this.instance.put("/setMode", mode);
+  }
+  setSlowWork(isSlow) {
+    this.instance.put("/setSlow", isSlow);
   }
 }
 export default API;
