@@ -397,7 +397,13 @@ export default {
   computed: {
     ...mapGetters(["getAllJobByAllGroupData"]),
   },
-  watch: {},
+  watch: {
+    getAllJobByAllGroupData(newValue, oldValue) {
+      if(newValue!= undefined){
+        this.items = newValue;
+      }
+    }
+  },
 };
 </script>
 <style scoped>
