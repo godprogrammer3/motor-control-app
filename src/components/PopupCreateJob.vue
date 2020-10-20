@@ -3,12 +3,13 @@
     <v-row align="center" justify="center">
       <v-col align="center" justify="center">
         <v-form v-model="valid" ref="form" lazy-validation>
-          <v-card width="40vw" height="80vh" class="pa-2">
+          <v-card width="40vw" height="85vh" class="pa-2">
             <v-col align="center" justify="center">
               <v-row align="center" justify="center">
-                <v-text-field
+                <v-col>
+                  <span class="text-h4">หมายเลขงาน</span>
+                  <v-text-field
                   ref="jobId"
-                  prefix="หมายเลขงาน"
                   :value="jobId"
                   class="text-h4"
                   placeholder="กรอกค่า"
@@ -16,43 +17,62 @@
                   @focus="textFieldFocusHandler('jobId')"
                   :rules="jobIdRules"
                   required
+                  style="text-align: center"
+                  @keydown="(event)=>updateValue(event,'jobId')"
+                  counter
+                  maxlength="20"
                 >
-                </v-text-field
-              ></v-row>
+                </v-text-field>
+                </v-col>
+                
+              </v-row>
               <v-row align="center" justify="center">
-                <v-text-field
+                <v-col>   
+                  <span class="text-h4">ความกว้าง</span>
+                   <v-text-field
                   ref="width"
-                  prefix="ความกว้าง"
                   :value="width"
-                  suffix="เมตร"
+                  suffix="ซม."
                   class="text-h4"
                   placeholder="กรอกค่า"
                   @click="textFieldFocusHandler('width')"
                   @focus="textFieldFocusHandler('width')"
                   :rules="widthRules"
                   required
+                  @keydown="(event)=>updateValue(event,'width')"
+                  counter
+                  maxlength="8"
                 >
                 </v-text-field
-              ></v-row>
+              >
+                </v-col>
+               </v-row>
               <v-row align="center" justify="center">
-                <v-text-field
+                <v-col>
+                   <span class="text-h4">ความยาว</span>
+                   <v-text-field
                   ref="height"
-                  prefix="ความยาว"
                   :value="height"
-                  suffix="เมตร"
+                  suffix="ซม."
                   class="text-h4"
                   placeholder="กรอกค่า"
                   @click="textFieldFocusHandler('height')"
                   @focus="textFieldFocusHandler('height')"
                   :rules="heightRules"
                   required
+                  @keydown="(event)=>updateValue(event,'height')"
+                  counter
+                  maxlength="8"
                 >
                 </v-text-field
-              ></v-row>
+              >
+                </v-col>
+               </v-row>
               <v-row align="center" justify="center">
-                <v-text-field
+                <v-col>
+                  <span class="text-h4">จำนวนแผ่น</span>
+                  <v-text-field
                   ref="sheet"
-                  prefix="จำนวนแผ่น"
                   :value="sheet"
                   suffix="แผ่น"
                   class="text-h4"
@@ -61,23 +81,30 @@
                   @focus="textFieldFocusHandler('sheet')"
                   :rules="sheetRules"
                   required
+                  @keydown="(event)=>updateValue(event,'sheet')"
+                  counter
+                  maxlength="8"
                 >
                 </v-text-field
-              ></v-row>
+              >
+                </v-col>
+               </v-row>
               <v-row align="center" justify="center">
-                <v-text-field
-                  ref="workDate"
-                  prefix="วันที่ดำเนินงาน"
+                <v-col>
+                  <span class="text-h4">วันที่ดำเนินงาน</span>
+                  <v-text-field
+                  ref="workDate" 
                   :value="workDate"
                   class="text-h4"
                   placeholder="กรอกค่า"
-                  @click="textFieldFocusHandler('workDate')"
-                  @focus="textFieldFocusHandler('workDate')"
+                  @click="showDatePicker = true"
                   :rules="workDateRules"
                   required
                 >
                 </v-text-field
-              ></v-row>
+              >
+                </v-col>
+                </v-row>
             </v-col>
           </v-card>
         </v-form>
@@ -86,12 +113,46 @@
         ><TouchKeyboard @keyboard-event="keyboardEventHandler"></TouchKeyboard
       ></v-col>
     </v-row>
+    <v-dialog v-model="showDatePicker" width="20vw">
+      <v-container>
+        <v-row> <v-date-picker v-model="picker" width="20vw" locale="th"></v-date-picker></v-row>
+         <v-row justify="center">
+           <v-btn
+          color="indigo"
+          dark
+          x-large
+          bottom
+          @click="saveDate()"
+          class="text-h5 ma-2"
+        >
+          บันทึก
+        </v-btn>
+           <v-btn
+          color="indigo"
+          dark
+          x-large
+          bottom
+          @click="cancelDate()"
+          class="text-h5  ma-2"
+        >
+          ยกเลิก
+        </v-btn>
+        </v-row>
+      </v-container>
+     
+    </v-dialog>
+     <v-overlay :value="overlay"><v-progress-circular
+      :size="50"
+      color="indigo"
+      indeterminate
+    ></v-progress-circular></v-overlay>
   </v-container>
 </template>
 
 <script>
 import TouchKeyboard from "./TouchKeyboard.vue";
 import { mapActions } from "vuex";
+import moment from "moment";
 export default {
   components: {
     TouchKeyboard,
@@ -99,33 +160,47 @@ export default {
   data() {
     return {
       jobId: "",
-      jobIdRules: [(v) => !!v || "กรุณากรอกหมายเลขงาน"],
+      jobIdRules: [(v) => !!v || "กรุณากรอกหมายเลขงาน",(v) => v.length <= 20 || 'ความยาวตัวอักษรสูงสุด 20 ตัว'],
       width: "",
       widthRules: [(v) => !!v || "กรุณากรอกความกว้าง"],
       height: "",
       heightRules: [(v) => !!v || "กรุณากรอกความยาว"],
       sheet: "",
       sheetRules: [(v) => !!v || "กรุณากรอกจำนวนแผ่น"],
-      workDate: "",
-      workDateRules: [(v) => !!v || "กรุณาวันที่ดำเนินงาน"],
+      workDate: this.parseDate(new Date().toISOString().substr(0, 10)),
+      workDateRules: [(v) => !!v || "กรุณากรอกวันที่ดำเนินงาน"],
       currentInput: "",
       valid: false,
+      picker: new Date().toISOString().substr(0, 10),
+      showDatePicker : false,
+      overlay: false,
     };
   },
   methods: {
     async keyboardEventHandler(event) {
       if (event.type == "letter" && event.value != ".") {
-        if (this.currentInput == "jobId") {
-          this.jobId += event.value;
-        } else if (this.currentInput == "width") {
-          this.width += event.value;
-        } else if (this.currentInput == "height") {
-          this.height += event.value;
-        } else if (this.currentInput == "sheet") {
-          this.sheet += event.value;
-        } else if (this.currentInput == "workDate") {
-          this.workDate += event.value;
-        }
+          if (this.currentInput == "jobId" && this.jobId.length < 20) {
+            this.jobId += event.value;
+          } else if (this.currentInput == "width" && this.width.length < 8) {
+            if(this.width.length != 0){
+              this.width += event.value;
+            }else if(event.value != '0'){
+              this.width += event.value;
+            }
+          } else if (this.currentInput == "height" && this.height.length < 8) {
+            if(this.height.length != 0){
+             this.height += event.value;
+            }else if(event.value != '0'){
+             this.height += event.value;
+            }
+          } else if (this.currentInput == "sheet" && this.sheet.length < 8) {
+            if(this.sheet.length != 0){
+              this.sheet += event.value;
+            }else if(event.value != '0'){
+              this.sheet += event.value;
+            }
+          }
+        
       } else if (event.type == "action") {
         if (event.value == "delete") {
           if (this.currentInput == "jobId") {
@@ -140,21 +215,35 @@ export default {
             this.workDate = this.workDate.slice(0, -1);
           }
         } else if (event.value == "save") {
-          console.log("save action");
           if (this.$refs.form.validate()) {
+             this.overlay = true;
             await this.createJob({
               job_id: this.jobId,
-              width: this.width,
-              height: this.height,
-              length: this.height * this.sheet,
-              work_date: this.workDate,
+              width: Number(this.width),
+              height: Number(this.height),
+              sheet:Number(this.sheet),
+              length: this.height * this.sheet/100.0,
+              work_date: this.deParseDate(this.workDate)+' 00:00:00',
             });
+             this.overlay = false;
             this.$emit("popup-create-event", {
               type: event.type,
               value: event.value,
             });
           }
-        } else {
+        } else if(event.value == "clear" ){
+          if (this.currentInput == "jobId") {
+            this.jobId = '';
+          } else if (this.currentInput == "width") {
+            this.width = '';
+          } else if (this.currentInput == "height") {
+            this.height = '';
+          } else if (this.currentInput == "sheet") {
+            this.sheet = '';
+          } else if (this.currentInput == "workDate") {
+            this.workDate = '';
+          }
+        }else {
           this.$emit("popup-create-event", {
             type: event.type,
             value: event.value,
@@ -193,6 +282,67 @@ export default {
       }
     },
     ...mapActions(["createJob"]),
+    parseDate(date){
+      let part = date.split('-');
+      return part[2]+'/'+part[1]+'/'+part[0];
+    },
+    deParseDate(date){
+      let part = date.split('/');
+      return part[2]+'-'+part[1]+'-'+part[0];
+    },
+    saveDate(){
+      this.workDate = this.parseDate(this.picker) ;
+      this.showDatePicker = false;
+    },
+    cancelDate(){
+      this.picker = this.deParseDate(this.workDate);
+      this.showDatePicker = false;
+    },
+    updateValue(event,type){
+      event.preventDefault();
+      var letters;
+      if(type == 'jobId' && this.jobId.length < 20){
+        letters = /^[0-9a-zA-Z]$/;
+        if(event.key.match(letters)){
+           this.jobId += event.key;
+        }else if(event.key == 'Backspace'){
+          this.jobId = this.jobId.slice(0, -1)
+        }
+      }else if(type == 'width' && this.width.length < 8){
+         letters = /^[0-9]$/;
+        if(event.key.match(letters)){
+          if(this.width.length != 0){
+            this.width += event.key;
+          }else if(event.key != '0'){
+            this.width += event.key;
+          }
+        }else if(event.key == 'Backspace'){
+          this.width = this.width.slice(0, -1)
+        }
+      }else if(type == 'height' && this.height.length < 8){
+         letters = /^[0-9]$/;
+        if(event.key.match(letters)){
+          if(this.height.length != 0){
+            this.height += event.key;
+          }else if(event.key != '0'){
+            this.height += event.key;
+          }
+        }else if(event.key == 'Backspace'){
+          this.height = this.height.slice(0, -1)
+        }
+      }else if(type == 'sheet'  && this.sheet.length < 8){
+         letters = /^[0-9]$/;
+        if(event.key.match(letters)){
+          if(this.sheet.length != 0){
+            this.sheet += event.key;
+          }else if(event.key != '0'){
+            this.sheet += event.key;
+          }
+        }else if(event.key == 'Backspace'){
+          this.sheet = this.sheet.slice(0, -1)
+        }
+      }
+    }
   },
 };
 </script>

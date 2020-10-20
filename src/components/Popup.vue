@@ -9,7 +9,7 @@
     ></PopupCreateJob>
     <PopupEditJob
       v-else-if="type == 'editJob'"
-      :jobId="value.job_id.toString()"
+      :job="value"
       @popup-create-event="
         (event) =>
           $emit('popup-event', { type: event.type, value: event.value })
@@ -67,7 +67,7 @@ export default {
     },
     value: {
       type: Object,
-      default: "",
+      default: ()=>{},
     },
   },
 };

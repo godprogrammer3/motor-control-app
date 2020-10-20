@@ -7,16 +7,15 @@
     </v-row>
     <v-row justify="center" align="center">
       <v-list
-        v-dragscroll.y="true"
         class="mt-3 list-class"
         :style="{ height: isJobRunning ? '60vh' : '70vh' }"
       >
         <draggable
-          v-model="items"
+          v-model="getAllJobByAllGroupData"
           :disabled="isDragableDisabled"
           handle=".handle"
         >
-          <v-list-item v-for="(item, index) in items" :key="index">
+          <v-list-item v-for="(item, index) in getAllJobByAllGroupData" :key="index">
             <v-card width="100%" class="mb-5 rounded-xl">
               <v-toolbar
                 :color="item.isContinue ? 'indigo' : 'orange'"
@@ -28,7 +27,6 @@
                 <v-spacer></v-spacer>
                 <v-btn
                   v-if="isJobRunning != true"
-                  x-large
                   fab
                   dark
                   color="green"
@@ -54,15 +52,15 @@
                               {{ sub_item.job_id }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_length }}
+                              {{ sub_item.length }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_work_date }}
+                              {{ parseDateFromDB(sub_item.work_date) }}
                             </td>
                             <td>
                               <div class="text-center">
                                 <v-btn
-                                  x-large
+        
                                   fab
                                   dark
                                   color="red"
@@ -73,7 +71,7 @@
                                   <v-icon dark large>delete</v-icon>
                                 </v-btn>
                                 <v-btn
-                                  x-large
+                               
                                   fab
                                   dark
                                   color="orange"
@@ -136,13 +134,17 @@
         @popup-event="popupEventHandler"
       ></Popup>
     </v-dialog>
+     <v-overlay :value="overlay"><v-progress-circular
+      :size="50"
+      color="indigo"
+      indeterminate
+    ></v-progress-circular></v-overlay>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
-import { dragscroll } from "vue-dragscroll";
 import Popup from "@/components/Popup.vue";
 export default {
   name: "HomeJobList",
@@ -151,9 +153,6 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  directives: {
-    dragscroll,
   },
   components: {
     draggable,
@@ -183,45 +182,24 @@ export default {
           col_size: 3,
         },
       ],
-      items: [
-        {
-          data: [
-            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
-            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
-            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
-          ],
-          isContinue: true,
-        },
-        {
-          data: [{ job_id: 127, job_length: 500, job_work_date: "5/09/63" }],
-          isContinue: true,
-        },
-        {
-          data: [
-            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
-            { job_id: 127, job_length: 500, job_work_date: "5/09/63" },
-          ],
-          isContinue: false,
-        },
-      ],
       isDragableDisabled: false,
       isDialogShow: false,
       dialogType: "",
       dialogValue: "",
+      overlay:false,
     };
   },
   mounted() {
-    this.getJobList();
+    this.overlay = true;
+    this.getAllJobByAllGroup().then(()=>{this.overlay = false;});
   },
   methods: {
-    ...mapActions({
-      getJobList: "getJobList",
-    }),
-
+    ...mapActions(['getAllJobByAllGroup']),
     popupEventHandler(event) {
       if (event.type == "action") {
         if (event.value == "cancel" || event.value == "save") {
           this.isDialogShow = false;
+          this.dialogValue = {};
         }
       } else if (event.type == "confirm-delete-job") {
         if (event.value == "cancel" || event.value == "yes") {
@@ -251,6 +229,7 @@ export default {
         this.dialogValue = { str: "delete" };
       } else {
         this.dialogType = type;
+        this.dialogValue = { str: "createJob" };
       }
       this.isDialogShow = true;
     },
@@ -259,9 +238,14 @@ export default {
       this.dialogValue = { str: "startJob", data: groupId };
       this.isDialogShow = true;
     },
+    parseDateFromDB(date){
+      let part = date.split(' ');
+      part = part[0].split('-');
+      return part[2]+'/'+part[1]+'/'+part[0];
+    }
   },
   computed: {
-    ...mapGetters(["getJoblist"]),
+    ...mapGetters(["getAllJobByAllGroupData"])
   },
 };
 </script>

@@ -12,7 +12,6 @@
     </v-row>
     <v-row align="center" justify="center"
       ><v-list
-        v-dragscroll.y="true"
         class="mt-3 list-class"
         :style="{ height: isJobRunning ? '60vh' : '70vh' }"
       >
@@ -21,7 +20,7 @@
           :disabled="isDragableDisabled"
           handle=".handle"
         >
-          <v-list-item v-for="(item, index) in items" :key="index">
+          <v-list-item v-for="(item, index) in getAllJobByAllGroupData" :key="index">
             <v-card
               width="100%"
               class="mb-5 rounded-xl"
@@ -99,16 +98,16 @@
                               {{ sub_item.job_id }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_width }}
+                              {{ sub_item.width }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_height }}
+                              {{ sub_item.height }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_sheet }}
+                              {{ sub_item.sheet }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_work_date }}
+                              {{ parseDate(sub_item.work_date) }}
                             </td>
                           </tr>
                         </tbody>
@@ -135,16 +134,16 @@
                               {{ sub_item.job_id }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_width }}
+                              {{ sub_item.width }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_height }}
+                              {{ sub_item.height }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_sheet }}
+                              {{ sub_item.sheet }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_work_date }}
+                              {{ parseDate(sub_item.work_date) }}
                             </td>
                             <td class="text-center text-h6 nocopy">
                               <v-row
@@ -208,16 +207,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
-import { dragscroll } from "vue-dragscroll";
 export default {
   props: {
     isJobRunning: {
       type: Boolean,
       default: false,
     },
-  },
-  directives: {
-    dragscroll,
   },
   components: {
     draggable,
@@ -324,12 +319,11 @@ export default {
     };
   },
   mounted() {
-    this.getJobList();
+    this.overlay = true;
+    this.getAllJobByAllGroup().then(()=>{this.overlay = false;});
   },
   methods: {
-    ...mapActions({
-      getJobList: "getJobList",
-    }),
+    ...mapActions(["getAllJobByAllGroup"]),
     manageMemberInGroup(groubId) {
       this.currentSelectedGroup = groubId;
       this.mode = "manage-member-ingroup";
@@ -385,9 +379,14 @@ export default {
       }
     },
     list() {},
+     parseDate(date){
+      let part = date.split(' ');
+      part = part[0].split('-');
+      return part[2]+'/'+part[1]+'/'+part[0];
+    }
   },
   computed: {
-    ...mapGetters(["getJoblist"]),
+    ...mapGetters(["getAllJobByAllGroupData"]),
   },
   watch: {},
 };

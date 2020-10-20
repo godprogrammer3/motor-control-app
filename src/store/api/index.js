@@ -2,9 +2,33 @@ import axios from "axios";
 class API {
   constructor() {
     this.instance = axios.create({
-      baseURL: "http://192.168.1.2:3000",
+      baseURL: "http://127.0.0.1:3000",
       adapter: require("axios/lib/adapters/http"),
     });
+  }
+  async getAllGroup() {
+    try {
+      var result = await this.instance.get("/getAllGroup");
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async getAllJobByAllGroup() {
+    try {
+      var result = await this.instance.get("/getAllJobByAllGroup");
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
   async getAllJobList() {
     try {

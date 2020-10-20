@@ -10,6 +10,8 @@ export default new Vuex.Store({
     allJobList: [],
     fillterJobList: [],
     setting: {},
+    allJobByAllGroup: [],
+    allGroup: [],
   },
   mutations: {
     UPDATE_JOBLIST(state, data) {
@@ -21,8 +23,20 @@ export default new Vuex.Store({
     UPDATE_SETTING(state, data) {
       state.setting = data;
     },
+    UPDATE_ALL_JOB_BY_ALL_GROUP(state, data) {
+      state.allJobByAllGroup = data;
+    },
+    UPDATE_ALL_GROUP(state, data) {
+      state.allGroup = data;
+    },
   },
   actions: {
+    async getAllJobByAllGroup({ commit }, payload) {
+      let result = await api.getAllJobByAllGroup();
+      this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
+      result = await api.getAllGroup();
+      this.commit("UPDATE_ALL_GROUP", result);
+    },
     async getJobList({ commit }, payload) {
       let result = await api.getAllJobList();
       this.commit("UPDATE_JOBLIST", result);
@@ -33,11 +47,16 @@ export default new Vuex.Store({
     },
     async createJob({ commit }, payload) {
       let result = await api.createJob(payload);
-      await this.dispatch("getJobList");
+      result = await api.getAllJobByAllGroup();
+      this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
+      result = await api.getAllGroup();
+      this.commit("UPDATE_ALL_GROUP", result);
     },
     async editJob({ commit }, payload) {
       let result = await api.editJob(payload);
       await this.dispatch("getJobList");
+      result = await api.getAllJobByAllGroup();
+      this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
     },
     async getJobListByDate({ commit }, payload) {
       let result = await api.getJobListByDate(payload.type, payload.value);
@@ -71,6 +90,22 @@ export default new Vuex.Store({
     },
   },
   getters: {
+    getAllJobByAllGroupData: (state) => {
+      if (state.allJobByAllGroup.length == 0 || state.allGroup.length == 0) {
+        return [];
+      } else {
+        let result = state.allJobByAllGroup.map((row) => {
+          let tmpData = {};
+          tmpData.data = row;
+          let group = state.allGroup.find(
+            (group) => group.group_id == row[0].group_id
+          );
+          tmpData.isContinue = true;
+          return tmpData;
+        });
+        return result;
+      }
+    },
     getHistoryJoblist: (state) => {
       let result = [];
       for (var i = 0; i < state.fillterJobList.length; i++) {

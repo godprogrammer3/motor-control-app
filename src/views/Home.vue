@@ -185,8 +185,4 @@ export default {
 };
 </script>
 <style lang="css">
-.v-dialog {
-  box-shadow: none !important;
-  overflow-y: hidden !important;
-}
 </style>
