@@ -37,13 +37,20 @@ export default new Vuex.Store({
       result = await api.getAllGroup();
       this.commit("UPDATE_ALL_GROUP", result);
     },
-    async getJobList({ commit }, payload) {
-      let result = await api.getAllJobList();
-      this.commit("UPDATE_JOBLIST", result);
+    async reorderGroup({ commit }, payload) {
+      let result = await api.reorderGroup(payload);
+      result = await api.getAllJobByAllGroup();
+      this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
+      result = await api.getAllGroup();
+      this.commit("UPDATE_ALL_GROUP", result);
     },
     async deleteJob({ commit }, payload) {
       let result = await api.deleteJob(payload);
       await this.dispatch("getJobList");
+      result = await api.getAllJobByAllGroup();
+      this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
+      result = await api.getAllGroup();
+      this.commit("UPDATE_ALL_GROUP", result);
     },
     async createJob({ commit }, payload) {
       let result = await api.createJob(payload);
@@ -70,6 +77,13 @@ export default new Vuex.Store({
       let result = await api.editSetting(payload);
       this.commit("UPDATE_SETTING", payload);
     },
+    async createGroupWithJob({ commit }, payload) {
+      let result = await api.createGroupWithJob(payload);
+      result = await api.getAllJobByAllGroup();
+      this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
+      result = await api.getAllGroup();
+      this.commit("UPDATE_ALL_GROUP", result);
+    },
     startWork({ commit }, payload) {
       api.startWork(payload);
     },
@@ -94,16 +108,7 @@ export default new Vuex.Store({
       if (state.allJobByAllGroup.length == 0 || state.allGroup.length == 0) {
         return [];
       } else {
-        let result = state.allJobByAllGroup.map((row) => {
-          let tmpData = {};
-          tmpData.data = row;
-          let group = state.allGroup.find(
-            (group) => group.group_id == row[0].group_id
-          );
-          tmpData.isContinue = true;
-          return tmpData;
-        });
-        return result;
+        return state.allJobByAllGroup;
       }
     },
     getHistoryJoblist: (state) => {

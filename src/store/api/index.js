@@ -6,6 +6,50 @@ class API {
       adapter: require("axios/lib/adapters/http"),
     });
   }
+  async reorderGroup(groups) {
+    try {
+      var newGroup = [];
+      for (var i = 0; i < groups.length; i++) {
+        newGroup.push({
+          group_id: groups[i].group_id,
+          group_order: i + 1,
+          is_continue: groups[i].is_continue,
+        });
+      }
+      var result = await this.instance.post("/reorderGroup", newGroup);
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async createGroupWithJob(group) {
+    try {
+      var newGroup = [];
+      group.forEach((element) => {
+        element.job.forEach((sub_job) => {
+          if (sub_job.isSelected) {
+            newGroup.push(sub_job);
+          }
+        });
+      });
+      if (newGroup.length <= 1) {
+        return -1;
+      } else {
+        var result = await this.instance.post("/createGroupWithJob", newGroup);
+        if (result.status === 200) {
+          return result.data;
+        } else {
+          throw new Error("Error : " + result.status);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   async getAllGroup() {
     try {
       var result = await this.instance.get("/getAllGroup");
@@ -43,9 +87,9 @@ class API {
     }
   }
 
-  async deleteJob(jobId) {
+  async deleteJob(job) {
     try {
-      var result = await this.instance.delete(`/deleteJob/${jobId}`);
+      var result = await this.instance.delete(`/deleteJob/${job.job_id}`);
       if (result.status === 200) {
         return result.data;
       } else {

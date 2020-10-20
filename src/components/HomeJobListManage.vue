@@ -20,31 +20,30 @@
           :disabled="isDragableDisabled"
           handle=".handle"
         >
-          <v-list-item v-for="(item, index) in getAllJobByAllGroupData" :key="index">
+          <v-list-item v-for="(item, index) in items" :key="index">
             <v-card
               width="100%"
               class="mb-5 rounded-xl"
               v-if="
                 (mode != 'manage-member-ingroup' ||
-                  item.data.length == 1 ||
+                  item.job.length == 1 ||
                   index == currentSelectedGroup) &&
-                  (mode != 'add-group' || item.data.length == 1)
+                  (mode != 'add-group' || item.job.length == 1)
               "
             >
               <v-toolbar
-                :color="item.isContinue ? 'indigo' : 'orange'"
+                :color="item.is_continue ? 'indigo' : 'orange'"
                 height="95"
                 v-if="
-                  (mode != 'manage-member-ingroup' || item.data.length != 1) &&
-                    mode != 'add-group'
+                  (mode != 'manage-member-ingroup' || item.group_id == currentSelectedGroup.group_id)&& mode != 'add-group' 
                 "
               >
                 <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
-                  >กลุ่มที่ {{ index + 1 }}</v-toolbar-title
+                  >กลุ่มหมายเลข {{ item.group_id }}</v-toolbar-title
                 >
                 <v-spacer></v-spacer>
                 <v-switch
-                  v-model="item.isContinue"
+                  v-model="item.is_continue"
                   inset
                   hide-details
                   color="white"
@@ -54,7 +53,7 @@
                   <template v-slot:label>
                     <span class="white--text">
                       {{
-                        item.isContinue ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
+                        item.type == 'continue' ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
                       }}</span
                     >
                   </template>
@@ -64,7 +63,7 @@
                   fab
                   dark
                   color="orange"
-                  @click="manageMemberInGroup(index)"
+                  @click="manageMemberInGroup(item)"
                   v-if="mode == 'group-reorder'"
                 >
                   <v-icon dark large>create</v-icon>
@@ -88,7 +87,7 @@
                       <template v-slot:default>
                         <tbody v-if="mode == 'group-reorder'">
                           <tr
-                            v-for="(sub_item, sub_index) in item.data"
+                            v-for="(sub_item, sub_index) in item.job"
                             :key="sub_index"
                           >
                             <td class="text-center text-h6 nocopy">
@@ -107,25 +106,56 @@
                               {{ sub_item.sheet }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ parseDate(sub_item.work_date) }}
+                              {{ parseDateFormDB(sub_item.work_date) }}
+                            </td>
+                          </tr>
+                        </tbody>
+                         <tbody v-else-if="mode == 'add-group'">
+                          <tr
+                            v-for="(sub_item, sub_index) in item.job"
+                            :key="sub_index"
+                          >
+                            <td class="text-center text-h6 nocopy">
+                              {{ sub_item.job_id }}
+                            </td>
+                            <td class="text-center text-h6 nocopy">
+                              {{ sub_item.width }}
+                            </td>
+                            <td class="text-center text-h6 nocopy">
+                              {{ sub_item.height }}
+                            </td>
+                            <td class="text-center text-h6 nocopy">
+                              {{ sub_item.sheet }}
+                            </td>
+                            <td class="text-center text-h6 nocopy">
+                              {{ parseDateFormDB(sub_item.work_date) }}
+                            </td>
+                            <td class="text-center text-h6 nocopy">
+                              <v-row
+                                ><v-checkbox
+                                  v-model="sub_item.isSelected"
+                                  style="transform: scale(1.5)"
+                                ></v-checkbox
+                              ></v-row>
                             </td>
                           </tr>
                         </tbody>
                         <draggable
-                          v-model="list"
+                          v-model="item.job"
                           tag="tbody"
                           handle=".handle"
                           v-else-if="
-                            mode == 'manage-member-ingroup' ||
-                              mode == 'add-group'
+                            mode == 'manage-member-ingroup'
                           "
                         >
                           <tr
-                            v-for="(sub_item, sub_index) in item.data"
+                            v-for="(sub_item, sub_index) in item.job"
                             :key="sub_index"
                           >
-                            <td class="text-center handle">
-                              <v-icon x-large> reorder </v-icon>
+                           <td class="text-center text-h6 nocopy handle">
+                              <v-spacer></v-spacer>
+                                <v-icon x-large> reorder </v-icon>
+                              <v-spacer></v-spacer>
                             </td>
                             <td class="text-center text-h6 nocopy">
                               {{ sub_index + 1 }}
@@ -143,7 +173,7 @@
                               {{ sub_item.sheet }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ parseDate(sub_item.work_date) }}
+                              {{ parseDateFormDB(sub_item.work_date) }}
                             </td>
                             <td class="text-center text-h6 nocopy">
                               <v-row
@@ -170,7 +200,7 @@
           dark
           x-large
           bottom
-          @click="mode = 'add-group'"
+          @click="addGroupAction"
           class="text-h5"
         >
           เพิ่มกลุ่ม
@@ -201,6 +231,11 @@
         </v-btn>
       </v-col></v-row
     >
+    <v-overlay :value="overlay"><v-progress-circular
+      :size="50"
+      color="indigo"
+      indeterminate
+    ></v-progress-circular></v-overlay>
   </v-container>
 </template>
 
@@ -230,10 +265,10 @@ export default {
           text: "หมายเลขงาน",
         },
         {
-          text: "กว้าง",
+          text: "หน้ากว้าง",
         },
         {
-          text: "ยาว",
+          text: "ความยาว",
         },
         {
           text: "จำนวนแผ่น",
@@ -242,91 +277,29 @@ export default {
           text: "วันที่ดำเนินงาน",
         },
       ],
-      items: [
-        {
-          data: [
-            {
-              job_id: 123,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              job_width: 5,
-              job_height: 10,
-              job_sheet: 10,
-              isSelected: true,
-            },
-            {
-              job_id: 124,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              job_width: 5,
-              job_height: 10,
-              job_sheet: 10,
-              isSelected: true,
-            },
-            {
-              job_id: 125,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              job_width: 5,
-              job_height: 10,
-              job_sheet: 10,
-              isSelected: true,
-            },
-          ],
-          isContinue: true,
-        },
-        {
-          data: [
-            {
-              job_id: 126,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              job_width: 5,
-              job_height: 10,
-              job_sheet: 10,
-              isSelected: true,
-            },
-          ],
-          isContinue: true,
-        },
-        {
-          data: [
-            {
-              job_id: 127,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              job_width: 5,
-              job_height: 10,
-              job_sheet: 10,
-              isSelected: true,
-            },
-            {
-              job_id: 128,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              job_width: 5,
-              job_height: 10,
-              job_sheet: 10,
-              isSelected: true,
-            },
-          ],
-          isContinue: false,
-        },
-      ],
       isDragableDisabled: false,
       mode: "group-reorder",
       currentSelectedGroup: null,
+      items:[],
+      overlay:false
     };
   },
   mounted() {
     this.overlay = true;
-    this.getAllJobByAllGroup().then(()=>{this.overlay = false;});
+    this.getAllJobByAllGroup().then(()=>{this.items = this.getAllJobByAllGroupData; this.overlay = false;});
   },
   methods: {
-    ...mapActions(["getAllJobByAllGroup"]),
-    manageMemberInGroup(groubId) {
-      this.currentSelectedGroup = groubId;
+    ...mapActions(["getAllJobByAllGroup","reorderGroup","createGroupWithJob"]),
+    manageMemberInGroup(group) {
+      this.currentSelectedGroup = group;
       this.mode = "manage-member-ingroup";
+      this.items.forEach((item)=>{
+        if(item.group_id == this.currentSelectedGroup.group_id){
+          item.job.forEach((sub_item)=>sub_item.isSelected = true);
+        }else{
+          item.job.forEach((sub_item)=>sub_item.isSelected = false);
+        }
+      });
       this.headers = [
         {
           text: "จัดลำดับ",
@@ -354,15 +327,21 @@ export default {
         },
       ];
     },
-    handleSaveButton() {
+    async handleSaveButton() {
       if (this.mode == "manage-member-ingroup") {
         this.mode = "group-reorder";
       } else if (this.mode == "group-reorder") {
+        this.overlay = true;
+        await this.reorderGroup(this.items);
+        this.overlay = false;
         this.$emit("handle-event", {
           type: "change_mode",
           value: "home",
         });
       } else if (this.mode == "add-group") {
+        this.overlay = true;
+        await this.createGroupWithJob(this.items);
+        this.overlay = false;
         this.mode = "group-reorder";
       }
     },
@@ -378,11 +357,41 @@ export default {
         this.mode = "group-reorder";
       }
     },
-    list() {},
      parseDate(date){
       let part = date.split(' ');
       part = part[0].split('-');
       return part[2]+'/'+part[1]+'/'+part[0];
+    },
+     parseDateFormDB(date){
+      let part = date.split('T');
+      part = part[0].split('-');
+      return part[2]+'/'+part[1]+'/'+part[0];
+    },
+    addGroupAction(){
+      this.mode = 'add-group';
+      this.items.forEach((item)=>{
+        item.job.forEach((sub_item)=>sub_item.isSelected = false);
+      });
+      this.headers = [
+        {
+          text: "หมายเลขงาน",
+        },
+        {
+          text: "กว้าง",
+        },
+        {
+          text: "ยาว",
+        },
+        {
+          text: "จำนวนแผ่น",
+        },
+        {
+          text: "วันที่ดำเนินงาน",
+        },
+        {
+          text: "การเลือก",
+        },
+      ];
     }
   },
   computed: {

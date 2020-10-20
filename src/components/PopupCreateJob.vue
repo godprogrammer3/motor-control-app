@@ -7,7 +7,7 @@
             <v-col align="center" justify="center">
               <v-row align="center" justify="center">
                 <v-col>
-                  <span class="text-h4">หมายเลขงาน</span>
+                  <span class="text-h4 indigo--text">หมายเลขงาน</span>
                   <v-text-field
                   ref="jobId"
                   :value="jobId"
@@ -28,7 +28,7 @@
               </v-row>
               <v-row align="center" justify="center">
                 <v-col>   
-                  <span class="text-h4">ความกว้าง</span>
+                  <span class="text-h4 indigo--text">หน้ากว้าง</span>
                    <v-text-field
                   ref="width"
                   :value="width"
@@ -49,7 +49,7 @@
                </v-row>
               <v-row align="center" justify="center">
                 <v-col>
-                   <span class="text-h4">ความยาว</span>
+                   <span class="text-h4 indigo--text">ความยาว</span>
                    <v-text-field
                   ref="height"
                   :value="height"
@@ -70,7 +70,7 @@
                </v-row>
               <v-row align="center" justify="center">
                 <v-col>
-                  <span class="text-h4">จำนวนแผ่น</span>
+                  <span class="text-h4 indigo--text">จำนวนแผ่น</span>
                   <v-text-field
                   ref="sheet"
                   :value="sheet"
@@ -91,7 +91,7 @@
                </v-row>
               <v-row align="center" justify="center">
                 <v-col>
-                  <span class="text-h4">วันที่ดำเนินงาน</span>
+                  <span class="text-h4 indigo--text">วันที่ดำเนินงาน</span>
                   <v-text-field
                   ref="workDate" 
                   :value="workDate"
@@ -222,7 +222,6 @@ export default {
               width: Number(this.width),
               height: Number(this.height),
               sheet:Number(this.sheet),
-              length: this.height * this.sheet/100.0,
               work_date: this.deParseDate(this.workDate)+' 00:00:00',
             });
              this.overlay = false;

@@ -231,7 +231,6 @@ export default {
               width: Number(this.width),
               height: Number(this.height),
               sheet:Number(this.sheet),
-              length: this.height * this.sheet/100.0,
               work_date: this.deParseDate(this.workDate)+' 00:00:00',
             });
              this.overlay = false;
@@ -292,7 +291,7 @@ export default {
     },
     ...mapActions(["editJob"]),
     parseDateFromDB(date){
-      let part = date.split(' ');
+      let part = date.split('T');
       part = part[0].split('-');
       return part[2]+'/'+part[1]+'/'+part[0];
     },

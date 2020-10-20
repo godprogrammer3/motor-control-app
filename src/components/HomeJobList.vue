@@ -11,18 +11,18 @@
         :style="{ height: isJobRunning ? '60vh' : '70vh' }"
       >
         <draggable
-          v-model="getAllJobByAllGroupData"
+          v-model="items"
           :disabled="isDragableDisabled"
           handle=".handle"
         >
-          <v-list-item v-for="(item, index) in getAllJobByAllGroupData" :key="index">
+          <v-list-item v-for="(item, index) in items" :key="index">
             <v-card width="100%" class="mb-5 rounded-xl">
               <v-toolbar
-                :color="item.isContinue ? 'indigo' : 'orange'"
+                :color="item.is_continue ? 'indigo' : 'orange'"
                 height="95"
               >
                 <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
-                  >กลุ่มที่ {{ index + 1 }}</v-toolbar-title
+                  >กลุ่มหมายเลข {{ item.group_id }}</v-toolbar-title
                 >
                 <v-spacer></v-spacer>
                 <v-btn
@@ -42,7 +42,7 @@
                       <template v-slot:default>
                         <tbody>
                           <tr
-                            v-for="(sub_item, sub_index) in item.data"
+                            v-for="(sub_item, sub_index) in item.job"
                             :key="sub_index"
                           >
                             <td class="text-center text-h6 nocopy">
@@ -52,7 +52,7 @@
                               {{ sub_item.job_id }}
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_item.length }}
+                              {{ sub_item.height * sub_item.sheet / 100.0 }}
                             </td>
                             <td class="text-center text-h6 nocopy">
                               {{ parseDateFromDB(sub_item.work_date) }}
@@ -66,7 +66,7 @@
                                   color="red"
                                   class="ma-1"
                                   elevation="1"
-                                  @click="deleteJob(sub_item.job_id)"
+                                  @click="deleteJob(sub_item)"
                                 >
                                   <v-icon dark large>delete</v-icon>
                                 </v-btn>
@@ -187,11 +187,12 @@ export default {
       dialogType: "",
       dialogValue: "",
       overlay:false,
+      items:[]
     };
   },
   mounted() {
     this.overlay = true;
-    this.getAllJobByAllGroup().then(()=>{this.overlay = false;});
+    this.getAllJobByAllGroup().then(()=>{this.items = this.getAllJobByAllGroupData ,this.overlay = false;});
   },
   methods: {
     ...mapActions(['getAllJobByAllGroup']),
@@ -213,9 +214,9 @@ export default {
         }
       }
     },
-    deleteJob(jobId) {
+    deleteJob(job) {
       this.dialogType = "confirm";
-      this.dialogValue = { str: "deleteJob" };
+      this.dialogValue = { str: "deleteJob" ,value : job};
       this.isDialogShow = true;
     },
     editJob(jobData) {
@@ -239,7 +240,7 @@ export default {
       this.isDialogShow = true;
     },
     parseDateFromDB(date){
-      let part = date.split(' ');
+      let part = date.split('T');
       part = part[0].split('-');
       return part[2]+'/'+part[1]+'/'+part[0];
     }

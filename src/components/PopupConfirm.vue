@@ -5,6 +5,7 @@
         <v-row align="center" justify="center">
           <PopupConfirmDeleteJob
             v-if="type.str == 'deleteJob'"
+            :job='type.value'
             @popup-confirm-delete-job="
               (event) =>
                 $emit('popup-comfirm-event', {
@@ -35,7 +36,8 @@
           ></PopupConfirmCancelJob>
         </v-row>
       </v-container> </v-card
-  ></v-row>
+  >
+  </v-row>
 </template>
 
 <script>
