@@ -1,7 +1,8 @@
 <template>
   <v-col align="center" justify="center" class="text-h3 pa-5">
     <v-row align="center" justify="center"
-      > <v-icon dark large>play_arrow</v-icon>
+      > <v-icon x-large style="transform:scale(4);margin:2em;">note</v-icon
+          >
     </v-row>
     <v-row align="center" justify="center"
       ><span>ใส่กระดาษให้เรียบร้อย</span>
