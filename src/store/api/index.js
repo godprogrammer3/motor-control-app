@@ -86,6 +86,18 @@ class API {
       console.log(e);
     }
   }
+  async getAllHistoryJobByAllGroup() {
+    try {
+      var result = await this.instance.get("/getAllHistoryJobByAllGroup");
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   async getAllJobList() {
     try {
       var result = await this.instance.get("/getAllJobList");

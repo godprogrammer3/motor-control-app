@@ -11,6 +11,7 @@ export default new Vuex.Store({
     fillterJobList: [],
     setting: {},
     allJobByAllGroup: [],
+    allHistoryJobByAllGroup: [],
     allGroup: [],
   },
   mutations: {
@@ -26,6 +27,9 @@ export default new Vuex.Store({
     UPDATE_ALL_JOB_BY_ALL_GROUP(state, data) {
       state.allJobByAllGroup = data;
     },
+    UPDATE_ALL_HISTORY_JOB_BY_ALL_GROUP(state, data) {
+      state.allHistoryJobByAllGroup = data;
+    },
     UPDATE_ALL_GROUP(state, data) {
       state.allGroup = data;
     },
@@ -36,6 +40,10 @@ export default new Vuex.Store({
       this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
       result = await api.getAllGroup();
       this.commit("UPDATE_ALL_GROUP", result);
+    },
+    async getAllHistoryJobByAllGroup({ commit }, payload) {
+      let result = await api.getAllHistoryJobByAllGroup();
+      this.commit("UPDATE_ALL_HISTORY_JOB_BY_ALL_GROUP", result);
     },
     async reorderGroup({ commit }, payload) {
       let result = await api.reorderGroup(payload);
@@ -127,6 +135,13 @@ export default new Vuex.Store({
         return [];
       } else {
         return state.allJobByAllGroup;
+      }
+    },
+    getAllHistoryJobByAllGroupData: (state) => {
+      if (state.allHistoryJobByAllGroup.length == 0) {
+        return [];
+      } else {
+        return state.allHistoryJobByAllGroup;
       }
     },
     getHistoryJoblist: (state) => {

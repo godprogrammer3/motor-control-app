@@ -273,6 +273,8 @@ export default {
         if (event.value == "close") {
           this.isShowHomePopup = false;
         }
+      }else if(event.type == "confirm-insert-paper"){
+        this.isDialogShow = false;
       }
     },
     editOnTop() {
@@ -306,7 +308,9 @@ export default {
     },
   },
   mounted() {
-    console.log(this.group.group_id);
+     this.dialogType = "confirm";
+     this.dialogValue = { str: "confirmInsertPaper" };
+     this.isDialogShow = true;
     // socket.on("Speed2", function(msg) {
     //   this.speed = msg;
     // });

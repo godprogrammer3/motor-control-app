@@ -53,7 +53,7 @@
                   <template v-slot:label>
                     <span class="white--text">
                       {{
-                        item.type == 'continue' ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
+                        item.is_continue ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
                       }}</span
                     >
                   </template>

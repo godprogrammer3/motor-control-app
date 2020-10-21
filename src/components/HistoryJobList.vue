@@ -51,11 +51,11 @@
         <v-list-item v-for="(item, index) in items" :key="index">
           <v-card width="100%" class="mb-5 rounded-xl">
             <v-toolbar
-              :color="item.isContinue ? 'indigo' : 'orange'"
+              :color="item.is_continue ? 'indigo' : 'orange'"
               height="95"
             >
               <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
-                >กลุ่มที่ {{ index + 1 }}</v-toolbar-title
+                >กลุ่มหมายเลข {{ item.group_id }}</v-toolbar-title
               >
               <span class="text-h5 ml-5 white--text">{{
                 item.isContinue ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
@@ -79,7 +79,7 @@
                     <template v-slot:default>
                       <tbody>
                         <tr
-                          v-for="(sub_item, sub_index) in item.data"
+                          v-for="(sub_item, sub_index) in item.job"
                           :key="sub_index"
                         >
                           <td class="text-center text-h6 nocopy">
@@ -152,6 +152,11 @@
         @popup-event="popupEventHandler"
       ></Popup>
     </v-dialog>
+    <v-overlay :value="overlay"><v-progress-circular
+      :size="50"
+      color="indigo"
+      indeterminate
+    ></v-progress-circular></v-overlay>
   </v-container>
 </template>
 
@@ -204,6 +209,7 @@ export default {
           text: "รายละเอียด",
           col_size: 3,
         },
+        
       ],
       items: [
         {
@@ -269,14 +275,15 @@ export default {
       dialogValue: "",
       searchBy: "day",
       searchDate: "10/10/2563",
+      overlay:false
     };
   },
   mounted() {
-
+  this.overlay = true;
+    this.getAllHistoryJobByAllGroup().then(()=>{this.items = this.getAllHistoryJobByAllGroupData ,this.overlay = false;});
   },
   methods: {
-    
-
+    ...mapActions(["getAllHistoryJobByAllGroup"]),
     popupEventHandler(event) {
       if (event.type == "action") {
         if (event.value == "cancel" || event.value == "save") {
@@ -320,6 +327,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["getAllHistoryJobByAllGroupData"]),
     searchDateShow() {
       var dateSplilt = this.searchDate.split("/");
       if (this.searchBy == "day") {
