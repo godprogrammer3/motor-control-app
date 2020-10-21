@@ -121,6 +121,7 @@ class API {
       }
     } catch (e) {
       console.log(e);
+      return -1;
     }
   }
   async editJob(job) {
