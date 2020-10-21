@@ -27,7 +27,7 @@
               v-if="
                 (mode != 'manage-member-ingroup' ||
                   item.job.length == 1 ||
-                  index == currentSelectedGroup) &&
+                  item.group_id == currentSelectedGroup.group_id) &&
                   (mode != 'add-group' || item.job.length == 1)
               "
             >
@@ -158,7 +158,7 @@
                               <v-spacer></v-spacer>
                             </td>
                             <td class="text-center text-h6 nocopy">
-                              {{ sub_index + 1 }}
+                              {{ sub_item.job_order}}
                             </td>
                             <td class="text-center text-h6 nocopy">
                               {{ sub_item.job_id }}
@@ -289,7 +289,7 @@ export default {
     this.getAllJobByAllGroup().then(()=>{this.items = this.getAllJobByAllGroupData; this.overlay = false;});
   },
   methods: {
-    ...mapActions(["getAllJobByAllGroup","reorderGroup","createGroupWithJob"]),
+    ...mapActions(["getAllJobByAllGroup","reorderGroup","createGroupWithJob","updateInGroup"]),
     manageMemberInGroup(group) {
       this.currentSelectedGroup = group;
       this.mode = "manage-member-ingroup";
@@ -329,6 +329,15 @@ export default {
     },
     async handleSaveButton() {
       if (this.mode == "manage-member-ingroup") {
+        var payload = [];
+        this.items.forEach((element)=>{
+          element.job.forEach((sub_job)=>{
+            if( sub_job.group_id == this.currentSelectedGroup.group_id || sub_job.isSelected){
+              payload.push(sub_job);
+            }
+          });
+        });
+        await this.updateInGroup({jobs:payload,group_id:this.currentSelectedGroup.group_id});
         this.mode = "group-reorder";
       } else if (this.mode == "group-reorder") {
         this.overlay = true;

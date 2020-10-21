@@ -44,9 +44,15 @@ export default new Vuex.Store({
       result = await api.getAllGroup();
       this.commit("UPDATE_ALL_GROUP", result);
     },
+    async updateInGroup({ commit }, payload) {
+      let result = await api.updateInGroup(payload);
+      result = await api.getAllJobByAllGroup();
+      this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
+      result = await api.getAllGroup();
+      this.commit("UPDATE_ALL_GROUP", result);
+    },
     async deleteJob({ commit }, payload) {
       let result = await api.deleteJob(payload);
-      await this.dispatch("getJobList");
       result = await api.getAllJobByAllGroup();
       this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
       result = await api.getAllGroup();
@@ -61,7 +67,6 @@ export default new Vuex.Store({
     },
     async editJob({ commit }, payload) {
       let result = await api.editJob(payload);
-      await this.dispatch("getJobList");
       result = await api.getAllJobByAllGroup();
       this.commit("UPDATE_ALL_JOB_BY_ALL_GROUP", result);
     },
@@ -84,6 +89,7 @@ export default new Vuex.Store({
       result = await api.getAllGroup();
       this.commit("UPDATE_ALL_GROUP", result);
     },
+
     startWork({ commit }, payload) {
       api.startWork(payload);
     },

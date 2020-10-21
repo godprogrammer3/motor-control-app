@@ -26,6 +26,18 @@ class API {
       console.log(e);
     }
   }
+  async updateInGroup(payload) {
+    try {
+      var result = await this.instance.post("/updateInGroup", payload);
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   async createGroupWithJob(group) {
     try {
       var newGroup = [];

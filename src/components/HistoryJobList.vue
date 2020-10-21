@@ -272,12 +272,10 @@ export default {
     };
   },
   mounted() {
-    this.getJobList();
+
   },
   methods: {
-    ...mapActions({
-      getJobList: "getJobList",
-    }),
+    
 
     popupEventHandler(event) {
       if (event.type == "action") {
@@ -322,7 +320,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getJoblist"]),
     searchDateShow() {
       var dateSplilt = this.searchDate.split("/");
       if (this.searchBy == "day") {
