@@ -110,6 +110,13 @@ export default new Vuex.Store({
     },
   },
   getters: {
+    getSettingData: (state) => {
+      if (state.setting == undefined) {
+        return [];
+      } else {
+        return state.setting;
+      }
+    },
     getAllJobByAllGroupData: (state) => {
       if (state.allJobByAllGroup.length == 0 || state.allGroup.length == 0) {
         return [];

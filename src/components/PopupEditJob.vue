@@ -318,16 +318,16 @@ export default {
     updateValue(event,type){
       event.preventDefault();
       var letters;
-      if(type == 'jobId' && this.jobId.length < 20){
+      if(type == 'jobId' ){
         letters = /^[0-9a-zA-Z]$/;
-        if(event.key.match(letters)){
+        if(event.key.match(letters) && this.jobId.length < 20){
            this.jobId += event.key;
         }else if(event.key == 'Backspace'){
           this.jobId = this.jobId.slice(0, -1)
         }
-      }else if(type == 'width' && this.width.length < 8){
+      }else if(type == 'width' ){
          letters = /^[0-9]$/;
-        if(event.key.match(letters)){
+        if(event.key.match(letters) && this.width.length < 8){
           if(this.width.length != 0){
             this.width += event.key;
           }else if(event.key != '0'){
@@ -336,9 +336,9 @@ export default {
         }else if(event.key == 'Backspace'){
           this.width = this.width.slice(0, -1)
         }
-      }else if(type == 'height' && this.height.length < 8){
+      }else if(type == 'height' ){
          letters = /^[0-9]$/;
-        if(event.key.match(letters)){
+        if(event.key.match(letters) && this.height.length < 8){
           if(this.height.length != 0){
             this.height += event.key;
           }else if(event.key != '0'){
@@ -347,9 +347,9 @@ export default {
         }else if(event.key == 'Backspace'){
           this.height = this.height.slice(0, -1)
         }
-      }else if(type == 'sheet'  && this.sheet.length < 8){
+      }else if(type == 'sheet' ){
          letters = /^[0-9]$/;
-        if(event.key.match(letters)){
+        if(event.key.match(letters)  && this.sheet.length < 8){
           if(this.sheet.length != 0){
             this.sheet += event.key;
           }else if(event.key != '0'){
