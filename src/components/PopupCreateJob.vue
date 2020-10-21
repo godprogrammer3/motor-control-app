@@ -162,7 +162,7 @@ export default {
       jobId: "",
       jobIdRules: [(v) => !!v || "กรุณากรอกหมายเลขงาน",(v) => v.length <= 20 || 'ความยาวตัวอักษรสูงสุด 20 ตัว'],
       width: "",
-      widthRules: [(v) => !!v || "กรุณากรอกความกว้าง"],
+      widthRules: [(v) => !!v || "กรุณากรอกหน้ากว้าง"],
       height: "",
       heightRules: [(v) => !!v || "กรุณากรอกความยาว"],
       sheet: "",

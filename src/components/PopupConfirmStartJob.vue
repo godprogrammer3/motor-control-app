@@ -5,7 +5,7 @@
       ><span class="green--text ml-3">เริ่มงาน</span></v-row
     >
     <v-row align="center" justify="center"
-      ><span>หมายเลข</span><span class="ml-3">1234</span></v-row
+      ><span>กลุ่มหมายเลข</span><span class="ml-3">{{group.group_id}}</span></v-row
     >
     <v-row align="center" justify="center"><span>ใช่หรือไม่ ?</span> </v-row>
     <v-row align="center" justify="space-around" class="mt-4">
@@ -13,7 +13,7 @@
         class="text-h4 white--text px-10"
         style="height:auto;width:auto;"
         color="green"
-        @click="$emit('popup-confirm-start-job', 'yes')"
+        @click="$emit('popup-confirm-start-job', {str:'yes',group:group})"
       >
         ใช่
       </v-btn>
@@ -21,7 +21,7 @@
         class="text-h4 white--text"
         style="height:auto;width:auto;"
         color="grey"
-        @click="$emit('popup-confirm-start-job', 'cancel')"
+        @click="$emit('popup-confirm-start-job', {str:'cancel',group:group})"
       >
         ยกเลิก
       </v-btn>
@@ -30,7 +30,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    group: {
+      type: Object,
+      default: ()=>{}
+    },
+  },
+};
 </script>
 
 <style></style>

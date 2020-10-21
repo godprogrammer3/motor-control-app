@@ -89,7 +89,12 @@ export default new Vuex.Store({
       result = await api.getAllGroup();
       this.commit("UPDATE_ALL_GROUP", result);
     },
-
+    changeOnTopWork({ commit }, payload) {
+      api.changeOnTopWork(payload);
+    },
+    changeOffsetWork({ commit }, payload) {
+      api.changeOffsetWork(payload);
+    },
     startWork({ commit }, payload) {
       api.startWork(payload);
     },

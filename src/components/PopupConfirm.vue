@@ -16,6 +16,7 @@
           ></PopupConfirmDeleteJob>
           <PopupConfirmStartJob
             v-else-if="type.str == 'startJob'"
+            :group='type.group'
             @popup-confirm-start-job="
               (event) =>
                 $emit('popup-comfirm-event', {

@@ -30,7 +30,7 @@
                   fab
                   dark
                   color="green"
-                  @click="startJob(index)"
+                  @click="startJob(item)"
                 >
                   <v-icon dark large>play_arrow</v-icon>
                 </v-btn>
@@ -207,10 +207,12 @@ export default {
           this.isDialogShow = false;
         }
       } else if (event.type == "confirm-start-job") {
-        if (event.value == "cancel") {
+        if (event.value.str == "cancel") {
           this.isDialogShow = false;
-        } else if (event.value == "yes") {
-          this.$router.replace("operating");
+        } else if (event.value.str == "yes") {
+          this.$router.replace({name:"Operating",params:{
+            group:event.value.group
+          }});
         }
       }
     },
@@ -234,9 +236,9 @@ export default {
       }
       this.isDialogShow = true;
     },
-    startJob(groupId) {
+    startJob(group) {
       this.dialogType = "confirm";
-      this.dialogValue = { str: "startJob", data: groupId };
+      this.dialogValue = { str: "startJob", group: group };
       this.isDialogShow = true;
     },
     parseDateFromDB(date){

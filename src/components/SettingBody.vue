@@ -22,6 +22,7 @@
                 @keydown="(event)=>updateValue(event,'onTop')"
                 counter
                 maxlength="8"
+                :rules="onTopRules"
               >
               </v-text-field
             >
@@ -44,6 +45,7 @@
                 @keydown="(event)=>updateValue(event,'slowModeSpeed')"
                 counter
                 maxlength="8"
+                :rules="slowModeSpeedRules"
               >
               </v-text-field
             >
@@ -76,7 +78,9 @@ export default {
     return {
       currentInput: "",
       onTop: "20",
+      onTopRules: [(v) => !!v || "กรุณากรอกค่า ON TOP"],
       slowModeSpeed: "30",
+      slowModeSpeedRules: [(v) => !!v || "กรุณากรอกค่าความเร็วโหมดช้า"],
       overlay:false
     };
   },
@@ -91,7 +95,7 @@ export default {
       this.overlay = false;});
   },
   methods: {
-    ...mapActions(["getSetting"]),
+    ...mapActions(["getSetting","editSetting"]),
     async keyboardEventHandler(event) {
       if (event.type == "letter" && event.value != ".") {
            if (this.currentInput == "onTop" && this.onTop.length < 8) {
@@ -118,7 +122,7 @@ export default {
         } else if (event.value == "save") {
           if (this.$refs.form.validate()) {
              this.overlay = true;
-            await this.saveSetting({
+            await this.editSetting({
               on_top: Number(this.onTop),
               slow_speed: Number(this.slowModeSpeed),
             });

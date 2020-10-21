@@ -194,6 +194,9 @@ class API {
   changeOnTopWork(onTop) {
     this.instance.put("/changeOnTop", onTop);
   }
+  changeOffsetWork(onTop) {
+    this.instance.put("/changeOffset", onTop);
+  }
   setModeWork(mode) {
     this.instance.put("/setMode", mode);
   }

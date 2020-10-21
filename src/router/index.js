@@ -27,7 +27,7 @@ const routes = [
     name: "Operating",
     component: Operating,
     props: (route) => ({
-      groupId: route.query.groupId,
+      ...route.params,
     }),
   },
 ];

@@ -93,7 +93,7 @@
                 ><v-row align="center" justify="center">เพิ่ม/ลด</v-row
                 ><v-row align="center" justify="center">+100</v-row
                 ><v-row align="center" justify="center"
-                  ><span class="mr-5">เมตร</span>
+                  ><span class="mr-5">แผ่น</span>
                   <v-icon x-large color="white">
                     create
                   </v-icon></v-row
@@ -245,43 +245,6 @@ export default {
     };
   },
   methods: {
-    showEditDialog(type) {
-      this.editType = type;
-      if (type === "offset") {
-        this.editValue = this.offsetValue;
-        this.displayLable = "เพิ่ม/ลด";
-      } else {
-        this.editValue = this.onTopValue;
-        this.displayLable = "On Top";
-      }
-      this.isEditDialogShow = true;
-    },
-    keyPress(key) {
-      if (key === "close") {
-        this.input = "";
-      } else if (key === "del") {
-        this.editValue = parseInt((this.editValue + "").slice(0, -1));
-        if (isNaN(this.editValue)) {
-          this.editValue = 0;
-        }
-      } else if (key === "+" || key === "-") {
-        if (key === "+") {
-          this.editValue = Math.abs(this.editValue);
-        } else {
-          this.editValue = -1 * Math.abs(this.editValue);
-        }
-      } else {
-        this.editValue = parseInt(this.editValue.toString() + key);
-      }
-    },
-    saveValue() {
-      if (this.input === "offset") {
-        this.offsetValue = this.editValue;
-      } else {
-        this.onTopValue = this.editValue;
-      }
-      this.isEditDialogShow = false;
-    },
     process() {
       this.processWork();
       this.isShowInserPaper = false;
@@ -337,12 +300,13 @@ export default {
     },
   },
   props: {
-    groupId: {
-      type: String,
-      default: "",
+    group: {
+      type: Object,
+      default:()=>{},
     },
   },
   mounted() {
+    console.log(this.group.group_id);
     // socket.on("Speed2", function(msg) {
     //   this.speed = msg;
     // });
