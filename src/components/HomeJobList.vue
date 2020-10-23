@@ -242,10 +242,12 @@ export default {
       this.isDialogShow = true;
     },
     parseDateFromDB(date){
-      let part = date.split('T');
-      part = part[0].split('-');
-      return part[2]+'/'+part[1]+'/'+part[0];
-    }
+      var d = new Date(date);
+      var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+      var offset = 7;
+      date = new Date(utc + (3600000*offset));
+      return date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
+    },
   },
   computed: {
     ...mapGetters(["getAllJobByAllGroupData"])

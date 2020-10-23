@@ -99,6 +99,7 @@
                           </td>
                           <td class="text-center text-h6 nocopy">
                             {{ parseDateFromDB(sub_item.work_date) }}
+                            <!-- {{sub_item.work_date}} -->
                           </td>
                           <td class="text-center text-h6 nocopy">
                             <v-btn
@@ -266,10 +267,7 @@ export default {
       var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
       var offset = 7;
       date = new Date(utc + (3600000*offset));
-      date = date.toISOString();
-      let part = date.split('T');
-      part = part[0].split('-');
-      return part[2]+'/'+part[1]+'/'+part[0];
+      return date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
     },
     showSearchDatePopup(){
       this.dialogType = "searchDate";

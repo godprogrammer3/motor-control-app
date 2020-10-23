@@ -1,5 +1,7 @@
 <template>
-  <v-card width="100%" class="mb-5 rounded-xl">
+<v-container fluid fill-heigh >
+  <v-row align="center" justify="center">
+    <v-card width="60%" class="mb-5 rounded-xl">
     <v-col align="center" justify="center" class="text-h3 pa-5">
       <v-row>
         <v-spacer></v-spacer><v-btn
@@ -47,6 +49,9 @@
       </v-row>
     </v-col>
   </v-card>
+  </v-row>
+</v-container>
+  
 </template>
 
 <script>
