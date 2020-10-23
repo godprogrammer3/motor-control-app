@@ -33,6 +33,33 @@
       "
     >
     </PopupEditOffset>
+    <PopupGroupDetail
+      v-else-if="type == 'groupDetail'"
+      :group="value"
+      @popup-group-detail-event="
+        (event) =>
+          $emit('popup-event', { type: event.type, value: event.value })
+      "
+    >
+    </PopupGroupDetail>
+    <PopupJobDetail
+      v-else-if="type == 'jobDetail'"
+      :job="value"
+      @popup-job-detail-event="
+        (event) =>
+          $emit('popup-event', { type: event.type, value: event.value })
+      "
+    >
+    </PopupJobDetail>
+    <PopupSearchDate
+      v-else-if="type == 'searchDate'"
+      :type="value.str"
+      @popup-search-date-event="
+        (event) =>
+          $emit('popup-event', { type: event.type, value: event.value })
+      "
+    >
+    </PopupSearchDate>
     <PopupConfirm
       v-else-if="type == 'confirm'"
       :type="value"
@@ -51,6 +78,9 @@ import PopupConfirm from "./PopupConfirm";
 import PopupEditJob from "./PopupEditJob";
 import PopupEditOnTop from "./PopupEditOnTop";
 import PopupEditOffset from "./PopupEditOffset";
+import PopupGroupDetail from "./PopupGroupDetail";
+import PopupJobDetail from "./PopupJobDetail";
+import PopupSearchDate from "./PopupSearchDate";
 export default {
   components: {
     PopupCreateJob,
@@ -58,6 +88,9 @@ export default {
     PopupEditJob,
     PopupEditOnTop,
     PopupEditOffset,
+    PopupGroupDetail,
+    PopupJobDetail,
+    PopupSearchDate
   },
   mounted() {},
   props: {

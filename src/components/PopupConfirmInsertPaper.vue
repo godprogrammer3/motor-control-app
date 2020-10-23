@@ -19,6 +19,14 @@
       >
         เริ่มดำเนินการ
       </v-btn>
+        <v-btn
+        class="text-h4 white--text px-10"
+        style="height:auto;width:auto;"
+        color="grey"
+        @click="$emit('popup-confirm-insert-paper-event','cancel')"
+      >
+        ยกเลิก
+      </v-btn>
     </v-row>
   </v-col>
 </template>

@@ -149,7 +149,7 @@
           </v-col></v-row
         >
       </footer>
-      <v-dialog v-model="isDialogShow" elevation="0">
+      <v-dialog v-model="isDialogShow" elevation="0" :persistent="isPersistent">
         <Popup
           :type="dialogType"
           :value="dialogValue"
@@ -242,6 +242,7 @@ export default {
       onTop: 30,
       offset: 100,
       isShowHomePopup: false,
+      isPersistent:true,
     };
   },
   methods: {
@@ -255,7 +256,7 @@ export default {
     },
     cancelJob() {
       this.dialogType = "confirm";
-      this.dialogValue = { str: "cancelJob" };
+      this.dialogValue = { str: "cancelJob" ,value:this.group};
       this.isDialogShow = true;
     },
     popupEventHandler(event) {
@@ -274,7 +275,12 @@ export default {
           this.isShowHomePopup = false;
         }
       }else if(event.type == "confirm-insert-paper"){
-        this.isDialogShow = false;
+        if(event.value == 'confirm'){
+          this.isDialogShow = false;
+        }else if(event.value == 'cancel'){
+          this.$router.replace({ path: '/' })
+        }
+        
       }
     },
     editOnTop() {

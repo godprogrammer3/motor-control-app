@@ -113,9 +113,9 @@
         ><TouchKeyboard @keyboard-event="keyboardEventHandler"></TouchKeyboard
       ></v-col>
     </v-row>
-    <v-dialog v-model="showDatePicker" width="20vw">
+    <v-dialog v-model="showDatePicker" width="100vw" height>
       <v-container>
-        <v-row> <v-date-picker v-model="picker" width="20vw" locale="th"></v-date-picker></v-row>
+        <v-row> <v-date-picker v-model="picker" width="35vw" locale="th" style="transform:scale(1.1);margin-left:18vw;margin-bottom:5vh;"></v-date-picker></v-row>
          <v-row justify="center">
            <v-btn
           color="indigo"
@@ -346,4 +346,7 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+ @import '~vuetify/src/components/VDatePicker/_variables.scss';
+ $date-picker-years-font-size:100px !important;
+</style>

@@ -192,6 +192,85 @@ class API {
     }
   }
 
+  async getLastHistoryDate() {
+    try {
+      var result = await this.instance.get("/getLastHistoryDate");
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async getHistoryJobByQuery(query) {
+    try {
+      let result;
+      if (query.type == "day") {
+        result = await this.instance.get(
+          `/getHistoryJobByQueryDate?date=${query.day}&month=${query.month}&year=${query.year}`
+        );
+      } else if (query.type == "month") {
+        result = await this.instance.get(
+          `/getHistoryJobByQueryMonth?month=${query.month}&year=${query.year}`
+        );
+      } else if (query.type == "year") {
+        result = await this.instance.get(
+          `/getHistoryJobByQueryYear?year=${query.year}`
+        );
+      }
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getAllYearHistory() {
+    try {
+      let result = await this.instance.get("/getAllYearHistory");
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async getAllMonthHistory(query) {
+    try {
+      let result = await this.instance.get(
+        `/getAllMonthHistory?year=${query.year}`
+      );
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async getAllDayHistory(query) {
+    try {
+      let result = await this.instance.get(
+        `/getAllDayHistory?year=${query.year}&month=${query.month}`
+      );
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("Error : " + result.status);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   startWork(work) {
     this.instance.post("/start", work);
   }

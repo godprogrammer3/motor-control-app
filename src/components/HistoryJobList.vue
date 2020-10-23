@@ -31,6 +31,7 @@
         style="width:auto;height:auto;"
         class="ma-2 pl-6 pr-6 pt-4 pb-4 white--text"
         color="indigo"
+        @click="showSearchDatePopup"
         ><v-row align="center" justify="center"
           ><v-icon x-large>date_range</v-icon
           ><span class="text-h5">{{ searchDateShow }}</span></v-row
@@ -44,7 +45,6 @@
     </v-row>
     <v-row justify="center" align="center">
       <v-list
-        v-dragscroll.y="true"
         class="mt-3 list-class"
         :style="{ height: '60vh' }"
       >
@@ -58,7 +58,7 @@
                 >กลุ่มหมายเลข {{ item.group_id }}</v-toolbar-title
               >
               <span class="text-h5 ml-5 white--text">{{
-                item.isContinue ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
+                item.is_continue ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
               }}</span>
               <v-spacer></v-spacer>
               <v-btn
@@ -67,7 +67,7 @@
                 fab
                 dark
                 color="blue"
-                @click="startJob(index)"
+                @click="openGroupDetailPopup(item)"
               >
                 <v-icon dark large>search</v-icon>
               </v-btn>
@@ -83,22 +83,22 @@
                           :key="sub_index"
                         >
                           <td class="text-center text-h6 nocopy">
-                            {{ sub_index + 1 }}
+                            {{ sub_item.job_order }}
                           </td>
                           <td class="text-center text-h6 nocopy">
                             {{ sub_item.job_id }}
                           </td>
                           <td class="text-center text-h6 nocopy">
-                            {{ sub_item.job_length }}
+                            {{ sub_item.height * sub_item.sheet }}
                           </td>
                           <td class="text-center text-h6 nocopy">
                             {{ sub_item.offset }}
                           </td>
                           <td class="text-center text-h6 nocopy">
-                            {{ sub_item.amount }}
+                            {{ sub_item.height * (sub_item.sheet+sub_item.offset) }}
                           </td>
                           <td class="text-center text-h6 nocopy">
-                            {{ sub_item.job_work_date }}
+                            {{ parseDateFromDB(sub_item.work_date) }}
                           </td>
                           <td class="text-center text-h6 nocopy">
                             <v-btn
@@ -108,7 +108,7 @@
                               dark
                               elevation="2"
                               color="blue"
-                              @click="startJob(index)"
+                              @click="openJobDetailPopup(sub_item)"
                             >
                               <v-icon dark large>search</v-icon>
                             </v-btn>
@@ -127,19 +127,23 @@
     <v-footer absolute>
       <v-row align="center" class="text-h6 pl-10 elevation-2">
         <v-col
-          ><span>จำนวนงาน</span><span class="ml-2 mr-2">100</span
+          ><span class="indigo--text">จำนวนงาน :</span><span class="ml-2 mr-2">{{totalJob}}</span
           ><span>งาน</span></v-col
         >
         <v-col
-          ><span>ความยาวรวม</span><span class="ml-2 mr-2">100</span
+          ><span class="indigo--text">ความยาวงานรวม :</span><span class="ml-2 mr-2">{{sumWorkLength.toFixed(2)}}</span
           ><span>เมตร</span></v-col
         >
         <v-col
-          ><span>เพิ่ม/ลดรวม</span><span class="ml-2 mr-2">100</span
+          ><span class="indigo--text">เพิ่ม/ลดรวม :</span><span class="ml-2 mr-2">{{sumOffset.toFixed(2)}}</span
           ><span>เมตร</span></v-col
         >
         <v-col
-          ><span>รวมทั้งหมด</span><span class="ml-2 mr-2">100</span
+          ><span class="indigo--text">รวมทั้งหมด :</span><span class="ml-2 mr-2">{{(sumWorkLength+sumOffset).toFixed(2)}}</span
+          ><span>เมตร</span></v-col
+        >
+        <v-col
+          ><span class="indigo--text">ส่วนเกินรวม :</span><span class="ml-2 mr-2">{{sumOverhead.toFixed(2)}}</span
           ><span>เมตร</span></v-col
         >
       </v-row>
@@ -162,8 +166,8 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { dragscroll } from "vue-dragscroll";
 import Popup from "@/components/Popup.vue";
+import API from "@/store/api";
 export default {
   name: "HomeJobList",
   props: {
@@ -171,9 +175,6 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  directives: {
-    dragscroll,
   },
   components: {
     Popup,
@@ -211,76 +212,19 @@ export default {
         },
         
       ],
-      items: [
-        {
-          data: [
-            {
-              job_id: 127,
-              job_length: 500,
-              offset: 100,
-              amount: 600,
-              job_work_date: "5/09/63",
-            },
-            {
-              job_id: 127,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              offset: -100,
-              amount: 400,
-            },
-            {
-              job_id: 127,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              offset: 100,
-              amount: 600,
-            },
-          ],
-          isContinue: true,
-        },
-        {
-          data: [
-            {
-              job_id: 127,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              offset: 100,
-              amount: 600,
-            },
-          ],
-          isContinue: true,
-        },
-        {
-          data: [
-            {
-              job_id: 127,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              offset: 100,
-              amount: 600,
-            },
-            {
-              job_id: 127,
-              job_length: 500,
-              job_work_date: "5/09/63",
-              offset: 100,
-              amount: 600,
-            },
-          ],
-          isContinue: false,
-        },
-      ],
       isDialogShow: false,
       dialogType: "",
       dialogValue: "",
       searchBy: "day",
-      searchDate: "10/10/2563",
-      overlay:false
+      searchDay: '',
+      searchMonth: '',
+      searchYear: '',
+      overlay:false,
+      items:[],
+      api:new API()
     };
   },
   mounted() {
-  this.overlay = true;
-    this.getAllHistoryJobByAllGroup().then(()=>{this.items = this.getAllHistoryJobByAllGroupData ,this.overlay = false;});
   },
   methods: {
     ...mapActions(["getAllHistoryJobByAllGroup"]),
@@ -289,55 +233,115 @@ export default {
         if (event.value == "cancel" || event.value == "save") {
           this.isDialogShow = false;
         }
-      } else if (event.type == "confirm-delete-job") {
-        if (event.value == "cancel" || event.value == "yes") {
-          this.isDialogShow = false;
+      }else if( event.type == 'search-date'){
+        this.items = event.value.jobs;
+        if(event.value.searchBy == 'day'){
+          this.searchDay = event.value.day;
+          this.searchMonth = event.value.month;
+          this.searchYear = event.value.year;
+        }else if( event.value.searchBy == 'month'){
+          this.searchMonth = event.value.month;
+          this.searchYear = event.value.year;
+          this.searchDay = '';
+        }else if( event.value.searchBy == 'year'){
+          this.searchYear = event.value.year;
+          this.searchDay = '';
+          this.searchMonth = '';
         }
-      } else if (event.type == "confirm-start-job") {
-        if (event.value == "cancel") {
-          this.isDialogShow = false;
-        } else if (event.value == "yes") {
-          this.$router.replace("operating");
-        }
+        this.isDialogShow = false;
       }
     },
-    deleteJob(jobId) {
-      this.dialogType = "confirm";
-      this.dialogValue = { str: "deleteJob" };
+    openGroupDetailPopup(group){
+      this.dialogType = "groupDetail";
+      this.dialogValue = group;
       this.isDialogShow = true;
     },
-    editJob(jobData) {
-      this.dialogType = "editJob";
-      this.dialogValue = jobData;
+    openJobDetailPopup(job){
+      this.dialogType = "jobDetail";
+      this.dialogValue = job;
       this.isDialogShow = true;
     },
-    showDialog(type) {
-      if (type == "confirmDelete") {
-        this.dialogType = "confirm";
-        this.dialogValue = { str: "delete" };
-      } else {
-        this.dialogType = type;
-      }
-      this.isDialogShow = true;
+    parseDateFromDB(date){
+      var d = new Date(date);
+      var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+      var offset = 7;
+      date = new Date(utc + (3600000*offset));
+      date = date.toISOString();
+      let part = date.split('T');
+      part = part[0].split('-');
+      return part[2]+'/'+part[1]+'/'+part[0];
     },
-    startJob(groupId) {
-      this.dialogType = "confirm";
-      this.dialogValue = { str: "startJob", data: groupId };
+    showSearchDatePopup(){
+      this.dialogType = "searchDate";
+      this.dialogValue = {str:this.searchBy};
       this.isDialogShow = true;
-    },
+      
+    }
   },
   computed: {
     ...mapGetters(["getAllHistoryJobByAllGroupData"]),
     searchDateShow() {
-      var dateSplilt = this.searchDate.split("/");
-      if (this.searchBy == "day") {
-        return dateSplilt[0] + "/" + dateSplilt[1] + "/" + dateSplilt[2];
-      } else if (this.searchBy == "month") {
-        return dateSplilt[1] + "/" + dateSplilt[2];
-      } else if (this.searchBy == "year") {
-        return dateSplilt[2];
+      var date = '';
+      if(this.searchDay !=''){
+        date += this.searchDay;
+      }else{
+        date += 'วัน';
+      }
+      date += '/';
+      if(this.searchMonth !=''){
+        date += this.searchMonth;
+      }else{
+        date += 'เดือน';
+      }
+      date += '/';
+      if(this.searchYear !=''){
+        date += this.searchYear;
+      }else{
+        date += 'ปี';
+      }
+      var listDate = date.split('/');
+      if(this.searchBy == 'day'){
+        return listDate[0]+'/'+listDate[1]+'/'+listDate[2];
+      }else if( this.searchBy == 'month' ){
+        return listDate[1]+'/'+listDate[2];
+      }else{
+        return listDate[2];
       }
     },
+    totalJob(){
+      var sum = 0;
+      this.items.forEach(element => {
+        sum += element.job.length;
+      });
+      return sum;
+    },
+    sumWorkLength(){
+      var sum = 0;
+      this.items.forEach(element => {
+        element.job.forEach((sub_element)=>{
+          sum += sub_element.height * sub_element.sheet / 100.0;
+        });
+      });
+      return sum;
+    },
+    sumOffset(){
+      var sum = 0;
+      this.items.forEach(element => {
+        element.job.forEach((sub_element)=>{
+          sum += sub_element.offset * sub_element.height / 100.0;
+        });
+      });
+      return sum;
+    },
+    sumOverhead(){
+       var sum = 0;
+      this.items.forEach(element => {
+        element.job.forEach((sub_element)=>{
+          sum += sub_element.overhead;
+        });
+      });
+      return sum;
+    }
   },
 };
 </script>
