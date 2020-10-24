@@ -372,9 +372,8 @@ export default {
       return part[2]+'/'+part[1]+'/'+part[0];
     },
      parseDateFormDB(date){
-      let part = date.split('T');
-      part = part[0].split('-');
-      return part[2]+'/'+part[1]+'/'+part[0];
+      var date = new Date(date);
+      return date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
     },
     addGroupAction(){
       this.mode = 'add-group';

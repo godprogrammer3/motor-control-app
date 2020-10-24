@@ -242,10 +242,7 @@ export default {
       this.isDialogShow = true;
     },
     parseDateFromDB(date){
-      var d = new Date(date);
-      var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-      var offset = 7;
-      date = new Date(utc + (3600000*offset));
+      var date = new Date(date);
       return date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
     },
   },
