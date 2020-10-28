@@ -1,9 +1,14 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-row class="elevation-2 pl-10 ma-0" style="background-color:white;">
-      <v-col v-for="(col, index) in headers" :key="index" :cols="col.col_size">
-        <span class="text-h7"> {{ col.text }}</span>
-      </v-col>
+    <v-row class="elevation-2 pl-10 ma-0" style="background-color:white;padding-left:3vw;padding-right:7vw;">
+      <v-col align="center" justify="center"><span>ลำดับ</span></v-col>
+      <v-col align="center" justify="center"><span>หมายเลขงาน</span></v-col>
+      <v-col align="center" justify="center"><span>หน้ากว้าง</span></v-col>
+      <v-col align="center" justify="center"><span>ความยาวแผ่น</span></v-col>
+      <v-col align="center" justify="center"><span>จำนวนแผ่น</span></v-col>
+      <v-col align="center" justify="center"><span>ความยาวงาน</span></v-col>
+      <v-col align="center" justify="center"><span>วันที่ดำเนินงาน</span></v-col>
+      <v-col align="center" justify="center"><span>การดำเนินงาน</span></v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-list
@@ -45,44 +50,40 @@
                             v-for="(sub_item, sub_index) in item.job"
                             :key="sub_index"
                           >
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_index + 1 }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_id }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.height * sub_item.sheet / 100.0 }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ parseDateFromDB(sub_item.work_date) }}
-                            </td>
-                            <td>
-                              <div class="text-center">
+                          <v-row align="center" justify="center" style="width:90vw;">
+                            <v-col align="center" justify="center"><span>{{ sub_index + 1 }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.job_id }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.width}}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.height}}</span></v-col>
+                            <v-col align="center" justify="center"><span> {{ sub_item.sheet}}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.height * sub_item.sheet / 100.0}}</span></v-col>
+                            <v-col align="center" justify="center"><span> {{ parseDateFromDB(sub_item.work_date) }}</span></v-col>
+                            <v-col align="center" justify="center">
+                              <v-row align="center" justify="center">  
                                 <v-btn
-        
-                                  fab
-                                  dark
-                                  color="red"
-                                  class="ma-1"
-                                  elevation="1"
-                                  @click="deleteJob(sub_item)"
-                                >
-                                  <v-icon dark large>delete</v-icon>
-                                </v-btn>
-                                <v-btn
-                               
-                                  fab
-                                  dark
-                                  color="orange"
-                                  class="ma-1"
-                                  elevation="1"
-                                  @click="editJob(sub_item)"
-                                >
-                                  <v-icon dark large>create</v-icon>
-                                </v-btn>
-                              </div>
-                            </td>
+                                    fab
+                                    dark
+                                    color="red"
+                                    class="ma-1"
+                                    elevation="1"
+                                    @click="deleteJob(sub_item)"
+                                  >
+                                    <v-icon dark large>delete</v-icon>
+                                  </v-btn>
+                                  <v-btn
+                                
+                                    fab
+                                    dark
+                                    color="orange"
+                                    class="ma-1"
+                                    elevation="1"
+                                    @click="editJob(sub_item)"
+                                  >
+                                    <v-icon dark large>create</v-icon>
+                                  </v-btn>
+                                </v-row>
+                              </v-col>
+                          </v-row>
                           </tr>
                         </tbody>
                       </template>

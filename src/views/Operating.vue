@@ -20,14 +20,16 @@
       </v-btn>
     </v-app-bar>
     <v-container fluid class="pa-0">
-      <v-row class="elevation-2 pl-10">
-        <v-col
-          v-for="(col, index) in headers"
-          :key="index"
-          :cols="col.col_size"
-        >
-          <span class="text-h6"> {{ col.text + "  " + col.data }}</span>
-        </v-col>
+      <v-row class="elevation-2" style="background-color:white;" align="center" justify="center">
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">หมายเลขงาน :</span><span class="text-h5 ml-2">1234</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">หน้ากว้าง :</span><span class="text-h5 ml-2">20 ซม.</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวแผ่น :</span ><span class="text-h5 ml-2">30 ซม.</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">จำนวนแผ่น :</span><span class="text-h5 ml-2">10 แผ่น</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวงาน :</span><span class="text-h5 ml-2">15.2 เมตร</span></v-col>
+      </v-row>
+      <v-row align="center" justify="center" class="mt-5">
+        <span class="text-h2 indigo--text">งานเสร็จสิ้น :</span>
+        <span class="text-h2 ml-5">5.65 %</span>
       </v-row>
       <v-container>
         <v-row align="center" justify="center"
@@ -137,17 +139,15 @@
       </v-row>
       <footer class="elevation-2 pl-10" fixed absolute>
         <v-row align="center" justify="center"
-          ><span class="text-h6">งานต่อไป</span></v-row
+          ><span class="text-h4 indigo--text">งานต่อไป</span></v-row
         >
-        <v-row>
-          <v-col
-            v-for="(col, index) in headers"
-            :key="index"
-            :cols="col.col_size"
-          >
-            <span class="text-h6"> {{ col.text + "  " + col.data + "1" }}</span>
-          </v-col></v-row
-        >
+        <v-row align="center" justify="center">
+          <v-col align="center" justify="center"><span class="indigo--text text-h5">หมายเลขงาน :</span><span class="text-h5 ml-2">1235</span></v-col>
+          <v-col align="center" justify="center"><span class="indigo--text text-h5">หน้ากว้าง :</span><span class="text-h5 ml-2">21 ซม.</span></v-col>
+          <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวแผ่น :</span ><span class="text-h5 ml-2">31 ซม.</span></v-col>
+          <v-col align="center" justify="center"><span class="indigo--text text-h5">จำนวนแผ่น :</span><span class="text-h5 ml-2">11 แผ่น</span></v-col>
+          <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวงาน :</span><span class="text-h5 ml-2">16.2 เมตร</span></v-col>
+        </v-row>
       </footer>
       <v-dialog v-model="isDialogShow" elevation="0" :persistent="isPersistent">
         <Popup

@@ -1,14 +1,59 @@
 <template>
   <v-container fluid class="pa-0">
     <v-row
+      v-if="mode == 'group-reorder'"
       class="elevation-2"
       justify="center"
       align="center"
-      style="padding-left: 50px; padding-right: 50px"
     >
-      <v-col v-for="(col, index) in headers" :key="index">
-        <span class="text-h7"> {{ col.text }}</span>
-      </v-col>
+    <v-col cols="1">
+      <v-row>
+        <v-col align="center" justify="center"><span>จัดลำดับกลุ่ม</span></v-col>
+      </v-row>
+    </v-col>
+    <v-col cols="10">
+       <v-row>
+        <v-col align="center" justify="center"><span>ลำดับงาน</span></v-col>
+        <v-col align="center" justify="center"><span>หมายเลขงาน</span></v-col>
+        <v-col align="center" justify="center"><span>หน้ากว้าง</span></v-col>
+        <v-col align="center" justify="center"><span>ความยาวแผ่น</span></v-col>
+        <v-col align="center" justify="center"><span>จำนวนแผ่น</span></v-col>
+        <v-col align="center" justify="center"><span>ความยาวงาน</span></v-col>
+        <v-col align="center" justify="center"><span>วันที่ดำเนินงาน</span></v-col>
+      </v-row>
+    </v-col>
+    </v-row>
+    <v-row
+      v-else-if="mode == 'add-group'"
+      class="elevation-2"
+      justify="center"
+      align="center"
+      style="padding-left:3vw;padding-right:7vw;"
+    >
+      <v-col align="center" justify="center"><span>หมายเลขงาน</span></v-col>
+      <v-col align="center" justify="center"><span>หน้ากว้าง</span></v-col>
+      <v-col align="center" justify="center"><span>ความยาวแผ่น</span></v-col>
+      <v-col align="center" justify="center"><span>จำนวนแผ่น</span></v-col>
+      <v-col align="center" justify="center"><span>ความยาวงาน</span></v-col>
+      <v-col align="center" justify="center"><span>วันที่ดำเนินงาน</span></v-col>
+      <v-col align="center" justify="center"><span>เลือก</span></v-col>
+    </v-row>
+     <v-row
+      v-else-if="mode == 'manage-member-ingroup'"
+      class="elevation-2"
+      justify="center"
+      align="center"
+      style="padding-left:3vw;padding-right:7vw;"
+    >
+      <v-col align="center" justify="center"><span>จัดลำดับงาน</span></v-col>
+      <v-col align="center" justify="center"><span>ลำดับงาน</span></v-col>
+      <v-col align="center" justify="center"><span>หมายเลขงาน</span></v-col>
+      <v-col align="center" justify="center"><span>หน้ากว้าง</span></v-col>
+      <v-col align="center" justify="center"><span>ความยาวแผ่น</span></v-col>
+      <v-col align="center" justify="center"><span>จำนวนแผ่น</span></v-col>
+      <v-col align="center" justify="center"><span>ความยาวงาน</span></v-col>
+      <v-col align="center" justify="center"><span>วันที่ดำเนินงาน</span></v-col>
+      <v-col align="center" justify="center"><span>เลือก</span></v-col>
     </v-row>
     <v-row align="center" justify="center"
       ><v-list
@@ -47,7 +92,7 @@
                   inset
                   hide-details
                   color="white"
-                  style="transform: scale(1.3); margin-right: 100px"
+                  style="transform: scale(1.3); margin-right: 100px;"
                   v-if="mode == 'group-reorder'"
                 >
                   <template v-slot:label>
@@ -82,62 +127,46 @@
                     <v-icon x-large> reorder </v-icon>
                     <v-spacer></v-spacer>
                   </v-col>
-                  <v-col :cols="mode == 'group-reorder' ? 11 : 12">
+                <v-col :cols="mode == 'group-reorder' ? 11 : 12">
+                <v-row align="center" justify="center">
                     <v-simple-table>
                       <template v-slot:default>
-                        <tbody v-if="mode == 'group-reorder'">
+                        <tbody v-if="mode == 'group-reorder'" >
                           <tr
                             v-for="(sub_item, sub_index) in item.job"
                             :key="sub_index"
+                            
                           >
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_index + 1 }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_id }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.width }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.height }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.sheet }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ parseDateFormDB(sub_item.work_date) }}
-                            </td>
+                          <v-row align="center" justify="center" style="width:90vw;">
+                            <v-col align="center" justify="center"><span>{{ sub_index + 1 }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.job_id }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.width}}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.height}}</span></v-col>
+                            <v-col align="center" justify="center"><span> {{ sub_item.sheet}}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.height * sub_item.sheet / 100.0}}</span></v-col>
+                            <v-col align="start" justify="start"><span> {{ parseDateFromDB(sub_item.work_date) }}</span></v-col>
+                           </v-row>
                           </tr>
                         </tbody>
                          <tbody v-else-if="mode == 'add-group'">
+                           
                           <tr
                             v-for="(sub_item, sub_index) in item.job"
                             :key="sub_index"
                           >
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_id }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.width }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.height }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.sheet }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ parseDateFormDB(sub_item.work_date) }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              <v-row
-                                ><v-checkbox
+                          <v-row align="center" justify="center" style="width:90vw;">
+                            <v-col align="center" justify="center"><span>{{ sub_item.job_id }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.width}}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.height}}</span></v-col>
+                            <v-col align="center" justify="center"><span> {{ sub_item.sheet}}</span></v-col>
+                            <v-col align="center" justify="center"><span >{{ sub_item.height * sub_item.sheet / 100.0}}</span></v-col>
+                            <v-col align="center" justify="center"><span class="mr-7"> {{ parseDateFromDB(sub_item.work_date) }}</span></v-col>
+                            <v-col align="center" justify="center"><v-checkbox
                                   v-model="sub_item.isSelected"
-                                  style="transform: scale(1.5)"
+                                  style="transform: scale(1.5);margin-left:5vw;"
                                 ></v-checkbox
-                              ></v-row>
-                            </td>
+                              ></v-col>
+                           </v-row>
                           </tr>
                         </tbody>
                         <draggable
@@ -152,41 +181,26 @@
                             v-for="(sub_item, sub_index) in item.job"
                             :key="sub_index"
                           >
-                           <td class="text-center text-h6 nocopy handle">
-                              <v-spacer></v-spacer>
-                                <v-icon x-large> reorder </v-icon>
-                              <v-spacer></v-spacer>
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_order}}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.job_id }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.width }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.height }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ sub_item.sheet }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              {{ parseDateFormDB(sub_item.work_date) }}
-                            </td>
-                            <td class="text-center text-h6 nocopy">
-                              <v-row
-                                ><v-checkbox
+                          <v-row align="center" justify="center" style="width:90vw;">
+                            <v-col align="center" justify="center" class="handle"> <v-icon x-large> reorder </v-icon></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.job_id }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.width}}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.height}}</span></v-col>
+                            <v-col align="center" justify="center"><span> {{ sub_item.sheet}}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.height * sub_item.sheet / 100.0}}</span></v-col>
+                            <v-col align="center" justify="center"><span> {{ parseDateFromDB(sub_item.work_date) }}</span></v-col>
+                            <v-col align="center" justify="center"><v-checkbox
                                   v-model="sub_item.isSelected"
-                                  style="transform: scale(1.5)"
+                                  style="transform: scale(1.5);margin-left:5vw;"
                                 ></v-checkbox
-                              ></v-row>
-                            </td>
+                              ></v-col>
+                           </v-row>
                           </tr>
                         </draggable>
                       </template> </v-simple-table
-                  ></v-col>
+                  >
+                </v-row>
+                </v-col>
                 </v-row>
               </v-container>
             </v-card> </v-list-item
@@ -366,12 +380,12 @@ export default {
         this.mode = "group-reorder";
       }
     },
-     parseDate(date){
+    parseDate(date){
       let part = date.split(' ');
       part = part[0].split('-');
       return part[2]+'/'+part[1]+'/'+part[0];
     },
-     parseDateFormDB(date){
+    parseDateFromDB(date){
       var date = new Date(date);
       return date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
     },
@@ -420,6 +434,6 @@ export default {
   overflow: auto;
 }
 .handle {
-  width: auto;
+  --dummy:1;
 }
 </style>

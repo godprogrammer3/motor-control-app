@@ -35,4 +35,7 @@ html
   scrollbar-width: none
 html::-webkit-scrollbar
   display: none
+.v-data-table__wrapper
+  overflow-x: hidden !important
+
 </style>

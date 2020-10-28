@@ -38,10 +38,14 @@
         ></v-btn
       >
     </v-row>
-    <v-row class="elevation-2 pl-10 ma-0" style="background-color:white;">
-      <v-col v-for="(col, index) in headers" :key="index">
-        <span class="text-h7"> {{ col.text }}</span>
-      </v-col>
+    <v-row class="elevation-2 pl-10 ma-0" style="background-color:white;padding-left:3vw;padding-right:7vw;">
+      <v-col align="center" justify="center"><span>ลำดับ</span></v-col>
+      <v-col align="center" justify="center"><span>หมายเลขงาน</span></v-col>
+      <v-col align="center" justify="center"><span>ความยาวงาน</span></v-col>
+      <v-col align="center" justify="center"><span>เพิ่ม/ลด</span></v-col>
+      <v-col align="center" justify="center"><span>ทั้งหมด</span></v-col>
+      <v-col align="center" justify="center"><span>วันที่ดำเนินงาน</span></v-col>
+      <v-col align="center" justify="center"><span>รายละเอียด</span></v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-list
@@ -82,38 +86,29 @@
                           v-for="(sub_item, sub_index) in item.job"
                           :key="sub_index"
                         >
-                          <td class="text-center text-h6 nocopy">
-                            {{ sub_item.job_order }}
-                          </td>
-                          <td class="text-center text-h6 nocopy">
-                            {{ sub_item.job_id }}
-                          </td>
-                          <td class="text-center text-h6 nocopy">
-                            {{ sub_item.height * sub_item.sheet }}
-                          </td>
-                          <td class="text-center text-h6 nocopy">
-                            {{ sub_item.offset }}
-                          </td>
-                          <td class="text-center text-h6 nocopy">
-                            {{ sub_item.height * (sub_item.sheet+sub_item.offset) }}
-                          </td>
-                          <td class="text-center text-h6 nocopy">
-                            {{ parseDateFromDB(sub_item.work_date) }}
-                            <!-- {{sub_item.work_date}} -->
-                          </td>
-                          <td class="text-center text-h6 nocopy">
-                            <v-btn
-                              v-if="isJobRunning != true"
-                              small
-                              fab
-                              dark
-                              elevation="2"
-                              color="blue"
-                              @click="openJobDetailPopup(sub_item)"
-                            >
-                              <v-icon dark large>search</v-icon>
-                            </v-btn>
-                          </td>
+                        <v-row align="center" justify="center" style="width:90vw;">
+                            <v-col align="center" justify="center"><span>{{ sub_index + 1 }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.job_id }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.height * sub_item.sheet }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.offset }}</span></v-col>
+                            <v-col align="center" justify="center"><span> {{ sub_item.height * (sub_item.sheet+sub_item.offset) }}</span></v-col>
+                            <v-col align="center" justify="center"><span> {{ parseDateFromDB(sub_item.work_date) }}</span></v-col>
+                            <v-col align="center" justify="center">
+                              <v-row align="center" justify="center">  
+                                 <v-btn
+                                    v-if="isJobRunning != true"
+                                    small
+                                    fab
+                                    dark
+                                    elevation="2"
+                                    color="blue"
+                                    @click="openJobDetailPopup(sub_item)"
+                                  >
+                                    <v-icon dark large>search</v-icon>
+                                  </v-btn>
+                                </v-row>
+                              </v-col>
+                          </v-row>
                         </tr>
                       </tbody>
                     </template>
@@ -182,37 +177,6 @@ export default {
   },
   data() {
     return {
-      headers: [
-        {
-          text: "ลำดับ",
-          col_size: 1,
-        },
-        {
-          text: "หมายเลขงาน",
-          col_size: 2,
-        },
-        {
-          text: "ความยาว",
-          col_size: 2,
-        },
-        {
-          text: "เพิ่ม/ลด",
-          col_size: 3,
-        },
-        {
-          text: "ทั้งหมด",
-          col_size: 3,
-        },
-        {
-          text: "วันที่ดำเนินงาน",
-          col_size: 3,
-        },
-        {
-          text: "รายละเอียด",
-          col_size: 3,
-        },
-        
-      ],
       isDialogShow: false,
       dialogType: "",
       dialogValue: "",
