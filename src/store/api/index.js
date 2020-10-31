@@ -2,7 +2,7 @@ import axios from "axios";
 class API {
   constructor() {
     this.instance = axios.create({
-      baseURL: "http://127.0.0.1:3000",
+      baseURL: "http://192.168.1.3:3000",
       adapter: require("axios/lib/adapters/http"),
     });
   }
@@ -271,8 +271,18 @@ class API {
     }
   }
 
-  startWork(work) {
-    this.instance.post("/start", work);
+  async startWork(id) {
+    try {
+      var result = await this.instance.get(`/initialProcess?id=${id}`);
+      if (result.status == 204) {
+        return { status: 0 };
+      } else {
+        return { status: result.status, value: result.data };
+      }
+    } catch (error) {
+      console.log(error);
+      return { status: -1 };
+    }
   }
   processWork(work) {
     this.instance.post("/process", work);

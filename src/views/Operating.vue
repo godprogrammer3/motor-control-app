@@ -314,6 +314,7 @@ export default {
     },
   },
   mounted() {
+     console.log(this.group);
      this.dialogType = "confirm";
      this.dialogValue = { str: "confirmInsertPaper" };
      this.isDialogShow = true;
