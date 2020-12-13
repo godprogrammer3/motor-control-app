@@ -63,9 +63,10 @@ export default {
     async startWork() {
       this.overlay = true;
       console.log(this.group.group_id);
-      var result = await this.api.startWork(this.group.group_id);
+      // var result = await this.api.startWork(this.group.group_id);
+      var result = 0;
       this.overlay = false;
-      if(result.status == 0){
+      if(result.status == 0 || 1){
         this.$emit('popup-confirm-start-job', {str:'yes',group:this.group})
       }else if( result.status == -1){
         console.log('Unknow Error');
