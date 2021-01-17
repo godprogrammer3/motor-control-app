@@ -34,8 +34,25 @@
     <v-dialog v-model="isDialogShow">
       <v-card width="50vw" style="margin-left:24.4%;">
         <v-row align="center" justify="center"> 
+          <v-col align="center" justify="center" class="text-h3">
+              <span>เกิดข้อผิดพลาด !</span>
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center"> 
+          <v-col align="center" justify="center" class="text-h3">
+              <span>{{errorMessage}}</span>
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center"> 
           <v-col align="center" justify="center">
-              <span>Error </span>
+               <v-btn
+        class="text-h4 white--text px-10"
+        style="height:auto;width:auto;"
+        color="indigo"
+        @click="isDialogShow = false"
+      >
+        ย้อนกลับ
+      </v-btn>
           </v-col>
         </v-row>
       </v-card>
@@ -56,26 +73,49 @@ export default {
     return {
       api: new API(),
       overlay:false,
-      isDialogShow:false
+      isDialogShow:false,
+      errorMessage:''
     }
   },
   methods: {
     async startWork() {
       this.overlay = true;
-      console.log(this.group.group_id);
       // var result = await this.api.startWork(this.group.group_id);
-      var result = 0;
+      
+      var result = await this.api.checkHostC(new Date().getTime());  
+      console.log(result);
       this.overlay = false;
-      if(result.status == 0 || 1){
-        this.$emit('popup-confirm-start-job', {str:'yes',group:this.group})
-      }else if( result.status == -1){
-        console.log('Unknow Error');
-        this.isDialogShow = true;
+      if(result.status == 0){
+        console.log("Host c is connected.");
+        result = await this.api.initialProcessCheck();
+        if(result.status == 0){
+          this.$emit('popup-confirm-start-job', {str:'yes',group:this.group})
+        }else if( result.status == -1){
+          console.log('Unknow Error');
+          this.errorMessage = 'ข้อผิดพลาดที่ไม่รู้จัก';
+          this.isDialogShow = true;
+        }else{
+          console.log('Error:',result.data);
+          this.errorMessage = result.data;
+          this.isDialogShow = true;
+        }
       }else{
-        console.log('Error:',result.data);
+        this.errorMessage = 'เครื่อง C ไม่ได้เชื่อมต่อ';
         this.isDialogShow = true;
       }
+      
     }
+  },
+  sockets: {
+    connect: function() {
+      console.log("socket connected");
+    },
+    test: function(data) {
+      console.log(
+        'this method was fired by the socket server. eg: io.emit("customEmit", data)'
+      );
+      console.log(data);
+    },
   },
 };
 </script>

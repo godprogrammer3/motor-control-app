@@ -277,6 +277,7 @@ export default {
       }else if(event.type == "confirm-insert-paper"){
         if(event.value == 'confirm'){
           this.isDialogShow = false;
+          
         }else if(event.value == 'cancel'){
           this.$router.replace({ path: '/' })
         }
@@ -318,6 +319,7 @@ export default {
      this.dialogType = "confirm";
      this.dialogValue = { str: "confirmInsertPaper" };
      this.isDialogShow = true;
+    //  this.$socket.emit('test', 'Hello from main-control-app');
     // socket.on("Speed2", function(msg) {
     //   this.speed = msg;
     // });
@@ -326,10 +328,8 @@ export default {
     connect: function() {
       console.log("socket connected");
     },
-    test: function(data) {
-      console.log(
-        'this method was fired by the socket server. eg: io.emit("customEmit", data)'
-      );
+    CHANGE_PAPER_EVENT: function(data) {
+      console.log('-> This is data change paper event');
       console.log(data);
     },
   },

@@ -15,7 +15,7 @@
         class="text-h4 white--text px-10"
         style="height:auto;width:auto;"
         color="indigo"
-        @click="$emit('popup-confirm-insert-paper-event','confirm')"
+        @click="startWork"
       >
         เริ่มดำเนินการ
       </v-btn>
@@ -23,24 +23,49 @@
         class="text-h4 white--text px-10"
         style="height:auto;width:auto;"
         color="grey"
-        @click="$emit('popup-confirm-insert-paper-event','cancel')"
+        @click="cancelJob"
       >
         ยกเลิก
       </v-btn>
     </v-row>
+    <v-overlay :value="overlay"><v-progress-circular
+      :size="50"
+      color="indigo"
+      indeterminate
+    ></v-progress-circular></v-overlay>
   </v-col>
 </template>
 
 <script>
 import { mapActions} from "vuex";
+import API from "@/store/api";
 export default {
   props: {
   },
   data() {
     return {
+      api:new API(),
+      overlay:false,
+      
     }
   },
   methods: {
+    async startWork(){
+      this.overlay = true;
+      var result = await this.api.startWork();
+      this.overlay = false;
+      if(result.status == 0){
+        this.$emit('popup-confirm-insert-paper-event','confirm');
+      }
+    },
+    async cancelJob(){
+      this.overlay = true;
+      var result = await this.api.cancelJob();
+      this.overlay = false;
+      if(result.status == 0){
+        this.$emit('popup-confirm-insert-paper-event','cancel')
+      }
+    }
   },
 };
 </script>

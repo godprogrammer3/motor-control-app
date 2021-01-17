@@ -69,6 +69,15 @@
           $emit('popup-event', { type: event.type, value: event.value })
       "
     ></PopupConfirm>
+    <PopupError
+      v-else-if="type == 'error'"
+      class="align-center"
+      :value="value"
+      @popup-error-event="
+        (event) =>
+          $emit('popup-event', { type: event.type, value: event.value })
+      "
+    ></PopupError>
   </div>
 </template>
 
@@ -81,6 +90,7 @@ import PopupEditOffset from "./PopupEditOffset";
 import PopupGroupDetail from "./PopupGroupDetail";
 import PopupJobDetail from "./PopupJobDetail";
 import PopupSearchDate from "./PopupSearchDate";
+import PopupError from "./PopupError";
 export default {
   components: {
     PopupCreateJob,
@@ -90,7 +100,8 @@ export default {
     PopupEditOffset,
     PopupGroupDetail,
     PopupJobDetail,
-    PopupSearchDate
+    PopupSearchDate,
+    PopupError
   },
   mounted() {},
   props: {

@@ -10,15 +10,15 @@
                   <span class="text-h4 indigo--text">หมายเลขงาน</span>
                   <v-text-field
                   ref="jobId"
+                  id="jobId"
                   :value="jobId"
                   class="text-h4"
                   placeholder="กรอกค่า"
-                  @click="textFieldFocusHandler('jobId')"
-                  @focus="textFieldFocusHandler('jobId')"
                   :rules="jobIdRules"
                   required
                   style="text-align: center"
                   @keydown="(event)=>updateValue(event,'jobId')"
+                  @keyup="(event)=>enterHandler(event,'jobId')"
                   counter
                   maxlength="20"
                 >
@@ -251,34 +251,34 @@ export default {
       }
     },
     textFieldFocusHandler(type) {
-      this.currentInput = type;
-      var element;
-      if (type == "jobId") {
-        element = this.$refs.jobId.$el.querySelector("input");
-        this.$nextTick(() => {
-          element.setSelectionRange(element.value.length, element.value.length);
-        });
-      } else if (type == "width") {
-        element = this.$refs.width.$el.querySelector("input");
-        this.$nextTick(() => {
-          element.setSelectionRange(element.value.length, element.value.length);
-        });
-      } else if (type == "height") {
-        element = this.$refs.height.$el.querySelector("input");
-        this.$nextTick(() => {
-          element.setSelectionRange(element.value.length, element.value.length);
-        });
-      } else if (type == "sheet") {
-        element = this.$refs.sheet.$el.querySelector("input");
-        this.$nextTick(() => {
-          element.setSelectionRange(element.value.length, element.value.length);
-        });
-      } else if (type == "workDate") {
-        element = this.$refs.workDate.$el.querySelector("input");
-        this.$nextTick(() => {
-          element.setSelectionRange(element.value.length, element.value.length);
-        });
-      }
+      // this.currentInput = type;
+      // var element;
+      // if (type == "jobId") {
+      //   element = this.$refs.jobId.$el.querySelector("input");
+      //   this.$nextTick(() => {
+      //     element.setSelectionRange(element.value.length, element.value.length);
+      //   });
+      // } else if (type == "width") {
+      //   element = this.$refs.width.$el.querySelector("input");
+      //   this.$nextTick(() => {
+      //     element.setSelectionRange(element.value.length, element.value.length);
+      //   });
+      // } else if (type == "height") {
+      //   element = this.$refs.height.$el.querySelector("input");
+      //   this.$nextTick(() => {
+      //     element.setSelectionRange(element.value.length, element.value.length);
+      //   });
+      // } else if (type == "sheet") {
+      //   element = this.$refs.sheet.$el.querySelector("input");
+      //   this.$nextTick(() => {
+      //     element.setSelectionRange(element.value.length, element.value.length);
+      //   });
+      // } else if (type == "workDate") {
+      //   element = this.$refs.workDate.$el.querySelector("input");
+      //   this.$nextTick(() => {
+      //     element.setSelectionRange(element.value.length, element.value.length);
+      //   });
+      // }
     },
     ...mapActions(["createJob"]),
     parseDate(date){
@@ -298,49 +298,75 @@ export default {
       this.showDatePicker = false;
     },
     updateValue(event,type){
-      event.preventDefault();
       var letters;
-      if(type == 'jobId' ){
-        letters = /^[0-9a-zA-Z]$/;
-        if(event.key.match(letters) && this.jobId.length < 20){
-           this.jobId += event.key;
-        }else if(event.key == 'Backspace'){
-          this.jobId = this.jobId.slice(0, -1)
-        }
-      }else if(type == 'width' ){
-         letters = /^[0-9]$/;
-        if(event.key.match(letters) && this.width.length < 8){
-          if(this.width.length != 0){
-            this.width += event.key;
-          }else if(event.key != '0'){
-            this.width += event.key;
-          }
-        }else if(event.key == 'Backspace'){
-          this.width = this.width.slice(0, -1)
-        }
-      }else if(type == 'height' ){
-         letters = /^[0-9]$/;
-        if(event.key.match(letters) && this.height.length < 8){
-          if(this.height.length != 0){
-            this.height += event.key;
-          }else if(event.key != '0'){
-            this.height += event.key;
-          }
-        }else if(event.key == 'Backspace'){
-          this.height = this.height.slice(0, -1)
-        }
-      }else if(type == 'sheet' ){
-         letters = /^[0-9]$/;
-        if(event.key.match(letters)  && this.sheet.length < 8){
-          if(this.sheet.length != 0){
-            this.sheet += event.key;
-          }else if(event.key != '0'){
-            this.sheet += event.key;
-          }
-        }else if(event.key == 'Backspace'){
-          this.sheet = this.sheet.slice(0, -1)
+      letters = /^[0-9a-zA-Z\u0E00-\u0E7F]$/;
+      if( !event.key.match(letters) && event.key != 'Backspace'){
+        event.preventDefault();
+      }
+      //event.preventDefault();
+      // console.log('-> id :',event.target.id);
+      // console.log('-> selection start :',event.target.selectionStart);
+      // console.log('-> selection end :',event.target.selectionEnd);
+      // var letters;
+      // if(event.target.id == 'jobId' ){
+      //   letters = /^[0-9a-zA-Z\u0E00-\u0E7F]$/;
+      //   if(event.key.match(letters) && this.jobId.length < 20){
+      //     this.jobId = this.jobId.substring(0,event.target.selectionStart)+event.key+this.jobId.substring(event.target.selectionEnd);
+      //   }else if(event.key == 'Backspace'){
+      //     if( event.target.selectionStart != event.target.selectionEnd){
+      //       this.jobId = this.jobId.substring(0,event.target.selectionStart)+this.jobId.substring(event.target.selectionEnd);
+      //     }else{
+      //       this.jobId = this.jobId.substring(0,event.target.selectionStart-1)+this.jobId.substring(event.target.selectionEnd);
+      //     }
+          
+      //   }
+      //   event.target.setSelectionRange(0,0);
+      // }else if(type == 'width' ){
+      //    letters = /^[0-9]$/;
+      //   if(event.key.match(letters) && this.width.length < 8){
+      //     if(this.width.length != 0){
+      //       this.width += event.key;
+      //     }else if(event.key != '0'){
+      //       this.width += event.key;
+      //     }
+      //   }else if(event.key == 'Backspace'){
+      //     this.width = this.width.slice(0, -1)
+      //   }
+      // }else if(type == 'height' ){
+      //    letters = /^[0-9]$/;
+      //   if(event.key.match(letters) && this.height.length < 8){
+      //     if(this.height.length != 0){
+      //       this.height += event.key;
+      //     }else if(event.key != '0'){
+      //       this.height += event.key;
+      //     }
+      //   }else if(event.key == 'Backspace'){
+      //     this.height = this.height.slice(0, -1)
+      //   }
+      // }else if(type == 'sheet' ){
+      //    letters = /^[0-9]$/;
+      //   if(event.key.match(letters)  && this.sheet.length < 8){
+      //     if(this.sheet.length != 0){
+      //       this.sheet += event.key;
+      //     }else if(event.key != '0'){
+      //       this.sheet += event.key;
+      //     }
+      //   }else if(event.key == 'Backspace'){
+      //     this.sheet = this.sheet.slice(0, -1)
+      //   }
+      // }
+    },
+    enterHandler(event,type){
+      if( event.keyCode == 13){
+        var element;
+        if(event.target.id == 'jobId'){
+          element = this.$refs.width.$el.querySelector("input");
+          this.$nextTick(() => {
+            element.focus();
+          });
         }
       }
+     
     }
   },
 };

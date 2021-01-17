@@ -2,7 +2,7 @@ import axios from "axios";
 class API {
   constructor() {
     this.instance = axios.create({
-      baseURL: "http://localhost:3001",
+      baseURL: "http://localhost:4001",
       adapter: require("axios/lib/adapters/http"),
     });
   }
@@ -304,6 +304,58 @@ class API {
   }
   setSlowWork(isSlow) {
     this.instance.put("/setSlow", isSlow);
+  }
+  async checkHostC(time) {
+    try {
+      var result = await this.instance.get(`/checkHostC?time=${time}`);
+      if (result.status == 204) {
+        return { status: 0 };
+      } else {
+        return { status: result.status, value: result.data };
+      }
+    } catch (error) {
+      console.log(error);
+      return { status: -1 };
+    }
+  }
+  async initialProcessCheck() {
+    try {
+      var result = await this.instance.get(`/initialProcessCheck`);
+      if (result.status == 204) {
+        return { status: 0 };
+      } else {
+        return { status: result.status, value: result.data };
+      }
+    } catch (error) {
+      console.log(error);
+      return { status: -1 };
+    }
+  }
+  async startWork() {
+    try {
+      var result = await this.instance.get(`/startWork`);
+      if (result.status == 204) {
+        return { status: 0 };
+      } else {
+        return { status: result.status, value: result.data };
+      }
+    } catch (error) {
+      console.log(error);
+      return { status: -1 };
+    }
+  }
+  async cancelJob() {
+    try {
+      var result = await this.instance.get(`/cancelJob`);
+      if (result.status == 204) {
+        return { status: 0 };
+      } else {
+        return { status: result.status, value: result.data };
+      }
+    } catch (error) {
+      console.log(error);
+      return { status: -1 };
+    }
   }
 }
 export default API;

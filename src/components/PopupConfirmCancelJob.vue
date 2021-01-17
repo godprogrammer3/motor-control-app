@@ -13,7 +13,7 @@
         class="text-h4 white--text px-10"
         style="height:auto;width:auto;"
         color="red"
-        @click="$emit('popup-confirm-start-job', 'yes')"
+        @click="cancelJob"
       >
         ใช่
       </v-btn>
@@ -30,12 +30,25 @@
 </template>
 
 <script>
+import API from "@/store/api";
 export default {
   props: {
     group: {
       type: Object,
       default: ()=>{}
     },
+  },
+  data() {
+    return {
+      api: new API()
+    }
+  },
+  methods: {
+    async cancelJob() {
+      console.log('cancel job in Popup confirm cancel job');
+      var result = await this.api.cancelJob();
+      this.$emit('popup-confirm-start-job', 'yes')
+    }
   },
 };
 </script>
