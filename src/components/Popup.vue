@@ -10,7 +10,7 @@
     <PopupEditJob
       v-else-if="type == 'editJob'"
       :job="value"
-      @popup-create-event="
+      @popup-edit-event="
         (event) =>
           $emit('popup-event', { type: event.type, value: event.value })
       "

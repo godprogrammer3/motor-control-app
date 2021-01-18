@@ -25,18 +25,18 @@
       </v-row>
       <v-row align="center" justify="center">
        <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">หน้ากว้าง : </span></v-col>
-       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.width}} ซม.</span></v-col> 
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.width}} นิ้ว</span></v-col> 
       </v-row>
       <v-row align="center" justify="center">
        <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">ความยาว : </span></v-col>
-       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.height}} ซม.</span></v-col> 
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.height}} มม.</span></v-col> 
       </v-row>
       <v-row align="center" justify="center">
        <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">จำนวนแผ่น : </span></v-col>
        <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.sheet}} แผ่น</span></v-col> 
       </v-row>
       <v-row align="center" justify="center">
-       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">ความยาวงานรวม : </span></v-col>
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">ความยาวงานเดิม : </span></v-col>
        <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{(job.height*job.sheet/100.0).toFixed(2)}} เมตร</span></v-col> 
       </v-row>
       <v-row align="center" justify="center">

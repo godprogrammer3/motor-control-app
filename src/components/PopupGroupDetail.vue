@@ -32,7 +32,7 @@
        <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{group.job.length}} งาน</span></v-col> 
       </v-row>
       <v-row align="center" justify="center">
-       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">ความยาวงานรวม : </span></v-col>
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">ความยาวงานเดิม : </span></v-col>
        <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{sumWorkLength(group.job).toFixed(2)}} เมตร</span></v-col> 
       </v-row>
       <v-row align="center" justify="center">

@@ -10,21 +10,21 @@
         class="ma-2 white--text"
         :color="searchBy == 'day' ? 'indigo' : 'grey'"
         @click="searchBy = 'day'"
-        ><span class="text-h5">วัน</span></v-btn
+        ><span class="text-h5">แบบวัน</span></v-btn
       >
       <v-btn
         style="width:9vw;height:9vh;"
         class="ma-2"
         :color="searchBy == 'month' ? 'indigo' : 'grey'"
         @click="searchBy = 'month'"
-        ><span class="text-h5 white--text">เดือน</span></v-btn
+        ><span class="text-h5 white--text">แบบเดือน</span></v-btn
       >
       <v-btn
         style="width:9vw;height:9vh;"
         class="ma-2"
         :color="searchBy == 'year' ? 'indigo' : 'grey'"
         @click="searchBy = 'year'"
-        ><span class="text-h5 white--text">ปี</span></v-btn
+        ><span class="text-h5 white--text">แบบปี</span></v-btn
       >
       <v-spacer></v-spacer>
       <v-btn
@@ -127,7 +127,7 @@
           ><span>งาน</span></v-col
         >
         <v-col
-          ><span class="indigo--text">ความยาวงานรวม :</span><span class="ml-2 mr-2">{{sumWorkLength.toFixed(2)}}</span
+          ><span class="indigo--text">ความยาวงานเดิม :</span><span class="ml-2 mr-2">{{sumWorkLength.toFixed(2)}}</span
           ><span>เมตร</span></v-col
         >
         <v-col

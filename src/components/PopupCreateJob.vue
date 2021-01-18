@@ -11,12 +11,14 @@
                   <v-text-field
                   ref="jobId"
                   id="jobId"
-                  :value="jobId"
+                  v-model="jobId"
                   class="text-h4"
                   placeholder="กรอกค่า"
                   :rules="jobIdRules"
                   required
                   style="text-align: center"
+                  @click="textFieldFocusHandler('jobId')"
+                  @focus="textFieldFocusHandler('jobId')"
                   @keydown="(event)=>updateValue(event,'jobId')"
                   @keyup="(event)=>enterHandler(event,'jobId')"
                   counter
@@ -31,8 +33,9 @@
                   <span class="text-h4 indigo--text">หน้ากว้าง</span>
                    <v-text-field
                   ref="width"
-                  :value="width"
-                  suffix="ซม."
+                  id="width"
+                  v-model="width"
+                  suffix="นิ้ว"
                   class="text-h4"
                   placeholder="กรอกค่า"
                   @click="textFieldFocusHandler('width')"
@@ -40,6 +43,7 @@
                   :rules="widthRules"
                   required
                   @keydown="(event)=>updateValue(event,'width')"
+                  @keyup="(event)=>enterHandler(event,'width')"
                   counter
                   maxlength="8"
                 >
@@ -52,8 +56,9 @@
                    <span class="text-h4 indigo--text">ความยาว</span>
                    <v-text-field
                   ref="height"
-                  :value="height"
-                  suffix="ซม."
+                  id="height"
+                  v-model="height"
+                  suffix="มม."
                   class="text-h4"
                   placeholder="กรอกค่า"
                   @click="textFieldFocusHandler('height')"
@@ -61,6 +66,7 @@
                   :rules="heightRules"
                   required
                   @keydown="(event)=>updateValue(event,'height')"
+                  @keyup="(event)=>enterHandler(event,'height')"
                   counter
                   maxlength="8"
                 >
@@ -73,7 +79,8 @@
                   <span class="text-h4 indigo--text">จำนวนแผ่น</span>
                   <v-text-field
                   ref="sheet"
-                  :value="sheet"
+                  id='sheet'
+                  v-model="sheet"
                   suffix="แผ่น"
                   class="text-h4"
                   placeholder="กรอกค่า"
@@ -82,6 +89,7 @@
                   :rules="sheetRules"
                   required
                   @keydown="(event)=>updateValue(event,'sheet')"
+                  @keyup="(event)=>enterHandler(event,'sheet')"
                   counter
                   maxlength="8"
                 >
@@ -94,12 +102,14 @@
                   <span class="text-h4 indigo--text">วันที่ดำเนินงาน</span>
                   <v-text-field
                   ref="workDate" 
+                  id="workDate"
                   :value="workDate"
                   class="text-h4"
                   placeholder="กรอกค่า"
                   @click="showDatePicker = true"
                   :rules="workDateRules"
                   required
+                  @keydown="(event)=>updateValue(event,'workDate')"
                 >
                 </v-text-field
               >
@@ -179,40 +189,107 @@ export default {
   methods: {
     async keyboardEventHandler(event) {
       if (event.type == "letter" && event.value != ".") {
-          if (this.currentInput == "jobId" && this.jobId.length < 20) {
-            this.jobId += event.value;
-          } else if (this.currentInput == "width" && this.width.length < 8) {
-            if(this.width.length != 0){
-              this.width += event.value;
-            }else if(event.value != '0'){
-              this.width += event.value;
+          var element;  
+          if (this.currentInput == "jobId") {
+            element = this.$refs.jobId.$el.querySelector("input");
+            if( this.jobId.length < 20 || element.selectionStart != element.selectionEnd ){
+              var newSelectionStart = element.selectionStart + 1;
+              this.jobId = this.jobId.substring(0,element.selectionStart)+event.value+this.jobId.substring(element.selectionEnd);
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
             }
-          } else if (this.currentInput == "height" && this.height.length < 8) {
-            if(this.height.length != 0){
-             this.height += event.value;
-            }else if(event.value != '0'){
-             this.height += event.value;
+          } else if (this.currentInput == "width") {
+            element = this.$refs.width.$el.querySelector("input");
+            if( (this.width.length < 8 || element.selectionStart != element.selectionEnd) && (event.value != '0' || element.selectionStart != 0)){
+              var newSelectionStart = element.selectionStart + 1;
+              this.width = this.width.substring(0,element.selectionStart)+event.value+this.width.substring(element.selectionEnd);
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
             }
-          } else if (this.currentInput == "sheet" && this.sheet.length < 8) {
-            if(this.sheet.length != 0){
-              this.sheet += event.value;
-            }else if(event.value != '0'){
-              this.sheet += event.value;
+          } else if (this.currentInput == "height") {
+            element = this.$refs.height.$el.querySelector("input");
+            if( (this.height.length < 8 || element.selectionStart != element.selectionEnd) && (event.value != '0' || element.selectionStart != 0)){
+              var newSelectionStart = element.selectionStart + 1;
+              this.height = this.height.substring(0,element.selectionStart)+event.value+this.height.substring(element.selectionEnd);
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
+            }
+          } else if (this.currentInput == "sheet") {
+            element = this.$refs.sheet.$el.querySelector("input");
+            if( (this.sheet.length < 8 || element.selectionStart != element.selectionEnd) && (event.value != '0' || element.selectionStart != 0)){
+              var newSelectionStart = element.selectionStart + 1;
+              this.sheet = this.sheet.substring(0,element.selectionStart)+event.value+this.sheet.substring(element.selectionEnd);
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
             }
           }
         
       } else if (event.type == "action") {
         if (event.value == "delete") {
           if (this.currentInput == "jobId") {
-            this.jobId = this.jobId.slice(0, -1);
+            element = this.$refs.jobId.$el.querySelector("input");
+            var newSelectionStart;
+              if( element.selectionStart == element.selectionEnd){
+                newSelectionStart = element.selectionStart - 1;
+                this.jobId = this.jobId.substring(0,element.selectionStart-1)+this.jobId.substring(element.selectionEnd);
+              }else{
+                newSelectionStart = element.selectionStart;
+                this.jobId = this.jobId.substring(0,element.selectionStart)+this.jobId.substring(element.selectionEnd);
+              }
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
           } else if (this.currentInput == "width") {
-            this.width = this.width.slice(0, -1);
+            element = this.$refs.width.$el.querySelector("input");
+            var newSelectionStart;
+              if( element.selectionStart == element.selectionEnd){
+                newSelectionStart = element.selectionStart - 1;
+                this.width = this.width.substring(0,element.selectionStart-1)+this.width.substring(element.selectionEnd);
+              }else{
+                newSelectionStart = element.selectionStart;
+                this.width = this.width.substring(0,element.selectionStart)+this.width.substring(element.selectionEnd);
+              }
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
           } else if (this.currentInput == "height") {
-            this.height = this.height.slice(0, -1);
+            element = this.$refs.height.$el.querySelector("input");
+            var newSelectionStart;
+              if( element.selectionStart == element.selectionEnd){
+                newSelectionStart = element.selectionStart - 1;
+                this.height = this.height.substring(0,element.selectionStart-1)+this.height.substring(element.selectionEnd);
+              }else{
+                newSelectionStart = element.selectionStart;
+                this.height = this.height.substring(0,element.selectionStart)+this.height.substring(element.selectionEnd);
+              }
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
           } else if (this.currentInput == "sheet") {
-            this.sheet = this.sheet.slice(0, -1);
-          } else if (this.currentInput == "workDate") {
-            this.workDate = this.workDate.slice(0, -1);
+            element = this.$refs.sheet.$el.querySelector("input");
+            var newSelectionStart;
+              if( element.selectionStart == element.selectionEnd){
+                newSelectionStart = element.selectionStart - 1;
+                this.sheet = this.sheet.substring(0,element.selectionStart-1)+this.sheet.substring(element.selectionEnd);
+              }else{
+                newSelectionStart = element.selectionStart;
+                this.sheet = this.sheet.substring(0,element.selectionStart)+this.sheet.substring(element.selectionEnd);
+              }
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
           }
         } else if (event.value == "save") {
           if (this.$refs.form.validate()) {
@@ -224,7 +301,7 @@ export default {
               sheet:Number(this.sheet),
               work_date: this.deParseDate(this.workDate)+' 00:00:00',
             });
-             this.overlay = false;
+            this.overlay = false;
             this.$emit("popup-create-event", {
               type: event.type,
               value: event.value,
@@ -251,34 +328,7 @@ export default {
       }
     },
     textFieldFocusHandler(type) {
-      // this.currentInput = type;
-      // var element;
-      // if (type == "jobId") {
-      //   element = this.$refs.jobId.$el.querySelector("input");
-      //   this.$nextTick(() => {
-      //     element.setSelectionRange(element.value.length, element.value.length);
-      //   });
-      // } else if (type == "width") {
-      //   element = this.$refs.width.$el.querySelector("input");
-      //   this.$nextTick(() => {
-      //     element.setSelectionRange(element.value.length, element.value.length);
-      //   });
-      // } else if (type == "height") {
-      //   element = this.$refs.height.$el.querySelector("input");
-      //   this.$nextTick(() => {
-      //     element.setSelectionRange(element.value.length, element.value.length);
-      //   });
-      // } else if (type == "sheet") {
-      //   element = this.$refs.sheet.$el.querySelector("input");
-      //   this.$nextTick(() => {
-      //     element.setSelectionRange(element.value.length, element.value.length);
-      //   });
-      // } else if (type == "workDate") {
-      //   element = this.$refs.workDate.$el.querySelector("input");
-      //   this.$nextTick(() => {
-      //     element.setSelectionRange(element.value.length, element.value.length);
-      //   });
-      // }
+      this.currentInput = type;
     },
     ...mapActions(["createJob"]),
     parseDate(date){
@@ -299,75 +349,82 @@ export default {
     },
     updateValue(event,type){
       var letters;
-      letters = /^[0-9a-zA-Z\u0E00-\u0E7F]$/;
-      if( !event.key.match(letters) && event.key != 'Backspace'){
+      if(type == 'jobId'){
+        letters = /^[0-9a-zA-Z\u0E00-\u0E7F]$/;
+        if( !event.key.match(letters) && event.key != 'Backspace' && event.key!= 'ArrowUp' && event.key!= 'ArrowDown'  && event.key!= 'ArrowLeft' && event.key != 'ArrowRight' && !event.ctrlKey){
+          event.preventDefault();
+        }
+      }else if(type == 'width' || type=='height' || type=='sheet' ){
+        letters = /^[0-9]$/;
+        if( !event.key.match(letters) && event.key != 'Backspace' && event.key!= 'ArrowUp' && event.key!= 'ArrowDown'  && event.key!= 'ArrowLeft' && event.key!= 'ArrowRight' && !event.ctrlKey){
+          event.preventDefault();
+        }else if(event.key == '0' && event.target.selectionStart == 0){
+          event.preventDefault();
+        }
+      }else if( type == 'workDate'){
         event.preventDefault();
       }
-      //event.preventDefault();
-      // console.log('-> id :',event.target.id);
-      // console.log('-> selection start :',event.target.selectionStart);
-      // console.log('-> selection end :',event.target.selectionEnd);
-      // var letters;
-      // if(event.target.id == 'jobId' ){
-      //   letters = /^[0-9a-zA-Z\u0E00-\u0E7F]$/;
-      //   if(event.key.match(letters) && this.jobId.length < 20){
-      //     this.jobId = this.jobId.substring(0,event.target.selectionStart)+event.key+this.jobId.substring(event.target.selectionEnd);
-      //   }else if(event.key == 'Backspace'){
-      //     if( event.target.selectionStart != event.target.selectionEnd){
-      //       this.jobId = this.jobId.substring(0,event.target.selectionStart)+this.jobId.substring(event.target.selectionEnd);
-      //     }else{
-      //       this.jobId = this.jobId.substring(0,event.target.selectionStart-1)+this.jobId.substring(event.target.selectionEnd);
-      //     }
-          
-      //   }
-      //   event.target.setSelectionRange(0,0);
-      // }else if(type == 'width' ){
-      //    letters = /^[0-9]$/;
-      //   if(event.key.match(letters) && this.width.length < 8){
-      //     if(this.width.length != 0){
-      //       this.width += event.key;
-      //     }else if(event.key != '0'){
-      //       this.width += event.key;
-      //     }
-      //   }else if(event.key == 'Backspace'){
-      //     this.width = this.width.slice(0, -1)
-      //   }
-      // }else if(type == 'height' ){
-      //    letters = /^[0-9]$/;
-      //   if(event.key.match(letters) && this.height.length < 8){
-      //     if(this.height.length != 0){
-      //       this.height += event.key;
-      //     }else if(event.key != '0'){
-      //       this.height += event.key;
-      //     }
-      //   }else if(event.key == 'Backspace'){
-      //     this.height = this.height.slice(0, -1)
-      //   }
-      // }else if(type == 'sheet' ){
-      //    letters = /^[0-9]$/;
-      //   if(event.key.match(letters)  && this.sheet.length < 8){
-      //     if(this.sheet.length != 0){
-      //       this.sheet += event.key;
-      //     }else if(event.key != '0'){
-      //       this.sheet += event.key;
-      //     }
-      //   }else if(event.key == 'Backspace'){
-      //     this.sheet = this.sheet.slice(0, -1)
-      //   }
-      // }
+      
     },
     enterHandler(event,type){
       if( event.keyCode == 13){
         var element;
         if(event.target.id == 'jobId'){
-          element = this.$refs.width.$el.querySelector("input");
-          this.$nextTick(() => {
-            element.focus();
-          });
+          if(this.jobId != ''){
+            element = this.$refs.width.$el.querySelector("input");
+            this.$nextTick(() => {
+              element.focus();
+            });
+          }else{
+             element = this.$refs.jobId.$el.querySelector("input");
+             element.blur();
+             this.$nextTick(() => {
+              element.focus();
+             });
+          }
+        }else if(event.target.id == 'width'){
+          if(this.width != ''){
+            element = this.$refs.height.$el.querySelector("input");
+            this.$nextTick(() => {
+              element.focus();
+            });
+          }else{
+             element = this.$refs.width.$el.querySelector("input");
+             element.blur();
+             this.$nextTick(() => {
+              element.focus();
+             });
+          }
+        }else if(event.target.id == 'height'){
+          if(this.height != ''){
+            element = this.$refs.sheet.$el.querySelector("input");
+            this.$nextTick(() => {
+              element.focus();
+            });
+          }else{
+             element = this.$refs.height.$el.querySelector("input");
+             element.blur();
+             this.$nextTick(() => {
+              element.focus();
+             });
+          }
+        }else if(event.target.id == 'sheet'){
+          if(this.sheet != ''){
+            element = this.$refs.workDate.$el.querySelector("input");
+            this.$nextTick(() => {
+              element.click();
+            });
+          }else{
+             element = this.$refs.sheet.$el.querySelector("input");
+             element.blur();
+             this.$nextTick(() => {
+              element.focus();
+             });
+          }
         }
       }
      
-    }
+    },
   },
 };
 </script>
