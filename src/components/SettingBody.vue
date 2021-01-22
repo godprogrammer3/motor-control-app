@@ -14,12 +14,15 @@
               <span class="text-h4 indigo--text">ค่า ONTOP</span>
                <v-text-field
                 ref="onTop"
-                :value="onTop"
+                id="onTop"
+                v-model="onTop"
                 suffix="เมตร"
                 style="transform:scale(2);"
                 placeholder="กรอกค่า"
                 @click="textFieldFocusHandler('onTop')"
+                @focus="textFieldFocusHandler('onTop')"
                 @keydown="(event)=>updateValue(event,'onTop')"
+                @keyup="(event)=>enterHandler(event,'onTop')"
                 counter
                 maxlength="8"
                 :rules="onTopRules"
@@ -37,12 +40,15 @@
               <span class="text-h4 indigo--text">ความเร็วโหมดช้า</span>
               <v-text-field
                 ref="slowModeSpeed"
-                :value="slowModeSpeed"
+                id="slowModeSpeed"
+                v-model="slowModeSpeed"
                 suffix="%"
                 style="transform:scale(2);"
                 placeholder="กรอกค่า"
                 @click="textFieldFocusHandler('slowModeSpeed')"
+                @focus="textFieldFocusHandler('slowModeSpeed')"
                 @keydown="(event)=>updateValue(event,'slowModeSpeed')"
+                @keyup="(event)=>enterHandler(event,'slowModeSpeed')"
                 counter
                 maxlength="8"
                 :rules="slowModeSpeedRules"
@@ -64,15 +70,24 @@
       color="indigo"
       indeterminate
     ></v-progress-circular></v-overlay>
+    <v-dialog v-model="isDialogShow" elevation="0">
+        <Popup
+          :type="dialogType"
+          :value="dialogValue"
+          @popup-event="popupEventHandler"
+        ></Popup>
+      </v-dialog>
   </v-container>
 </template>
 
 <script>
 import { mapGetters , mapActions } from "vuex";
 import TouchKeyboard from "./TouchKeyboard.vue";
+import Popup from "./Popup";
 export default {
   components: {
     TouchKeyboard,
+    Popup
   },
   data() {
     return {
@@ -81,7 +96,10 @@ export default {
       onTopRules: [(v) => !!v || "กรุณากรอกค่า ON TOP"],
       slowModeSpeed: "30",
       slowModeSpeedRules: [(v) => !!v || "กรุณากรอกค่าความเร็วโหมดช้า"],
-      overlay:false
+      overlay:false,
+      isDialogShow:false,
+      dialogValue:'',
+      dialogType:''
     };
   },
   mounted() {
@@ -98,27 +116,60 @@ export default {
     ...mapActions(["getSetting","editSetting"]),
     async keyboardEventHandler(event) {
       if (event.type == "letter" && event.value != ".") {
-           if (this.currentInput == "onTop" && this.onTop.length < 8) {
-            if(this.onTop.length != 0){
-              this.onTop += event.value;
-            }else if(event.value != '0'){
-              this.onTop += event.value;
+          var element;
+          if (this.currentInput == "onTop") {
+            element = this.$refs.onTop.$el.querySelector("input");
+            if( (this.onTop.length < 8 || element.selectionStart != element.selectionEnd) && (event.value != '0' || element.selectionStart != 0)){
+              var newSelectionStart = element.selectionStart + 1;
+              this.onTop = this.onTop.substring(0,element.selectionStart)+event.value+this.onTop.substring(element.selectionEnd);
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
             }
-          } else if (this.currentInput == "slowModeSpeed" && this.slowModeSpeed.length < 8) {
-            if(this.slowModeSpeed.length != 0){
-             this.slowModeSpeed += event.value;
-            }else if(event.value != '0'){
-             this.slowModeSpeed += event.value;
+          } else if (this.currentInput == "slowModeSpeed") {
+            element = this.$refs.slowModeSpeed.$el.querySelector("input");
+            if( (this.slowModeSpeed.length < 8 || element.selectionStart != element.selectionEnd) && (event.value != '0' || element.selectionStart != 0)){
+              var newSelectionStart = element.selectionStart + 1;
+              this.slowModeSpeed = this.slowModeSpeed.substring(0,element.selectionStart)+event.value+this.slowModeSpeed.substring(element.selectionEnd);
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
             }
           }
-        
+           
       } else if (event.type == "action") {
         if (event.value == "delete") {
           if (this.currentInput == "onTop") {
-            this.onTop = this.onTop.slice(0, -1);
+            element = this.$refs.onTop.$el.querySelector("input");
+            var newSelectionStart;
+              if( element.selectionStart == element.selectionEnd){
+                newSelectionStart = element.selectionStart - 1;
+                this.onTop = this.onTop.substring(0,element.selectionStart-1)+this.onTop.substring(element.selectionEnd);
+              }else{
+                newSelectionStart = element.selectionStart;
+                this.onTop = this.onTop.substring(0,element.selectionStart)+this.onTop.substring(element.selectionEnd);
+              }
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
           } else if (this.currentInput == "slowModeSpeed") {
-            this.slowModeSpeed = this.slowModeSpeed.slice(0, -1);
-          } 
+            element = this.$refs.slowModeSpeed.$el.querySelector("input");
+            var newSelectionStart;
+              if( element.selectionStart == element.selectionEnd){
+                newSelectionStart = element.selectionStart - 1;
+                this.slowModeSpeed = this.slowModeSpeed.substring(0,element.selectionStart-1)+this.slowModeSpeed.substring(element.selectionEnd);
+              }else{
+                newSelectionStart = element.selectionStart;
+                this.slowModeSpeed = this.slowModeSpeed.substring(0,element.selectionStart)+this.slowModeSpeed.substring(element.selectionEnd);
+              }
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
+          }
         } else if (event.value == "save") {
           if (this.$refs.form.validate()) {
              this.overlay = true;
@@ -126,6 +177,10 @@ export default {
               on_top: Number(this.onTop),
               slow_speed: Number(this.slowModeSpeed),
             });
+    
+              this.dialogType = 'saveSettingComplete';
+              this.dialogValue = {};
+             this.isDialogShow = true;
              this.overlay = false;
           }
         } else if(event.value == "clear" ){
@@ -134,52 +189,63 @@ export default {
           } else if (this.currentInput == "slowModeSpeed") {
             this.slowModeSpeed = '';
           }
-        }else {
+        }else if(event.value == 'cancel'){
           this.onTop = this.getSettingData.default_on_top.toString();
           this.slowModeSpeed = this.getSettingData.default_slow_speed.toString();
+        }else if(event.value == 'finish'){
+         this.dialogValue = {};
+         this.isDialogShow = false;
         }
       }
     },
     textFieldFocusHandler(type) {
       this.currentInput = type;
-      var element;
-      if (type == "onTop") {
-        element = this.$refs.onTop.$el.querySelector("input");
-        this.$nextTick(() => {
-          element.setSelectionRange(element.value.length, element.value.length);
-        });
-      } else if (type == "slowModeSpeed") {
-        element = this.$refs.slowModeSpeed.$el.querySelector("input");
-        this.$nextTick(() => {
-          element.setSelectionRange(element.value.length, element.value.length);
-        });
-      }
     },
      updateValue(event,type){
-      event.preventDefault();
-      console.log(event.key);
-      var letters;
-      if(type == 'onTop' ){
-         letters = /^[0-9]$/;
-        if(event.key.match(letters) && this.onTop.length < 8){
-          if(this.onTop.length != 0){
-            this.onTop += event.key;
-          }else if(event.key != '0'){
-            this.onTop += event.key;
-          }
-        }else if(event.key == 'Backspace'){
-          this.onTop = this.onTop.slice(0, -1)
+    var letters;
+    if(type == 'onTop' || type=='slowModeSpeed'){
+        letters = /^[0-9]$/;
+        if( !event.key.match(letters) && event.key != 'Backspace' && event.key!= 'ArrowUp' && event.key!= 'ArrowDown'  && event.key!= 'ArrowLeft' && event.key!= 'ArrowRight' && !event.ctrlKey){
+          event.preventDefault();
+        }else if(event.key == '0' && event.target.selectionStart == 0){
+          event.preventDefault();
         }
-      }else if(type == 'slowModeSpeed' ){
-         letters = /^[0-9]$/;
-        if(event.key.match(letters) && this.slowModeSpeed.length < 8){
-          if(this.slowModeSpeed.length != 0){
-            this.slowModeSpeed += event.key;
-          }else if(event.key != '0'){
-            this.slowModeSpeed += event.key;
+      }
+    },
+    enterHandler(event,type){
+      if( event.keyCode == 13){
+        var element;
+        if(event.target.id == 'onTop'){
+          if(this.onTop != ''){
+            element = this.$refs.slowModeSpeed.$el.querySelector("input");
+            this.$nextTick(() => {
+              element.focus();
+            });
+          }else{
+             element = this.$refs.onTop.$el.querySelector("input");
+             element.blur();
+             this.$nextTick(() => {
+              element.focus();
+             });
           }
-        }else if(event.key == 'Backspace'){
-          this.slowModeSpeed = this.slowModeSpeed.slice(0, -1)
+        }else if(event.target.id == 'slowModeSpeed'){
+          if(this.slowModeSpeed != ''){
+            this.isDialogShow = true;
+          }else {
+             element = this.$refs.slowModeSpeed.$el.querySelector("input");
+             element.blur();
+             this.$nextTick(() => {
+              element.focus();
+             });
+          }
+        }
+      }
+     
+    },
+    popupEventHandler(event) {
+      if(event.type == 'action'){
+        if( event.value == 'finish'){
+          this.isDialogShow = false;
         }
       }
     }

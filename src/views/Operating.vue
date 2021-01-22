@@ -1,12 +1,11 @@
 <template>
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
-      <span class="white--text text-h4 mr-5">กลุ่มที่ 1</span>
+      <span class="white--text text-h4 mr-5">กลุ่มหมายเลข {{group.group_id}}</span>
       <v-toolbar-title class="white--text text-h4"
         >กำลังดำเนินงาน...</v-toolbar-title
       >
-      <span class="white--text text-h4 ml-5">80%</span>
-      <span class="white--text text-h4 ml-5">(8/10 งาน)</span>
+      <span class="white--text text-h4 ml-5">({{this.currentJobOrder+1}}/{{this.group.job.length}} งาน)</span>
       <v-spacer></v-spacer>
       <v-btn
         class="mx-2"
@@ -21,11 +20,11 @@
     </v-app-bar>
     <v-container fluid class="pa-0">
       <v-row class="elevation-2" style="background-color:white;" align="center" justify="center">
-        <v-col align="center" justify="center"><span class="indigo--text text-h5">หมายเลขงาน :</span><span class="text-h5 ml-2">1234</span></v-col>
-        <v-col align="center" justify="center"><span class="indigo--text text-h5">หน้ากว้าง :</span><span class="text-h5 ml-2">20 ซม.</span></v-col>
-        <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวแผ่น :</span ><span class="text-h5 ml-2">30 ซม.</span></v-col>
-        <v-col align="center" justify="center"><span class="indigo--text text-h5">จำนวนแผ่น :</span><span class="text-h5 ml-2">10 แผ่น</span></v-col>
-        <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวงาน :</span><span class="text-h5 ml-2">15.2 เมตร</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">หมายเลขงาน :</span><span class="text-h5 ml-2">{{group.job[currentJobOrder].job_id}}</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">หน้ากว้าง :</span><span class="text-h5 ml-2">{{group.job[currentJobOrder].width}} นิ้ว</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวแผ่น :</span ><span class="text-h5 ml-2">{{group.job[currentJobOrder].height}} มม.</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">จำนวนแผ่น :</span><span class="text-h5 ml-2">{{group.job[currentJobOrder].sheet}} แผ่น</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวงาน :</span><span class="text-h5 ml-2">{{(group.job[currentJobOrder].height/1000*group.job[currentJobOrder].sheet).toFixed(2)}} เมตร</span></v-col>
       </v-row>
       <v-row align="center" justify="center" class="mt-5">
         <span class="text-h2 indigo--text">งานเสร็จสิ้น :</span>
@@ -119,34 +118,49 @@
           </v-btn>
         </v-col>
         <v-col justify="center" style="width;100%;">
-          <v-switch
+          <v-row>
+            <v-switch
             style="transform:scale(1.3);"
             v-model="isNotSlowMode"
             inset
             :label="isNotSlowMode ? 'โหมดเร็ว' : 'โหมดช้า'"
             color="green"
+            :disabled="!isAutoMode"
           ></v-switch>
+          <v-icon v-if="isNotSlowMode" style="margin-left:50px;transform:scale(1.2);" x-large :color="isAutoMode?'green':'grey'">
+            speed
+          </v-icon>
+           <v-icon v-else style="margin-left:50px;transform:scale(-1.2,1.2);" x-large :color="isAutoMode?'orange':'grey'">
+            speed
+          </v-icon>
+          </v-row>
         </v-col>
         <v-col justify="center" style="width;100%;">
-          <v-switch
+          <v-row>
+            <v-switch
             style="transform:scale(1.3);"
             v-model="isAutoMode"
             inset
             :label="isAutoMode ? 'โหมดอัตโนมัติ' : 'โหมดแมนนวล'"
             color="green"
+            
           ></v-switch>
+          <v-icon style="margin-left:50px;transform:scale(1.2);" x-large :color="isAutoMode?'green':'orange'">
+            {{(isAutoMode)?'computer':'person'}} 
+          </v-icon>
+          </v-row>
         </v-col>
       </v-row>
-      <footer class="elevation-2 pl-10" fixed absolute>
+      <footer class="elevation-2 pl-10" fixed absolute v-if="currentJobOrder+1<group.job.length">
         <v-row align="center" justify="center"
           ><span class="text-h4 indigo--text">งานต่อไป</span></v-row
         >
         <v-row align="center" justify="center">
-          <v-col align="center" justify="center"><span class="indigo--text text-h5">หมายเลขงาน :</span><span class="text-h5 ml-2">1235</span></v-col>
-          <v-col align="center" justify="center"><span class="indigo--text text-h5">หน้ากว้าง :</span><span class="text-h5 ml-2">21 ซม.</span></v-col>
-          <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวแผ่น :</span ><span class="text-h5 ml-2">31 ซม.</span></v-col>
-          <v-col align="center" justify="center"><span class="indigo--text text-h5">จำนวนแผ่น :</span><span class="text-h5 ml-2">11 แผ่น</span></v-col>
-          <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวงาน :</span><span class="text-h5 ml-2">16.2 เมตร</span></v-col>
+           <v-col align="center" justify="center"><span class="indigo--text text-h5">หมายเลขงาน :</span><span class="text-h5 ml-2">{{group.job[currentJobOrder+1].job_id}}</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">หน้ากว้าง :</span><span class="text-h5 ml-2">{{group.job[currentJobOrder+1].width}} นิ้ว</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวแผ่น :</span ><span class="text-h5 ml-2">{{group.job[currentJobOrder+1].height}} มม.</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">จำนวนแผ่น :</span><span class="text-h5 ml-2">{{group.job[currentJobOrder+1].sheet}} แผ่น</span></v-col>
+        <v-col align="center" justify="center"><span class="indigo--text text-h5">ความยาวงาน :</span><span class="text-h5 ml-2">{{(group.job[currentJobOrder+1].height/1000*group.job[currentJobOrder].sheet).toFixed(2)}} เมตร</span></v-col>
         </v-row>
       </footer>
       <v-dialog v-model="isDialogShow" elevation="0" :persistent="isPersistent">
@@ -243,6 +257,7 @@ export default {
       offset: 100,
       isShowHomePopup: false,
       isPersistent:true,
+      currentJobOrder: 0
     };
   },
   methods: {
@@ -267,8 +282,13 @@ export default {
           this.$router.replace("/");
         }
       } else if (event.type == "action") {
-        if (event.value == "save" || event.value == "cancel") {
+        if (event.value == "save" || event.value == "cancel" | event.value == "ok") {
           this.isDialogShow = false;
+        }else if( event.value == "saveOffset"){
+          this.isDialogShow = false;
+          this.dialogType = "editOffsetComplete";
+          this.dialogValue = {isPlus:event.extraValue.isPlus , value:event.extraValue.value};
+          this.isDialogShow = true
         }
       } else if (event.type == "popup-home") {
         if (event.value == "close") {
@@ -329,7 +349,15 @@ export default {
       console.log("socket connected");
     },
     CHANGE_PAPER_EVENT: function(data) {
+      this.dialogType = "changingPaper";
+      this.dialogValue = {};
+      this.isDialogShow = true;
       console.log('-> This is data change paper event');
+      console.log(data);
+    },
+    FINISH_CHANGE_PAPER_EVENT: function(data) {
+      this.isDialogShow = false;
+      console.log('-> This is data finish change paper event');
       console.log(data);
     },
   },

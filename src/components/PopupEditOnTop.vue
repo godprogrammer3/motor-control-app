@@ -10,17 +10,19 @@
                   <span class="text-h4 indigo--text">ค่า ON TOP</span>
                 <v-text-field
                 ref="onTop"
+                id="onTop"
                 suffix="เมตร"
-                :value="onTop"
+                v-model="onTop"
                 class="text-h4"
                 placeholder="กรอกค่า"
-                @click="textFieldFocusHandler('onTop')"
-                @focus="textFieldFocusHandler('onTop')"
                 style="margin-top:10%;"
                 counter
                 maxlength="8"
-                :rules="onTopRules"
+                :rules="onTopRules" 
+                @click="textFieldFocusHandler('onTop')"
+                @focus="textFieldFocusHandler('onTop')"
                 @keydown="(event)=>updateValue(event,'onTop')"
+                @keyup="(event)=>enterHandler(event,'onTop')"
               >
               </v-text-field
             >
@@ -51,7 +53,7 @@ export default {
     TouchKeyboard,
   },
   props: {
-    onTop: {
+    oldOnTop: {
       type: String,
       default: "",
     },
@@ -60,25 +62,43 @@ export default {
     return {
       currentInput: "",
       onTopRules:[(v) => !!v || "กรุณากรอกค่า ON TOP"],
-      overlay:false
+      overlay:false,
+      onTop:''
     };
   },
   methods: {
     async keyboardEventHandler(event) {
+      var element;
       if (event.type == "letter" ) {
-          if (this.currentInput == "onTop" && this.onTop.length < 8) {
-            if(this.onTop.length != 0){
-             this.onTop += event.value;
-            }else if(event.value != '0'){
-             this.onTop += event.value;
+          if (this.currentInput == "onTop") {
+            element = this.$refs.onTop.$el.querySelector("input");
+            if( (this.onTop.length < 8 || element.selectionStart != element.selectionEnd) && (event.value != '0' || element.selectionStart != 0)){
+              var newSelectionStart = element.selectionStart + 1;
+              this.onTop = this.onTop.substring(0,element.selectionStart)+event.value+this.onTop.substring(element.selectionEnd);
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
             }
-          } 
+          }
         
       } else if (event.type == "action") {
         if (event.value == "delete") {
           if (this.currentInput == "onTop") {
-            this.onTop = this.onTop.slice(0, -1);
-          } 
+            element = this.$refs.onTop.$el.querySelector("input");
+            var newSelectionStart;
+              if( element.selectionStart == element.selectionEnd){
+                newSelectionStart = element.selectionStart - 1;
+                this.onTop = this.onTop.substring(0,element.selectionStart-1)+this.onTop.substring(element.selectionEnd);
+              }else{
+                newSelectionStart = element.selectionStart;
+                this.onTop = this.onTop.substring(0,element.selectionStart)+this.onTop.substring(element.selectionEnd);
+              }
+              this.$nextTick(() => {
+                element.focus();
+                element.setSelectionRange(newSelectionStart, newSelectionStart);
+              });
+          }
         } else if (event.value == "save") {
           if (this.$refs.form.validate()) {
              this.overlay = true;
@@ -96,6 +116,7 @@ export default {
             this.onTop = '';
           } 
         }else {
+          this.onTop = this.oldOnTop;
           this.$emit("popup-edit-on-top-event", {
             type: event.type,
             value: event.value,
@@ -105,32 +126,41 @@ export default {
     },
     textFieldFocusHandler(type) {
       this.currentInput = type;
-      var element;
-      if (type == "onTop") {
-        element = this.$refs.onTop.$el.querySelector("input");
-        this.$nextTick(() => {
-          element.setSelectionRange(element.value.length, element.value.length);
-        });
-      }
     },
     updateValue(event,type){
-      event.preventDefault();
-      var letters;
-     if(type == 'onTop' ){
-         letters = /^[0-9]$/;
-        if(event.key.match(letters) && this.onTop.length < 8){
-          if(this.onTop.length != 0){
-            this.onTop += event.key;
-          }else if(event.key != '0'){
-            this.onTop += event.key;
+       var letters;
+      if(type == 'onTop'){
+          letters = /^[0-9]$/;
+          if( !event.key.match(letters) && event.key != 'Backspace' && event.key!= 'ArrowUp' && event.key!= 'ArrowDown'  && event.key!= 'ArrowLeft' && event.key!= 'ArrowRight' && !event.ctrlKey){
+            event.preventDefault();
+          }else if(event.key == '0' && event.target.selectionStart == 0){
+            event.preventDefault();
           }
-        }else if(event.key == 'Backspace'){
-          this.onTop = this.onTop.slice(0, -1)
+      }
+  },
+    ...mapActions(["changeOnTopWork"]),
+     enterHandler(event,type){
+      if( event.keyCode == 13){
+        var element;
+        if(event.target.id == 'onTop'){
+          if(this.onTop != ''){
+            console.log('save');
+          }else{
+             element = this.$refs.onTop.$el.querySelector("input");
+             element.blur();
+             this.$nextTick(() => {
+              element.focus();
+             });
+          }
         }
-    }
+      }
+     
+    },
   },
-    ...mapActions(["changeOnTopWork"])
+  mounted () {
+    this.onTop = this.oldOnTop;
   },
+  
 };
 </script>
 

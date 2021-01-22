@@ -17,7 +17,7 @@
     ></PopupEditJob>
     <PopupEditOnTop
       v-else-if="type == 'editOnTop'"
-      :onTop="value.onTop.toString()"
+      :oldOnTop="value.onTop.toString()"
       @popup-edit-on-top-event="
         (event) =>
           $emit('popup-event', { type: event.type, value: event.value })
@@ -26,10 +26,10 @@
     </PopupEditOnTop>
     <PopupEditOffset
       v-else-if="type == 'editOffset'"
-      :offset="value.offset.toString()"
+      :oldOffset="value.offset.toString()"
       @popup-edit-offset-event="
         (event) =>
-          $emit('popup-event', { type: event.type, value: event.value })
+          $emit('popup-event', { type: event.type, value: event.value ,extraValue:event.extraValue})
       "
     >
     </PopupEditOffset>
@@ -78,6 +78,35 @@
           $emit('popup-event', { type: event.type, value: event.value })
       "
     ></PopupError>
+    <PopupChangingPaper
+      v-else-if="type == 'changingPaper'"
+      class="align-center"
+    >
+    </PopupChangingPaper>
+     <PopupSaveSettingComplete
+      v-else-if="type == 'saveSettingComplete'"
+      class="align-center"
+      @popup-save-setting-complete-event="
+        (event) =>{
+          $emit('popup-event', { type: event.type, value: event.value });
+        }
+          
+      "
+    >
+    </PopupSaveSettingComplete>
+    <PopupEditOffsetComplete
+      v-else-if="type == 'editOffsetComplete'"
+      class="align-center"
+      :isPlus="value.isPlus"
+      :value="value.value"
+      @popup-edit-offset-complete-event="
+        (event) =>{
+          $emit('popup-event', { type: event.type, value: event.value });
+        }
+          
+      "
+    >
+    </PopupEditOffsetComplete>
   </div>
 </template>
 
@@ -91,6 +120,9 @@ import PopupGroupDetail from "./PopupGroupDetail";
 import PopupJobDetail from "./PopupJobDetail";
 import PopupSearchDate from "./PopupSearchDate";
 import PopupError from "./PopupError";
+import PopupChangingPaper from "./PopupChangingPaper";
+import PopupSaveSettingComplete from "./PopupSaveSettingComplete";
+import PopupEditOffsetComplete from "./PopupEditOffsetComplete";
 export default {
   components: {
     PopupCreateJob,
@@ -101,7 +133,10 @@ export default {
     PopupGroupDetail,
     PopupJobDetail,
     PopupSearchDate,
-    PopupError
+    PopupError,
+    PopupChangingPaper,
+    PopupSaveSettingComplete,
+    PopupEditOffsetComplete
   },
   mounted() {},
   props: {

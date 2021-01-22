@@ -2,7 +2,7 @@ import axios from "axios";
 class API {
   constructor() {
     this.instance = axios.create({
-      baseURL: "http://localhost:4001",
+      baseURL: "http://localhost:3000",
       adapter: require("axios/lib/adapters/http"),
     });
   }
