@@ -87,16 +87,18 @@ export default {
       this.overlay = false;
       if(result.status == 0){
         console.log("Host c is connected.");
-        result = await this.api.initialProcessCheck();
-        if(result.status == 0){
+        //var result2 = await this.api.initialProcessCheck(this.group.group_id);
+        var result2 = {status:0};
+        if(result2.status == 0){
+          await this.api.startWork(this.group.group_id);
           this.$emit('popup-confirm-start-job', {str:'yes',group:this.group})
-        }else if( result.status == -1){
+        }else if( result2.status == -1){
           console.log('Unknow Error');
           this.errorMessage = 'ข้อผิดพลาดที่ไม่รู้จัก';
           this.isDialogShow = true;
         }else{
-          console.log('Error:',result.data);
-          this.errorMessage = result.data;
+          console.log('Error:',result2.data);
+          this.errorMessage = result2.data;
           this.isDialogShow = true;
         }
       }else{

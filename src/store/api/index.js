@@ -271,19 +271,19 @@ class API {
     }
   }
 
-  async startWork(id) {
-    try {
-      var result = await this.instance.get(`/initialProcess?id=${id}`);
-      if (result.status == 204) {
-        return { status: 0 };
-      } else {
-        return { status: result.status, value: result.data };
-      }
-    } catch (error) {
-      console.log(error);
-      return { status: -1 };
-    }
-  }
+  // async startWork(id) {
+  //   try {
+  //     var result = await this.instance.get(`/initialProcess?id=${id}`);
+  //     if (result.status == 204) {
+  //       return { status: 0 };
+  //     } else {
+  //       return { status: result.status, value: result.data };
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     return { status: -1 };
+  //   }
+  // }
   processWork(work) {
     this.instance.post("/process", work);
   }
@@ -318,9 +318,10 @@ class API {
       return { status: -1 };
     }
   }
-  async initialProcessCheck() {
+  async initialProcessCheck(groupId) {
     try {
-      var result = await this.instance.get(`/initialProcessCheck`);
+      var result = await this.instance.get(`/initialProcess?id=${groupId}`);
+      console.log(groupId);
       if (result.status == 204) {
         return { status: 0 };
       } else {
@@ -331,9 +332,9 @@ class API {
       return { status: -1 };
     }
   }
-  async startWork() {
+  async startWork(id) {
     try {
-      var result = await this.instance.get(`/startWork`);
+      var result = await this.instance.get(`/startWork?id=${id}`);
       if (result.status == 204) {
         return { status: 0 };
       } else {
@@ -347,6 +348,33 @@ class API {
   async cancelJob() {
     try {
       var result = await this.instance.get(`/cancelJob`);
+      if (result.status == 204) {
+        return { status: 0 };
+      } else {
+        return { status: result.status, value: result.data };
+      }
+    } catch (error) {
+      console.log(error);
+      return { status: -1 };
+    }
+  }
+  async runProcess() {
+    try {
+      var result = await this.instance.put(`/runProcess`);
+      if (result.status == 204) {
+        return { status: 0 };
+      } else {
+        return { status: result.status, value: result.data };
+      }
+    } catch (error) {
+      console.log(error);
+      return { status: -1 };
+    }
+  }
+
+  async insertPaperComplete() {
+    try {
+      var result = await this.instance.put(`/insertPaperComplete`);
       if (result.status == 204) {
         return { status: 0 };
       } else {

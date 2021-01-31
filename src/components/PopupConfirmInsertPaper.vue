@@ -52,7 +52,9 @@ export default {
   methods: {
     async startWork(){
       this.overlay = true;
-      var result = await this.api.startWork();
+      //var result = await this.api.runProcess();
+      var result = { status: 0};
+      await this.api.insertPaperComplete();
       this.overlay = false;
       if(result.status == 0){
         this.$emit('popup-confirm-insert-paper-event','confirm');
