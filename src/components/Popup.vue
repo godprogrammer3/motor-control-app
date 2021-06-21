@@ -29,7 +29,11 @@
       :oldOffset="value.offset.toString()"
       @popup-edit-offset-event="
         (event) =>
-          $emit('popup-event', { type: event.type, value: event.value ,extraValue:event.extraValue})
+          $emit('popup-event', {
+            type: event.type,
+            value: event.value,
+            extraValue: event.extraValue,
+          })
       "
     >
     </PopupEditOffset>
@@ -83,14 +87,13 @@
       class="align-center"
     >
     </PopupChangingPaper>
-     <PopupSaveSettingComplete
+    <PopupSaveSettingComplete
       v-else-if="type == 'saveSettingComplete'"
       class="align-center"
       @popup-save-setting-complete-event="
-        (event) =>{
+        (event) => {
           $emit('popup-event', { type: event.type, value: event.value });
         }
-          
       "
     >
     </PopupSaveSettingComplete>
@@ -100,13 +103,24 @@
       :isPlus="value.isPlus"
       :value="value.value"
       @popup-edit-offset-complete-event="
-        (event) =>{
+        (event) => {
           $emit('popup-event', { type: event.type, value: event.value });
         }
-          
       "
     >
     </PopupEditOffsetComplete>
+    <PopupExportData
+      v-else-if="type == 'exportData'"
+      class="align-center"
+      :usbList="value.value"
+      :jobs="value.extraValue.jobs"
+      @popup-export-data-event="
+        (event) => {
+          $emit('popup-event', { type: event.type, value: event.value });
+        }
+      "
+    >
+    </PopupExportData>
   </div>
 </template>
 
@@ -123,6 +137,7 @@ import PopupError from "./PopupError";
 import PopupChangingPaper from "./PopupChangingPaper";
 import PopupSaveSettingComplete from "./PopupSaveSettingComplete";
 import PopupEditOffsetComplete from "./PopupEditOffsetComplete";
+import PopupExportData from "./PopupExportData";
 export default {
   components: {
     PopupCreateJob,
@@ -136,7 +151,8 @@ export default {
     PopupError,
     PopupChangingPaper,
     PopupSaveSettingComplete,
-    PopupEditOffsetComplete
+    PopupEditOffsetComplete,
+    PopupExportData,
   },
   mounted() {},
   props: {
@@ -146,7 +162,7 @@ export default {
     },
     value: {
       type: Object,
-      default: ()=>{},
+      default: () => {},
     },
   },
 };

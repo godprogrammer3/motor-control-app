@@ -5,7 +5,7 @@
         <v-row align="center" justify="center">
           <PopupConfirmDeleteJob
             v-if="type.str == 'deleteJob'"
-            :job='type.value'
+            :job="type.value"
             @popup-confirm-delete-job="
               (event) =>
                 $emit('popup-comfirm-event', {
@@ -16,7 +16,7 @@
           ></PopupConfirmDeleteJob>
           <PopupConfirmStartJob
             v-else-if="type.str == 'startJob'"
-            :group='type.group'
+            :group="type.group"
             @popup-confirm-start-job="
               (event) =>
                 $emit('popup-comfirm-event', {
@@ -39,18 +39,28 @@
           <PopupConfirmInsertPaper
             v-else-if="type.str == 'confirmInsertPaper'"
             @popup-confirm-insert-paper-event="
-              (event) =>{
-                 $emit('popup-comfirm-event', {
+              (event) => {
+                $emit('popup-comfirm-event', {
                   type: 'confirm-insert-paper',
                   value: event,
-                })
+                });
               }
-               
             "
           ></PopupConfirmInsertPaper>
+          <PopupConfirmChangeKnife
+            v-else-if="type.str == 'confirmChangeKnife'"
+            @popup-confirm-change-knife-event="
+              (event) => {
+                $emit('popup-comfirm-event', {
+                  type: 'confirm-change-knife',
+                  value: event,
+                });
+              }
+            "
+          ></PopupConfirmChangeKnife>
         </v-row>
-      </v-container> </v-card
-  >
+      </v-container>
+    </v-card>
   </v-row>
 </template>
 
@@ -59,12 +69,14 @@ import PopupConfirmDeleteJob from "./PopupConfirmDeleteJob.vue";
 import PopupConfirmStartJob from "./PopupConfirmStartJob";
 import PopupConfirmCancelJob from "./PopupConfirmCancelJob";
 import PopupConfirmInsertPaper from "./PopupConfirmInsertPaper";
+import PopupConfirmChangeKnife from "./PopupConfirmChangeKnife";
 export default {
   components: {
     PopupConfirmDeleteJob,
     PopupConfirmStartJob,
     PopupConfirmCancelJob,
     PopupConfirmInsertPaper,
+    PopupConfirmChangeKnife,
   },
   props: {
     type: {

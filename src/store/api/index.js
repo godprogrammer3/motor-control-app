@@ -385,5 +385,48 @@ class API {
       return { status: -1 };
     }
   }
+
+  async getHistoryJobByStartAndEndDate(startDate, endDate) {
+    try {
+      var result = await this.instance.get(
+        `/getJobListByStartAndEndDate?startDate=${startDate}&endDate=${endDate}`
+      );
+      if (result.status == 200) {
+        return { status: 0, data: result.data };
+      } else {
+        return { status: -1 };
+      }
+    } catch (error) {
+      console.log(error);
+      return { status: -1 };
+    }
+  }
+
+  async getAllDrive() {
+    try {
+      var result = await this.instance.get(`/getAllDrive`);
+      if (result.status == 200) {
+        return { status: 0, data: result.data };
+      } else {
+        return { status: -1 };
+      }
+    } catch (error) {
+      console.log(error);
+      return { status: -1 };
+    }
+  }
+  async saveHistoryToDrive(data) {
+    try {
+      var result = await this.instance.post("/saveHistoryToDrive", data);
+      if (result.status === 200) {
+        return { status: 0, data: result.data };
+      } else {
+        return { status: -1 };
+      }
+    } catch (e) {
+      console.log(e);
+      return -1;
+    }
+  }
 }
 export default API;

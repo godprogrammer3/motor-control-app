@@ -5,19 +5,9 @@
           >
     </v-row>
     <v-row align="center" justify="center"
-      ><span>ใส่กระดาษให้เรียบร้อย</span>
+      ><span>กำลังใส่กระดาษ</span>
     </v-row>
-    <v-row align="center" justify="center"
-      ><span>ก่อนกดปุ่มเริ่มดำเนินงาน</span></v-row
-    >
     <v-row align="center" justify="space-around" class="mt-4">
-      <v-btn
-        class="text-h4 white--text px-10"
-        style="height:auto;width:auto;"
-        color="indigo"
-        @click="startWork"
-      >
-        เริ่มดำเนินการ
       </v-btn>
         <v-btn
         class="text-h4 white--text px-10"
