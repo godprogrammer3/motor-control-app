@@ -5,7 +5,7 @@
            <v-card width="50vw" >
         <v-row align="center" justify="center"> 
           <v-col align="center" justify="center" class="text-h3">
-              <span>เกิดข้อผิดพลาด !</span>
+              <span style="color:red;">เกิดข้อผิดพลาด !</span>
           </v-col>
         </v-row>
         <v-row align="center" justify="center"> 

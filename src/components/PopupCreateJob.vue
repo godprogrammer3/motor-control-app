@@ -151,6 +151,13 @@
       </v-container>
      
     </v-dialog>
+     <v-dialog v-model="isDialogShow" elevation="0">
+      <Popup
+        :type="dialogType"
+        :value="dialogValue"
+        @popup-event="popupEventHandler"
+      ></Popup>
+     </v-dialog>
      <v-overlay :value="overlay"><v-progress-circular
       :size="50"
       color="indigo"
@@ -163,9 +170,12 @@
 import TouchKeyboard from "./TouchKeyboard.vue";
 import { mapActions } from "vuex";
 import moment from "moment";
+import * as api from "../utills/api";
+import Popup from './Popup.vue';
 export default {
   components: {
     TouchKeyboard,
+    Popup,
   },
   data() {
     return {
@@ -184,6 +194,10 @@ export default {
       picker: new Date().toISOString().substr(0, 10),
       showDatePicker : false,
       overlay: false,
+      isDialogShow: false,
+      dialogType:'',
+      dialogValue:''
+
     };
   },
   methods: {
@@ -293,19 +307,28 @@ export default {
           }
         } else if (event.value == "save") {
           if (this.$refs.form.validate()) {
-             this.overlay = true;
-            await this.createJob({
-              job_id: this.jobId,
+            this.overlay = true;
+            const result = await api.jobs.create({
+              id: this.jobId,
               width: Number(this.width),
               height: Number(this.height),
               sheet:Number(this.sheet),
-              work_date: this.deParseDate(this.workDate)+' 00:00:00',
+              workDate: this.deParseDate(this.workDate)+' 00:00:00',
             });
             this.overlay = false;
-            this.$emit("popup-create-event", {
-              type: event.type,
-              value: event.value,
-            });
+            if(result.successful){
+              this.$emit("popup-create-event", {
+                type: event.type,
+                value: event.value,
+              });
+            }else{
+              if( result.errorCode == '03'){
+                this.dialogType = 'error',
+                this.dialogValue = {errorMessage:'งานที่สร้างซ้ำกับที่มีอยู่ในระบบแล้ว'};
+                this.isDialogShow = true;
+              }
+            }
+           
           }
         } else if(event.value == "clear" ){
           if (this.currentInput == "jobId") {
@@ -425,6 +448,13 @@ export default {
       }
      
     },
+    popupEventHandler(event){
+       if (event.type == "action") {
+         if(event.value === 'cancel'){
+           this.isDialogShow = false;
+         }
+       }
+    }
   },
 };
 </script>
