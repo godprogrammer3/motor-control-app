@@ -134,6 +134,7 @@ export default new Vuex.Store({
       if (state.allJobByAllGroup.length == 0 || state.allGroup.length == 0) {
         return [];
       } else {
+        console.log(state.allJobByAllGroup);
         return state.allJobByAllGroup;
       }
     },
