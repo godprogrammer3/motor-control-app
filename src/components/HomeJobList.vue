@@ -34,7 +34,7 @@
                 <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
                   >กลุ่มหมายเลข {{ item.id }}</v-toolbar-title
                 >
-                <v-spacer></v-spacer>
+                <!-- <v-spacer></v-spacer>
                 <v-btn
                   v-if="isJobRunning != true"
                   fab
@@ -43,7 +43,7 @@
                   @click="startJob(item)"
                 >
                   <v-icon dark large>play_arrow</v-icon>
-                </v-btn>
+                </v-btn> -->
               </v-toolbar>
               <v-container fluid fill-height>
                 <v-row align="center" justify="center">
@@ -322,6 +322,24 @@ export default {
       }
     },
   },
+  sockets:{
+    connect: function() {
+      console.log("socket connected");
+    },
+    CHECK_NC_CLIENT_CONNECT:function(data){
+      this.$socket.emit('CHECK_NC_CLIENT_CONNECT_RESPONSE',data);
+    },
+    NOTIFY_NC_CLIENT_TO_START_WORK:function(data){
+      this.$socket.emit('NOTIFY_NC_CLIENT_TO_START_WORK_RESPONSE',data);
+      this.$router.replace({
+        name: "Operating",
+        params: {
+          group: data,
+        },
+      });
+    }
+
+  }
 };
 </script>
 <style scoped>

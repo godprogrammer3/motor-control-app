@@ -2,13 +2,13 @@
   <div>
     <v-app-bar color="indigo darken-4" style="height:70px" flat>
       <span class="white--text text-h4 mr-5"
-        >กลุ่มหมายเลข {{ group.group_id }}</span
+        >กลุ่มหมายเลข {{ group.id }}</span
       >
       <v-toolbar-title class="white--text text-h4"
         >กำลังดำเนินงาน...</v-toolbar-title
       >
       <span class="white--text text-h4 ml-5"
-        >({{ this.currentJobOrder + 1 }}/{{ this.group.job.length }} งาน)</span
+        >({{ currentJobOrder + 1 }}/{{ group.jobs.length }} งาน)</span
       >
       <v-spacer></v-spacer>
       <v-btn
@@ -32,25 +32,25 @@
         <v-col align="center" justify="center"
           ><span class="indigo--text text-h5">หมายเลขงาน :</span
           ><span class="text-h5 ml-2">{{
-            group.job[currentJobOrder].job_id
+            group.jobs[currentJobOrder].id
           }}</span></v-col
         >
         <v-col align="center" justify="center"
           ><span class="indigo--text text-h5">หน้ากว้าง :</span
-          ><span class="text-h5 ml-2"
-            >{{ group.job[currentJobOrder].width }} นิ้ว</span
+          ><span class="text-h5 ml-2">
+            {{ group.jobs[currentJobOrder].width }} นิ้ว</span
           ></v-col
         >
         <v-col align="center" justify="center"
           ><span class="indigo--text text-h5">ความยาวแผ่น :</span
           ><span class="text-h5 ml-2"
-            >{{ group.job[currentJobOrder].height }} มม.</span
+            >{{ group.jobs[currentJobOrder].height }} มม.</span
           ></v-col
         >
         <v-col align="center" justify="center"
           ><span class="indigo--text text-h5">จำนวนแผ่น :</span
           ><span class="text-h5 ml-2"
-            >{{ group.job[currentJobOrder].sheet }} แผ่น</span
+            >{{ group.jobs[currentJobOrder].sheet }} แผ่น</span
           ></v-col
         >
         <v-col align="center" justify="center"
@@ -58,8 +58,9 @@
           ><span class="text-h5 ml-2"
             >{{
               (
-                (group.job[currentJobOrder].height / 1000) *
-                group.job[currentJobOrder].sheet
+                (group.jobs[currentJobOrder].sheet *
+                  group.jobs[currentJobOrder].height) /
+                1000
               ).toFixed(2)
             }}
             เมตร</span
@@ -67,7 +68,7 @@
         >
       </v-row>
       <v-row align="center" justify="center" class="mt-5">
-        <span class="text-h2 indigo--text">งานเสร็จสิ้น :</span>
+        <span class="text-h2 indigo--text">ลอน C จ่ายกระดาษแล้ว :</span>
         <span class="text-h2 ml-5">5.65 %</span>
       </v-row>
       <v-container>
@@ -75,7 +76,7 @@
           <v-col>
             <v-card color="green" class="text-h4 white--text">
               <v-col align="center" justify="center">
-                <v-row align="center" justify="center">เสร็จสิ้น</v-row>
+                <v-row align="center" justify="center">จ่ายแล้ว</v-row>
                 <v-row align="center" justify="center">{{
                   finishLength.toFixed(2)
                 }}</v-row>
@@ -103,7 +104,7 @@
           </v-col>
         </v-row>
         <v-row align="center" justify="center">
-          <v-col>
+          <v-col style="visibility:hidden;">
             <v-card color="red" class="text-h4 white--text">
               <v-col align="center" justify="center">
                 <v-row align="center" justify="center">ความเร็ว</v-row>
@@ -114,28 +115,29 @@
               </v-col>
             </v-card>
           </v-col>
-          <v-col>
-            <v-card color="orange" class="text-h4 white--text">
-              <v-col align="center" justify="center">
-                <v-row align="center" justify="center">ON TOP</v-row>
-                <v-row align="center" justify="center">30</v-row>
-                <v-row align="center" justify="center"
-                  ><span class="mr-5">เมตร</span>
-                </v-row>
-              </v-col>
-            </v-card>
-          </v-col>
-          <v-col>
-            <v-card
-              color="blue"
-              class="text-h4 white--text"
-              @click="editOffset"
-            >
+
+           <v-col>
+            <v-card color="blue" class="text-h4 white--text">
               <v-col align="center" justify="center">
                 <v-row align="center" justify="center">เพิ่ม/ลด</v-row>
                 <v-row align="center" justify="center">+100</v-row>
                 <v-row align="center" justify="center"
                   ><span class="mr-5">แผ่น</span>
+                </v-row>
+              </v-col>
+            </v-card>
+          </v-col>
+          <v-col style="visibility:hidden;">
+            <v-card
+              color="orange"
+              class="text-h4 white--text"
+              @click="editOnTop"
+            >
+              <v-col align="center" justify="center">
+                <v-row align="center" justify="center">ON TOP</v-row>
+                <v-row align="center" justify="center">30</v-row>
+                <v-row align="center" justify="center"
+                  ><span class="mr-5">เมตร</span>
                   <v-icon x-large color="white">
                     create
                   </v-icon>
@@ -143,27 +145,14 @@
               </v-col>
             </v-card>
           </v-col>
+         
         </v-row>
       </v-container>
-      <v-row align="center" justify="center" class="pl-10">
-        <v-col justify="center" style="width:100%;">
-          <v-btn
-            color="indigo"
-            dark
-            x-large
-            bottom
-            @click="isShowHomePopup = true"
-            class="text-h5"
-          >
-            แผนการดำเนินงาน
-          </v-btn>
-        </v-col>
-      </v-row>
       <footer
+        v-if="currentJobOrder + 1 < group.jobs.length"
         class="elevation-2 pl-10"
         fixed
         absolute
-        v-if="currentJobOrder + 1 < group.job.length"
       >
         <v-row align="center" justify="center"
           ><span class="text-h4 indigo--text">งานต่อไป</span></v-row
@@ -172,25 +161,25 @@
           <v-col align="center" justify="center"
             ><span class="indigo--text text-h5">หมายเลขงาน :</span
             ><span class="text-h5 ml-2">{{
-              group.job[currentJobOrder + 1].job_id
+              group.jobs[currentJobOrder + 1].id
             }}</span></v-col
           >
           <v-col align="center" justify="center"
             ><span class="indigo--text text-h5">หน้ากว้าง :</span
             ><span class="text-h5 ml-2"
-              >{{ group.job[currentJobOrder + 1].width }} นิ้ว</span
+              >{{ group.jobs[currentJobOrder + 1].width }} นิ้ว</span
             ></v-col
           >
           <v-col align="center" justify="center"
             ><span class="indigo--text text-h5">ความยาวแผ่น :</span
             ><span class="text-h5 ml-2"
-              >{{ group.job[currentJobOrder + 1].height }} มม.</span
+              >{{ group.jobs[currentJobOrder + 1].height }} มม.</span
             ></v-col
           >
           <v-col align="center" justify="center"
             ><span class="indigo--text text-h5">จำนวนแผ่น :</span
             ><span class="text-h5 ml-2"
-              >{{ group.job[currentJobOrder + 1].sheet }} แผ่น</span
+              >{{ group.jobs[currentJobOrder + 1].sheet }} แผ่น</span
             ></v-col
           >
           <v-col align="center" justify="center"
@@ -198,8 +187,9 @@
             ><span class="text-h5 ml-2"
               >{{
                 (
-                  (group.job[currentJobOrder + 1].height / 1000) *
-                  group.job[currentJobOrder].sheet
+                  (group.jobs[currentJobOrder + 1].sheet *
+                    group.jobs[currentJobOrder + 1].height) /
+                  1000
                 ).toFixed(2)
               }}
               เมตร</span
@@ -207,6 +197,69 @@
           >
         </v-row>
       </footer>
+      <!-- <v-row align="center" justify="center" style="height:10vh;">
+        <v-col justify="center" style="width:100%;">
+          <v-row align="center" justify="center">
+            <v-switch
+              style="transform:scale(1.3);"
+              v-model="isSlowMode"
+              inset
+              color="green"
+            >
+              <template v-slot:label>
+                <span :class="isAutoMode ? 'green--text' : 'orange--text'">{{
+                  isSlowMode ? "โหมดช้า" : "โหมดเร็ว"
+                }}</span>
+                <v-icon
+                  style="margin-left:5px;transform:scale(1.1);"
+                  x-large
+                  :color="isSlowMode ? 'green' : 'orange'"
+                >
+                  {{ isSlowMode ? "sync" : "sync_disabled" }}
+                </v-icon>
+              </template>
+            </v-switch>
+            
+          </v-row>
+        </v-col>
+        <v-col justify="center" style="width:100%;">
+          <v-row align="center" justify="center">
+            <v-switch
+              style="transform:scale(1.3);"
+              v-model="isAutoMode"
+              inset
+              color="green"
+            >
+              <template v-slot:label>
+                <span :class="isAutoMode ? 'green--text' : 'orange--text'">{{
+                  isAutoMode ? "ซิงค์ความเร็ว" : "ไม่ซิงค์ความเร็ว"
+                }}</span>
+                <v-icon
+                  style="margin-left:5px;transform:scale(1.1);"
+                  x-large
+                  :color="isAutoMode ? 'green' : 'orange'"
+                >
+                  {{ isAutoMode ? "sync" : "sync_disabled" }}
+                </v-icon>
+              </template>
+            </v-switch>
+            
+          </v-row>
+        </v-col>
+        <v-col align="center" justify="center">
+          <v-btn
+            color="indigo"
+            dark
+            x-large
+            bottom
+            @click="addWastPaper"
+            class="text-h5"
+          >
+            เพิ่มกระดาษเสีย
+          </v-btn>
+        </v-col>
+      </v-row> -->
+
       <v-dialog v-model="isDialogShow" elevation="0" :persistent="isPersistent">
         <Popup
           :type="dialogType"
@@ -214,9 +267,13 @@
           @popup-event="popupEventHandler"
         ></Popup>
       </v-dialog>
-      <v-dialog v-model="isShowHomePopup" elevation="0">
-        <PopupHome @popup-event="popupEventHandler"></PopupHome>
-      </v-dialog>
+      <v-overlay :value="overlay"
+      ><v-progress-circular
+        :size="50"
+        color="indigo"
+        indeterminate
+      ></v-progress-circular
+    ></v-overlay>
     </v-container>
   </div>
 </template>
@@ -224,11 +281,10 @@
 <script>
 import { mapActions } from "vuex";
 import Popup from "@/components/Popup/Popup.vue";
-import PopupHome from "@/components/Popup/PopupHome.vue";
+import * as API from "../utills/api";
 export default {
   components: {
     Popup,
-    PopupHome,
   },
   data() {
     return {
@@ -255,6 +311,7 @@ export default {
       isPersistent: true,
       currentJobOrder: 0,
       finishLength: 0.0,
+      overlay:false
     };
   },
   methods: {
@@ -271,44 +328,59 @@ export default {
       this.dialogValue = { str: "cancelJob", value: this.group };
       this.isDialogShow = true;
     },
-    popupEventHandler(event) {
+    async popupEventHandler(event) {
       console.log(event);
-      if (event.type == "confirm-cancel-job") {
+      if (event.type == "action") {
         if (event.value == "cancel") {
           this.isDialogShow = false;
-        } else if (event.value == "yes") {
-          this.$router.replace("/");
-        }
-      } else if (event.type == "action") {
-        if (
-          event.value == "save" ||
-          (event.value == "cancel") | (event.value == "ok")
-        ) {
+          this.dialogValue = {};
+        } else if (event.value == "confirm") {
+          this.api.changePaper();
           this.isDialogShow = false;
-        } else if (event.value == "saveOffset") {
+          this.dialogType = "changingPaper";
+          this.dialogValue = {};
+          this.isDialogShow = true;
+        } else if (event.value == "finish") {
+          this.api.finishChangePaper();
           this.isDialogShow = false;
-          this.dialogType = "editOffsetComplete";
+          this.dialogValue = {};
+        } else if (event.value == "saveOntop") {
+          this.isDialogShow = false;
+          this.dialogType = "editOntopComplete";
           this.dialogValue = {
-            isPlus: event.extraValue.isPlus,
             value: event.extraValue.value,
           };
           this.isDialogShow = true;
-        }
-      } else if (event.type == "popup-home") {
-        if (event.value == "close") {
-          this.isShowHomePopup = false;
-        }
-      } else if (event.type == "confirm-insert-paper") {
-        if (event.value == "confirm") {
+        } else if (event.value == "ok") {
           this.isDialogShow = false;
-        } else if (event.value == "cancel") {
-          this.$router.replace({ path: "/" });
         }
-      } else if (event.type == "confirm-change-knife") {
-        if (event.value == "confirm") {
+      }else if (event.type == "confirm-cancel-job") {
+        if (event.value == "cancel") {
           this.isDialogShow = false;
+        } else if (event.value == "yes") {
+          this.overlay = true;
+          const result = await API.processes.notifyCClientToCancelWork();
+          this.overlay = false;
+          if(!result.successful){
+            this.dialogType = 'error';
+            this.dialogValue = { errorMessage:'เครื่อง C ไม่ได้เชื่อมต่อ'};
+            this.isDialogShow = true;
+            return -1;
+          }
+          this.$router.replace("/");
         }
       }
+    },
+    confirmChangePaper() {
+      this.dialogType = "confirm";
+      this.dialogValue = { str: "confirmChangePaper" };
+      this.isDialogShow = true;
+    },
+    addWastPaper() {
+      this.isDialogShow = false;
+      this.dialogType = "changingPaper";
+      this.dialogValue = {};
+      this.isDialogShow = true;
     },
     editOnTop() {
       this.dialogType = "editOnTop";
@@ -341,32 +413,17 @@ export default {
     },
   },
   mounted() {
-    this.dialogType = "confirm";
-    this.dialogValue = { str: "confirmInsertPaper" };
-    this.isDialogShow = true;
-    //  this.$socket.emit('test', 'Hello from main-control-app');
-    // socket.on("Speed2", function(msg) {
-    //   this.speed = msg;
-    // });
-    // this.dialogType = "confirm";
-    // this.dialogValue = { str: "confirmChangeKnife" };
-    // this.isDialogShow = true;
   },
   sockets: {
     connect: function() {
       console.log("socket connected");
     },
-    CHANGE_PAPER_EVENT: function(data) {
-      this.dialogType = "changingPaper";
-      this.dialogValue = {};
-      this.isDialogShow = true;
-      console.log("-> This is data change paper event");
+    CANCEL_JOB: function(data) {
       console.log(data);
-    },
-    FINISH_CHANGE_PAPER_EVENT: function(data) {
-      this.isDialogShow = false;
-      console.log("-> This is data finish change paper event");
-      console.log(data);
+      this.$router.replace({ path: "/" }).catch((error) => {
+        console.log("->In operating page:");
+        console.log(error);
+      });
     },
     Lenght_A: function(data) {
       console.log("-> Log in : Operating>sockets>Lenght_A");
@@ -377,6 +434,11 @@ export default {
       console.log("-> Log in : Operating>sockets>Speed_C");
       console.log(data);
       this.speed = data;
+    },
+    NOTIFY_NC_CLIENT_TO_CANCEL_WORK:function(data){
+      console.log(data);
+      this.$socket.emit('NOTIFY_NC_CLIENT_TO_CANCEL_WORK_RESPONSE',data);
+      this.$router.replace("/");
     },
   },
 };

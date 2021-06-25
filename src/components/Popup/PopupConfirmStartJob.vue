@@ -5,7 +5,7 @@
       ><span class="green--text ml-3">เริ่มงาน</span></v-row
     >
     <v-row align="center" justify="center"
-      ><span>กลุ่มหมายเลข</span><span class="ml-3">{{group.group_id}}</span></v-row
+      ><span>กลุ่มหมายเลข</span><span class="ml-3">{{group.id}}</span></v-row
     >
     <v-row align="center" justify="center"><span>ใช่หรือไม่ ?</span> </v-row>
     <v-row align="center" justify="space-around" class="mt-4">
@@ -35,7 +35,7 @@
       <v-card width="50vw" style="margin-left:24.4%;">
         <v-row align="center" justify="center"> 
           <v-col align="center" justify="center" class="text-h3">
-              <span>เกิดข้อผิดพลาด !</span>
+              <span class="red--text">เกิดข้อผิดพลาดในการดำเนินการ</span>
           </v-col>
         </v-row>
         <v-row align="center" justify="center"> 

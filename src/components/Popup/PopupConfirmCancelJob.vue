@@ -45,8 +45,6 @@ export default {
   },
   methods: {
     async cancelJob() {
-      console.log('cancel job in Popup confirm cancel job');
-      var result = await this.api.cancelJob();
       this.$emit('popup-confirm-start-job', 'yes')
     }
   },
