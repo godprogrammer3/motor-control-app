@@ -64,6 +64,7 @@
           v-model="items"
           :disabled="isDragableDisabled"
           handle=".handle"
+          ghost-class="ghost"
         >
           <v-list-item v-for="(item, index) in items" :key="index">
             <v-card
@@ -71,24 +72,24 @@
               class="mb-5 rounded-xl"
               v-if="
                 (mode != 'manage-member-ingroup' ||
-                  item.job.length == 1 ||
-                  item.group_id == currentSelectedGroup.group_id) &&
-                  (mode != 'add-group' || item.job.length == 1)
+                  item.jobs.length == 1 ||
+                  item.id == currentSelectedGroup.id) &&
+                  (mode != 'add-group' || item.jobs.length == 1)
               "
             >
               <v-toolbar
-                :color="item.is_continue ? 'indigo' : 'orange'"
+                :color="item.isContinue ? 'indigo' : 'orange'"
                 height="95"
                 v-if="
-                  (mode != 'manage-member-ingroup' || item.group_id == currentSelectedGroup.group_id)&& mode != 'add-group' 
+                  (mode != 'manage-member-ingroup' || item.id == currentSelectedGroup.id)&& mode != 'add-group' 
                 "
               >
                 <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
-                  >กลุ่มหมายเลข {{ item.group_id }}</v-toolbar-title
+                  >กลุ่มหมายเลข {{ item.id }}</v-toolbar-title
                 >
                 <v-spacer></v-spacer>
                 <v-switch
-                  v-model="item.is_continue"
+                  v-model="item.isContinue"
                   inset
                   hide-details
                   color="white"
@@ -98,7 +99,7 @@
                   <template v-slot:label>
                     <span class="white--text">
                       {{
-                        item.is_continue ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
+                        item.isContinue ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
                       }}</span
                     >
                   </template>
@@ -133,34 +134,34 @@
                       <template v-slot:default>
                         <tbody v-if="mode == 'group-reorder'" >
                           <tr
-                            v-for="(sub_item, sub_index) in item.job"
+                            v-for="(sub_item, sub_index) in item.jobs"
                             :key="sub_index"
                             
                           >
                           <v-row align="center" justify="center" style="width:90vw;">
                             <v-col align="center" justify="center"><span>{{ sub_index + 1 }}</span></v-col>
-                            <v-col align="center" justify="center"><span>{{ sub_item.job_id }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.id }}</span></v-col>
                             <v-col align="center" justify="center"><span>{{ sub_item.width}}</span></v-col>
                             <v-col align="center" justify="center"><span>{{ sub_item.height}}</span></v-col>
                             <v-col align="center" justify="center"><span> {{ sub_item.sheet}}</span></v-col>
                             <v-col align="center" justify="center"><span>{{ sub_item.height * sub_item.sheet / 100.0}}</span></v-col>
-                            <v-col align="start" justify="start"><span> {{ parseDateFromDB(sub_item.work_date) }}</span></v-col>
+                            <v-col align="start" justify="start"><span> {{ parseDateFromDB(sub_item.workDate) }}</span></v-col>
                            </v-row>
                           </tr>
                         </tbody>
                          <tbody v-else-if="mode == 'add-group'">
                            
                           <tr
-                            v-for="(sub_item, sub_index) in item.job"
+                            v-for="(sub_item, sub_index) in item.jobs"
                             :key="sub_index"
                           >
                           <v-row align="center" justify="center" style="width:90vw;">
-                            <v-col align="center" justify="center"><span>{{ sub_item.job_id }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.id }}</span></v-col>
                             <v-col align="center" justify="center"><span>{{ sub_item.width}}</span></v-col>
                             <v-col align="center" justify="center"><span>{{ sub_item.height}}</span></v-col>
                             <v-col align="center" justify="center"><span> {{ sub_item.sheet}}</span></v-col>
                             <v-col align="center" justify="center"><span >{{ sub_item.height * sub_item.sheet / 100.0}}</span></v-col>
-                            <v-col align="center" justify="center"><span class="mr-7"> {{ parseDateFromDB(sub_item.work_date) }}</span></v-col>
+                            <v-col align="center" justify="center"><span class="mr-7"> {{ parseDateFromDB(sub_item.workDate) }}</span></v-col>
                             <v-col align="center" justify="center"><v-checkbox
                                   v-model="sub_item.isSelected"
                                   style="transform: scale(1.5);margin-left:5vw;"
@@ -170,25 +171,26 @@
                           </tr>
                         </tbody>
                         <draggable
-                          v-model="item.job"
+                          v-model="item.jobs"
                           tag="tbody"
                           handle=".handle"
+                          ghost-class="ghost"
                           v-else-if="
                             mode == 'manage-member-ingroup'
                           "
                         >
                           <tr
-                            v-for="(sub_item, sub_index) in item.job"
+                            v-for="(sub_item, sub_index) in item.jobs"
                             :key="sub_index"
                           >
                           <v-row align="center" justify="center" style="width:90vw;">
                             <v-col align="center" justify="center" class="handle"> <v-icon x-large> reorder </v-icon></v-col>
-                            <v-col align="center" justify="center"><span>{{ sub_item.job_id }}</span></v-col>
+                            <v-col align="center" justify="center"><span>{{ sub_item.id }}</span></v-col>
                             <v-col align="center" justify="center"><span>{{ sub_item.width}}</span></v-col>
                             <v-col align="center" justify="center"><span>{{ sub_item.height}}</span></v-col>
                             <v-col align="center" justify="center"><span> {{ sub_item.sheet}}</span></v-col>
                             <v-col align="center" justify="center"><span>{{ sub_item.height * sub_item.sheet / 100.0}}</span></v-col>
-                            <v-col align="center" justify="center"><span> {{ parseDateFromDB(sub_item.work_date) }}</span></v-col>
+                            <v-col align="center" justify="center"><span> {{ parseDateFromDB(sub_item.workDate) }}</span></v-col>
                             <v-col align="center" justify="center"><v-checkbox
                                   v-model="sub_item.isSelected"
                                   style="transform: scale(1.5);margin-left:5vw;"
@@ -204,7 +206,13 @@
                 </v-row>
               </v-container>
             </v-card> </v-list-item
-        ></draggable> </v-list
+        ></draggable> 
+         <v-container v-if="isNotHasData" fill-height fluid >
+          <v-row align="center" justify="center">
+            <v-col justify="center" align="center" class="not-found-text">ยังไม่มีงานในระบบ</v-col>
+          </v-row>
+        </v-container>
+        </v-list
     ></v-row>
     <v-row>
       <v-spacer> </v-spacer>
@@ -245,6 +253,13 @@
         </v-btn>
       </v-col></v-row
     >
+    <v-dialog v-model="isDialogShow" elevation="0">
+      <Popup
+        :type="dialogType"
+        :value="dialogValue"
+        @popup-event="popupEventHandler"
+      ></Popup>
+    </v-dialog>
     <v-overlay :value="overlay"><v-progress-circular
       :size="50"
       color="indigo"
@@ -256,6 +271,8 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
+import * as API from "../utills/api";
+import Popup from "./Popup/Popup.vue";
 export default {
   props: {
     isJobRunning: {
@@ -265,6 +282,7 @@ export default {
   },
   components: {
     draggable,
+    Popup
   },
   data() {
     return {
@@ -295,12 +313,16 @@ export default {
       mode: "group-reorder",
       currentSelectedGroup: null,
       items:[],
-      overlay:false
+      overlay:false,
+      dialogType:{},
+      dialogValue:{},
+      isDialogShow:false,
+      isNotHasData:false
+
     };
   },
   mounted() {
-    this.overlay = true;
-    this.getAllJobByAllGroup().then(()=>{this.items = this.getAllJobByAllGroupData; this.overlay = false;});
+    this.fetchData();
   },
   methods: {
     ...mapActions(["getAllJobByAllGroup","reorderGroup","createGroupWithJob","updateInGroup"]),
@@ -354,13 +376,20 @@ export default {
         await this.updateInGroup({jobs:payload,group_id:this.currentSelectedGroup.group_id});
         this.mode = "group-reorder";
       } else if (this.mode == "group-reorder") {
+        this.items.forEach((group,index)=>group.order = index +1);
         this.overlay = true;
-        await this.reorderGroup(this.items);
+        const result = await API.groups.updateList(this.items);
         this.overlay = false;
-        this.$emit("handle-event", {
-          type: "change_mode",
-          value: "home",
-        });
+        if(result.successful){
+          this.$emit("handle-event", {
+            type: "change_mode",
+            value: "home",
+          });
+        }else{
+          this.dialogType = 'error';
+          this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+        }
+       
       } else if (this.mode == "add-group") {
         this.overlay = true;
         await this.createGroupWithJob(this.items);
@@ -414,6 +443,36 @@ export default {
           text: "การเลือก",
         },
       ];
+    },
+    fetchData(){
+      this.overlay = true;
+      API.groups.listWithJobs({
+        orderBy:'order',
+        direction:'ASC'
+      }).then((response) => {
+        this.overlay = false;
+        if (response.successful) {
+          if (response.data.length) {
+            this.isNotHasData = false;
+            this.items = response.data;
+          } else {
+            this.isNotHasData = true;
+          }
+        }else{
+          this.dialogType = 'error';
+          this.dialogValue = { errorMessage: 'กรุณาลองอีกครั้ง'};
+          this.isDialogShow = true;
+        }
+      });
+    },
+    popupEventHandler(event) {
+      if (event.type == "action") {
+        this.fetchData();
+        if (event.value == "cancel" || event.value == "save") {
+          this.isDialogShow = false;
+          this.dialogValue = {};
+        }
+      }
     }
   },
   computed: {
@@ -435,5 +494,8 @@ export default {
 }
 .handle {
   --dummy:1;
+}
+.ghost {
+  opacity: 0.5;
 }
 </style>

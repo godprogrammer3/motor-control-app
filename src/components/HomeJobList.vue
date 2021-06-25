@@ -292,7 +292,10 @@ export default {
     },
     fetchData(){
       this.overlay = true;
-      API.groups.listWithJobs().then((response) => {
+      API.groups.listWithJobs({
+        orderBy:'order',
+        direction:'ASC'
+      }).then((response) => {
         this.overlay = false;
         if (response.successful) {
           if (response.data.length) {
@@ -301,6 +304,10 @@ export default {
           } else {
             this.isNotHasData = true;
           }
+        }else{
+          this.dialogType = 'error';
+          this.dialogValue = { errorMessage: 'กรุณาลองอีกครั้ง'};
+          this.isDialogShow = true;
         }
       });
     }

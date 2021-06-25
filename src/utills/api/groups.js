@@ -3,10 +3,17 @@ var instance = axios.create({
     baseURL: "http://localhost:3000/groups",
     adapter: require("axios/lib/adapters/http"),
     });
-export async function listWithJobs(){
+export async function listWithJobs(option){
       var result;
       try{
-        result = await instance.get("/list-with-jobs");
+        result = await instance.get("/list-with-jobs",
+        {
+          params: {
+            orderBy:'order',
+            direction:'ASC'
+          }
+        }
+        );
         result = result.data;
       }catch(error){
         result = error.response.data;
@@ -14,3 +21,16 @@ export async function listWithJobs(){
         return result;
       }
 } 
+
+export async function updateList(groups){
+  var result;
+  try{
+    result = await instance.patch("/bulk-update",groups);
+    result = result.data;
+  }catch(error){
+    result = error.response.data;
+  }finally{
+    return result;
+  }
+} 
+
