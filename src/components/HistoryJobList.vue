@@ -239,7 +239,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import Popup from "@/components/Popup.vue";
+import Popup from "@/components/Popup/Popup.vue";
 import API from "@/store/api";
 import moment from "moment";
 export default {

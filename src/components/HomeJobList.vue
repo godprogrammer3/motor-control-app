@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0">
+  <v-container fluid class="pa-0" :key="reRenderKey" >
     <v-row
       class="elevation-2 pl-10 ma-0"
       style="background-color:white;padding-left:3vw;padding-right:7vw;"
@@ -180,7 +180,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
-import Popup from "@/components/Popup.vue";
+import Popup from "@/components/Popup/Popup.vue";
 import * as API from "../utills/api";
 export default {
   name: "HomeJobList",
@@ -224,36 +224,25 @@ export default {
       dialogValue: "",
       overlay: false,
       items: [],
-      isNotHasData:false
+      isNotHasData:false,
+      reRenderKey:0
     };
   },
 
   created() {
-    this.overlay = true;
-    API.groups.listWithJobs().then((response) => {
-      this.overlay = false;
-      if (response.successful) {
-        console.log("-> DEBUG : This line in HomeJobList > created()");
-        console.log("response.data :", response.data);
-        if (response.data.length) {
-          this.isNotHasData = false;
-          this.items = response.data;
-        } else {
-          this.isNotHasData = true;
-        }
-      }
-    });
+    this.fetchData();
   },
   methods: {
     ...mapActions(["getAllJobByAllGroup"]),
     popupEventHandler(event) {
       if (event.type == "action") {
-        vm.$forceUpdate();
+        this.fetchData();
         if (event.value == "cancel" || event.value == "save") {
           this.isDialogShow = false;
           this.dialogValue = {};
         }
       } else if (event.type == "confirm-delete-job") {
+        this.fetchData();
         if (event.value == "cancel" || event.value == "yes") {
           this.isDialogShow = false;
         }
@@ -301,6 +290,20 @@ export default {
         date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
       );
     },
+    fetchData(){
+      this.overlay = true;
+      API.groups.listWithJobs().then((response) => {
+        this.overlay = false;
+        if (response.successful) {
+          if (response.data.length) {
+            this.isNotHasData = false;
+            this.items = response.data;
+          } else {
+            this.isNotHasData = true;
+          }
+        }
+      });
+    }
   },
   computed: {
     ...mapGetters(["getAllJobByAllGroupData"]),

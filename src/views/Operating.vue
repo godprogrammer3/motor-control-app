@@ -223,8 +223,8 @@
 
 <script>
 import { mapActions } from "vuex";
-import Popup from "@/components/Popup.vue";
-import PopupHome from "@/components/PopupHome.vue";
+import Popup from "@/components/Popup/Popup.vue";
+import PopupHome from "@/components/Popup/PopupHome.vue";
 export default {
   components: {
     Popup,

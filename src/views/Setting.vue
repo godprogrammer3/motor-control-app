@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import SettingBody from "@/components/SettingBody.vue";
-import TouchKeyboard from "../components/TouchKeyboard.vue";
+import SettingBody from "@/components/Popup/SettingBody.vue";
+import TouchKeyboard from "../components/Popup/TouchKeyboard.vue";
 import { mapState, mapActions } from "vuex";
 export default {
   components: {

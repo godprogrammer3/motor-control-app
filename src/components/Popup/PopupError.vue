@@ -4,8 +4,8 @@
       <v-col align="center" justify="center">
            <v-card width="50vw" >
         <v-row align="center" justify="center"> 
-          <v-col align="center" justify="center" class="text-h3">
-              <span style="color:red;">เกิดข้อผิดพลาด !</span>
+          <v-col align="center" justify="center" class="text-h4">
+              <span class="red--text">เกิดข้อผิดพลาดในการดำเนินการ!</span>
           </v-col>
         </v-row>
         <v-row align="center" justify="center"> 

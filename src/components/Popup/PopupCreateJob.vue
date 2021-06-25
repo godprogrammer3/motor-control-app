@@ -152,11 +152,10 @@
      
     </v-dialog>
      <v-dialog v-model="isDialogShow" elevation="0">
-      <Popup
-        :type="dialogType"
+      <PopupError
         :value="dialogValue"
-        @popup-event="popupEventHandler"
-      ></Popup>
+        @popup-error-event="popupEventHandler"
+      ></PopupError>
      </v-dialog>
      <v-overlay :value="overlay"><v-progress-circular
       :size="50"
@@ -170,12 +169,12 @@
 import TouchKeyboard from "./TouchKeyboard.vue";
 import { mapActions } from "vuex";
 import moment from "moment";
-import * as api from "../utills/api";
-import Popup from './Popup.vue';
+import * as api from "../../utills/api";
+import PopupError from './PopupError.vue';
 export default {
   components: {
     TouchKeyboard,
-    Popup,
+    PopupError,
   },
   data() {
     return {
@@ -195,8 +194,7 @@ export default {
       showDatePicker : false,
       overlay: false,
       isDialogShow: false,
-      dialogType:'',
-      dialogValue:''
+      dialogValue: {}
 
     };
   },
@@ -323,8 +321,7 @@ export default {
               });
             }else{
               if( result.errorCode == '03'){
-                this.dialogType = 'error',
-                this.dialogValue = {errorMessage:'งานที่สร้างซ้ำกับที่มีอยู่ในระบบแล้ว'};
+                this.dialogValue = {errorMessage:'หมายเลขงานซ้ำกับที่มีอยู่ในระบบแล้ว'};
                 this.isDialogShow = true;
               }
             }
