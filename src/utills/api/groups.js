@@ -45,3 +45,15 @@ export async function createWithJobs(jobs){
     return result;
   }
 } 
+
+export async function updateJobsInGroup(data){
+  var result;
+  try{
+    result = await instance.patch("/update-jobs-in-group",data);
+    result = result.data;
+  }catch(error){
+    result = error.response.data;
+  }finally{
+    return result;
+  }
+} 

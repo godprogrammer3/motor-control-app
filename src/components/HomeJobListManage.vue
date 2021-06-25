@@ -368,16 +368,26 @@ export default {
     },
     async handleSaveButton() {
       if (this.mode == "manage-member-ingroup") {
-        var payload = [];
-        this.items.forEach((element)=>{
-          element.job.forEach((sub_job)=>{
-            if( sub_job.group_id == this.currentSelectedGroup.group_id || sub_job.isSelected){
-              payload.push(sub_job);
+        const selectedJobs = [];
+        this.items.forEach(group=>
+          group.jobs.forEach(( job )=>{
+            if(job.isSelected){
+              selectedJobs.push(job);
             }
-          });
-        });
-        await this.updateInGroup({jobs:payload,group_id:this.currentSelectedGroup.group_id});
-        this.mode = "group-reorder";
+          }
+          )
+        );
+        this.overlay = true;
+        let result = await API.groups.updateJobsInGroup({id:this.currentSelectedGroup.id,jobs:selectedJobs});
+        this.overlay = false;
+        if(result.successful){
+          this.fetchData();
+          this.mode = "group-reorder";
+        }else{
+          this.dialogType = 'error';
+          this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+          this.isDialogShow = true;
+        }
       } else if (this.mode == "group-reorder") {
         this.items.forEach((group,index)=>group.order = index +1);
         this.overlay = true;
@@ -391,6 +401,7 @@ export default {
         }else{
           this.dialogType = 'error';
           this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+          this.isDialogShow = true;
         }
        
       } else if (this.mode == "add-group") {
@@ -405,7 +416,6 @@ export default {
             }
           })
         ); 
-        console.log(selectedJobs);
         const result = await API.groups.createWithJobs(selectedJobs);
         this.overlay = false;
         if(result.successful){
