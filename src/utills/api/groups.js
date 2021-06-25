@@ -8,10 +8,10 @@ export async function listWithJobs(option){
       try{
         result = await instance.get("/list-with-jobs",
         {
-          params: {
-            orderBy:'order',
-            direction:'ASC'
-          }
+          params:{
+            ...option
+          } 
+
         }
         );
         result = result.data;
@@ -34,3 +34,14 @@ export async function updateList(groups){
   }
 } 
 
+export async function createWithJobs(jobs){
+  var result;
+  try{
+    result = await instance.post("/create-with-jobs",jobs);
+    result = result.data;
+  }catch(error){
+    result = error.response.data;
+  }finally{
+    return result;
+  }
+} 

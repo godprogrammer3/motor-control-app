@@ -165,6 +165,7 @@
                             <v-col align="center" justify="center"><v-checkbox
                                   v-model="sub_item.isSelected"
                                   style="transform: scale(1.5);margin-left:5vw;"
+                                  @change="calculateCreatable"
                                 ></v-checkbox
                               ></v-col>
                            </v-row>
@@ -236,6 +237,7 @@
           bottom
           @click="handleSaveButton"
           class="text-h5"
+          :disabled="mode == 'add-group' && !isCreatable"
         >
           บันทึก
         </v-btn>
@@ -317,7 +319,8 @@ export default {
       dialogType:{},
       dialogValue:{},
       isDialogShow:false,
-      isNotHasData:false
+      isNotHasData:false,
+      isCreatable:false
 
     };
   },
@@ -330,10 +333,10 @@ export default {
       this.currentSelectedGroup = group;
       this.mode = "manage-member-ingroup";
       this.items.forEach((item)=>{
-        if(item.group_id == this.currentSelectedGroup.group_id){
-          item.job.forEach((sub_item)=>sub_item.isSelected = true);
+        if(item.id == this.currentSelectedGroup.id){
+          item.jobs.forEach((sub_item)=>sub_item.isSelected = true);
         }else{
-          item.job.forEach((sub_item)=>sub_item.isSelected = false);
+          item.jobs.forEach((sub_item)=>sub_item.isSelected = false);
         }
       });
       this.headers = [
@@ -392,9 +395,27 @@ export default {
        
       } else if (this.mode == "add-group") {
         this.overlay = true;
-        await this.createGroupWithJob(this.items);
+        const selectedJobs = [];
+       
+        this.items.forEach(
+          group =>
+          group.jobs.forEach((job)=>{
+            if( job.isSelected ){
+              selectedJobs.push(job);
+            }
+          })
+        ); 
+        console.log(selectedJobs);
+        const result = await API.groups.createWithJobs(selectedJobs);
         this.overlay = false;
-        this.mode = "group-reorder";
+        if(result.successful){
+          this.fetchData();
+          this.mode = "group-reorder";
+        }else{
+          this.dialogType = 'error';
+          this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+          this.isDialogShow = true;
+        }
       }
     },
     handleCancelButton() {
@@ -420,8 +441,8 @@ export default {
     },
     addGroupAction(){
       this.mode = 'add-group';
-      this.items.forEach((item)=>{
-        item.job.forEach((sub_item)=>sub_item.isSelected = false);
+      this.items.forEach((group)=>{
+        group.jobs.forEach((job)=>job.isSelected = false);
       });
       this.headers = [
         {
@@ -473,17 +494,26 @@ export default {
           this.dialogValue = {};
         }
       }
+    },
+    calculateCreatable(event){
+      const selectedJobs = [];
+      this.items.forEach(group=>
+        group.jobs.forEach(( job )=>{
+          if(job.isSelected){
+            selectedJobs.push(job);
+          }
+        }
+        )
+      );
+      if(selectedJobs.length > 1){
+        this.isCreatable = true;
+      }else{
+         this.isCreatable = false;
+      }
     }
   },
   computed: {
     ...mapGetters(["getAllJobByAllGroupData"]),
-  },
-  watch: {
-    getAllJobByAllGroupData(newValue, oldValue) {
-      if(newValue!= undefined){
-        this.items = newValue;
-      }
-    }
   },
 };
 </script>
