@@ -26,7 +26,6 @@
     </PopupEditOnTop>
     <PopupEditOffset
       v-else-if="type == 'editOffset'"
-      :oldOffset="value.offset.toString()"
       @popup-edit-offset-event="
         (event) =>
           $emit('popup-event', {
@@ -85,6 +84,10 @@
     <PopupChangingPaper
       v-else-if="type == 'changingPaper'"
       class="align-center"
+      @popup-changing-paper-event="
+        (event) =>
+          $emit('popup-event', { type: event.type, value: event.value })
+      "
     >
     </PopupChangingPaper>
     <PopupSaveSettingComplete

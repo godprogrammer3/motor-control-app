@@ -72,6 +72,7 @@
 <script>
 import TouchKeyboard from "./TouchKeyboard.vue";
 import {mapActions} from "vuex";
+import * as API from '../../utills/api';
 export default {
   components: {
     TouchKeyboard,
@@ -125,11 +126,18 @@ export default {
           }
         } else if (event.value == "save") {
           if (this.$refs.form.validate()) {
-             this.overlay = true;
-            await this.changeOffsetWork({
-              offset:this.offset,
-            });
+            this.overlay = true;
+            console.log( this.radioGroup );
+            let tmp = parseInt(this.offset);
+            if(!this.radioGroup){
+              tmp *= -1;
+            }
+            const result = await API.controls.addPaperSheet(tmp);
             this.overlay = false;
+            if(!result.successful){
+              console.log('Error');
+              return -1;
+            }
             this.$emit("popup-edit-offset-event", {
               type: event.type,
               value: 'saveOffset',
@@ -185,7 +193,6 @@ export default {
     },
   },
   mounted () {
-    this.offset = this.oldOffset;
   },
 }
 </script>

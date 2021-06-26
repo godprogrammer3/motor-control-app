@@ -120,7 +120,7 @@
             <v-card color="blue" class="text-h4 white--text" @click="editOffset">
               <v-col align="center" justify="center">
                 <v-row align="center" justify="center">เพิ่ม/ลด</v-row>
-                <v-row align="center" justify="center">+100</v-row>
+                <v-row align="center" justify="center">{{offset}}</v-row>
                 <v-row align="center" justify="center"
                   ><span class="mr-5">แผ่น</span>
                    <v-icon x-large color="white">
@@ -200,8 +200,8 @@
           >
         </v-row>
       </footer>
-      <!-- <v-row align="center" justify="center" style="height:10vh;">
-        <v-col justify="center" style="width:100%;">
+      <v-row align="center" justify="center" style="height:10vh;">
+        <v-col justify="center" style="width:100%;visibility:hidden;">
           <v-row align="center" justify="center">
             <v-switch
               style="transform:scale(1.3);"
@@ -225,7 +225,7 @@
             
           </v-row>
         </v-col>
-        <v-col justify="center" style="width:100%;">
+        <v-col justify="center" style="width:100%;visibility:hidden;">
           <v-row align="center" justify="center">
             <v-switch
               style="transform:scale(1.3);"
@@ -261,7 +261,7 @@
             เพิ่มกระดาษเสีย
           </v-btn>
         </v-col>
-      </v-row> -->
+      </v-row>
 
       <v-dialog v-model="isDialogShow" elevation="0" :persistent="isPersistent">
         <Popup
@@ -309,7 +309,7 @@ export default {
       dialogType: "",
       dialogValue: "",
       onTop: 30,
-      offset: 100,
+      offset: 0,
       isShowHomePopup: false,
       isPersistent: true,
       currentJobOrder: 0,
@@ -339,23 +339,23 @@ export default {
           this.isDialogShow = false;
           this.dialogValue = {};
         } else if (event.value == "confirm") {
-          this.api.changePaper();
           this.isDialogShow = false;
           this.dialogType = "changingPaper";
           this.dialogValue = {};
           this.isDialogShow = true;
         } else if (event.value == "finish") {
-          this.api.finishChangePaper();
           this.isDialogShow = false;
           this.dialogValue = {};
         } else if (event.value == "saveOntop") {
           this.isDialogShow = false;
-          this.dialogType = "editOntopComplete";
+          this.dialogType = "";
           this.dialogValue = {
             value: event.extraValue.value,
           };
           this.isDialogShow = true;
         } else if (event.value == "ok") {
+          this.isDialogShow = false;
+        }else if (event.value == "saveOffset") {
           this.isDialogShow = false;
         }
       }else if (event.type == "confirm-cancel-job") {
@@ -434,6 +434,18 @@ export default {
     },
     Lenght_C: function( data ){
       this.finishLength = data;
+    },
+    wastePaper_sheet:function( data ){
+      console.log(data);
+      this.offset = data;
+    },
+    alert:function( data ){
+      this.dialogType = 'confirm';
+      this.dialogValue = {str:'confirmNearFinish'};
+      this.isCloseDialogShow = true;
+    },
+    end:function(data){
+      this.currentJobOrder++;
     }
   },
 };
