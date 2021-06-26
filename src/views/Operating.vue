@@ -69,7 +69,7 @@
       </v-row>
       <v-row align="center" justify="center" class="mt-5">
         <span class="text-h2 indigo--text">ลอน C จ่ายกระดาษแล้ว :</span>
-        <span class="text-h2 ml-5">5.65 %</span>
+        <span class="text-h2 ml-5">{{( targetLength != 0?finishLength / targetLength:0).toFixed(2)}} %</span>
       </v-row>
       <v-container>
         <v-row align="center" justify="center">
@@ -88,7 +88,7 @@
             <v-card color="indigo darken-4" class="text-h4 white--text">
               <v-col align="center" justify="center">
                 <v-row align="center" justify="center">คงเหลือ</v-row>
-                <v-row align="center" justify="center">2659</v-row>
+                <v-row align="center" justify="center">{{ targetLength - finishLength}}</v-row>
                 <v-row align="center" justify="center">เมตร</v-row>
               </v-col>
             </v-card>
@@ -97,7 +97,7 @@
             <v-card color="purple" class="text-h4 white--text">
               <v-col align="center" justify="center">
                 <v-row align="center" justify="center">ทั้งหมด</v-row>
-                <v-row align="center" justify="center">3348</v-row>
+                <v-row align="center" justify="center">{{targetLength}}</v-row>
                 <v-row align="center" justify="center">เมตร</v-row>
               </v-col>
             </v-card>
@@ -117,12 +117,15 @@
           </v-col>
 
            <v-col>
-            <v-card color="blue" class="text-h4 white--text">
+            <v-card color="blue" class="text-h4 white--text" @click="editOffset">
               <v-col align="center" justify="center">
                 <v-row align="center" justify="center">เพิ่ม/ลด</v-row>
                 <v-row align="center" justify="center">+100</v-row>
                 <v-row align="center" justify="center"
                   ><span class="mr-5">แผ่น</span>
+                   <v-icon x-large color="white">
+                    create
+                  </v-icon>
                 </v-row>
               </v-col>
             </v-card>
@@ -311,6 +314,7 @@ export default {
       isPersistent: true,
       currentJobOrder: 0,
       finishLength: 0.0,
+      targetLength: 0,
       overlay:false
     };
   },
@@ -369,6 +373,8 @@ export default {
           }
           this.$router.replace("/");
         }
+      }else if(event.type == 'confirm-near-finish'){
+        this.isDialogShow = false;
       }
     },
     confirmChangePaper() {
@@ -418,28 +424,17 @@ export default {
     connect: function() {
       console.log("socket connected");
     },
-    CANCEL_JOB: function(data) {
-      console.log(data);
-      this.$router.replace({ path: "/" }).catch((error) => {
-        console.log("->In operating page:");
-        console.log(error);
-      });
-    },
-    Lenght_A: function(data) {
-      console.log("-> Log in : Operating>sockets>Lenght_A");
-      console.log(data);
-      this.finishLength = data;
-    },
-    Speed_C: function(data) {
-      console.log("-> Log in : Operating>sockets>Speed_C");
-      console.log(data);
-      this.speed = data;
-    },
     NOTIFY_NC_CLIENT_TO_CANCEL_WORK:function(data){
       console.log(data);
       this.$socket.emit('NOTIFY_NC_CLIENT_TO_CANCEL_WORK_RESPONSE',data);
       this.$router.replace("/");
     },
+    Lenght_target: function( data ){
+     this.targetLength = data;
+    },
+    Lenght_C: function( data ){
+      this.finishLength = data;
+    }
   },
 };
 </script>

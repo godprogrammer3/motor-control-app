@@ -337,8 +337,7 @@ export default {
           group: data,
         },
       });
-    }
-
+    },
   }
 };
 </script>

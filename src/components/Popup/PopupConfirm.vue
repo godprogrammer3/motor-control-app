@@ -58,6 +58,20 @@
               }
             "
           ></PopupConfirmChangeKnife>
+          <PopupConfirmNearFinish
+          v-else-if="type.str == 'confirmNearFinish'"
+          :group="type.value"
+            @popup-confirm-near-finish="
+              (event) => {
+                $emit('popup-comfirm-event', {
+                  type: 'confirm-near-finish',
+                  value: event,
+                });
+              }
+            "
+          >
+            
+          </PopupConfirmNearFinish>
         </v-row>
       </v-container>
     </v-card>
@@ -70,6 +84,7 @@ import PopupConfirmStartJob from "./PopupConfirmStartJob";
 import PopupConfirmCancelJob from "./PopupConfirmCancelJob";
 import PopupConfirmInsertPaper from "./PopupConfirmInsertPaper";
 import PopupConfirmChangeKnife from "./PopupConfirmChangeKnife";
+import PopupConfirmNearFinish from "./PopupConfirmNearFinish.vue"
 export default {
   components: {
     PopupConfirmDeleteJob,
@@ -77,6 +92,7 @@ export default {
     PopupConfirmCancelJob,
     PopupConfirmInsertPaper,
     PopupConfirmChangeKnife,
+    PopupConfirmNearFinish
   },
   props: {
     type: {
