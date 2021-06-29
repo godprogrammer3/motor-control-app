@@ -13,6 +13,25 @@ export default {
   data: () => ({
     //
   }),
+  sockets:{
+    connect: function() {
+      console.log("socket connected");
+    },
+    NOTIFY_NC_CLIENT_TO_CANCEL_WORK:function(data){
+      console.log(data);
+      this.$socket.emit('NOTIFY_NC_CLIENT_TO_CANCEL_WORK_RESPONSE',data);
+      this.$router.replace("/");
+    },
+    NOTIFY_NC_CLIENT_TO_START_WORK:function(data){
+      this.$socket.emit('NOTIFY_NC_CLIENT_TO_START_WORK_RESPONSE',data);
+      this.$router.replace({
+        name: "Operating",
+        query: {
+          id: data.id,
+        },
+      });
+    },
+  }
 };
 </script>
 <style lang="sass">

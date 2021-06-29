@@ -333,8 +333,8 @@ export default {
       this.$socket.emit('NOTIFY_NC_CLIENT_TO_START_WORK_RESPONSE',data);
       this.$router.replace({
         name: "Operating",
-        params: {
-          group: data,
+        query: {
+          id: data.id,
         },
       });
     },
