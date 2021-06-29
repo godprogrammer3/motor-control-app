@@ -85,7 +85,7 @@ export default {
       this.overlay = true;
       const result = await API.jobs.remove(this.job.id);
       if (result.successful) {
-         let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
+          let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
           this.overlay = false;
           if(!result2.successful){
             this.isError = true;
