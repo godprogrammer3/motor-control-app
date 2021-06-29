@@ -1,6 +1,6 @@
 import axios from "axios";
 var instance = axios.create({
-    baseURL: "http://192.168.1.4:3000/processes",
+    baseURL: process.env.VUE_APP_API_HOST+"/processes",
     adapter: require("axios/lib/adapters/http"),
     });
 export async function checkNCClientConnect(){
@@ -31,6 +31,18 @@ export async function notifyCClientToCancelWork(){
   var result;
   try{
     result = await instance.get("/notify-c-client-to-cancel-work");
+    result = result.data;
+  }catch(error){
+    result = error.response.data;
+  }finally{
+    return result;
+  }
+} 
+
+export async function notifyCClientToRefreshJobsList(){
+  var result;
+  try{
+    result = await instance.get("/notify-c-client-to-refresh-jobs-list");
     result = result.data;
   }catch(error){
     result = error.response.data;

@@ -84,8 +84,13 @@ export default {
     async deleteJobAction() {
       this.overlay = true;
       const result = await API.jobs.remove(this.job.id);
-      this.overlay = false;
       if (result.successful) {
+         let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
+          this.overlay = false;
+          if(!result2.successful){
+            this.isError = true;
+            return -1;
+          }
         this.$emit("popup-confirm-delete-job", "yes");
       } else {
         this.isError = true;

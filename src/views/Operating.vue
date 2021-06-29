@@ -445,7 +445,9 @@ export default {
       this.isCloseDialogShow = true;
     },
     end:function(data){
-      this.currentJobOrder++;
+       if(this.currentJobOrder+1 < this.group.jobs.length){
+         this.currentJobOrder++;
+       }
     }
   },
 };

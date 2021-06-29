@@ -367,8 +367,13 @@ export default {
               sheet: Number(this.sheet),
               workDate: this.deParseDate(this.workDate) + " 00:00:00",
             });
-            this.overlay = false;
             if (result.successful) {
+               let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
+                this.overlay = false;
+                if(!result2.successful){
+                  this.isError = true;
+                  return -1;
+                }
               this.$emit("popup-edit-event", {
                 type: event.type,
                 value: event.value,

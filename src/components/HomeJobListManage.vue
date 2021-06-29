@@ -379,8 +379,15 @@ export default {
         );
         this.overlay = true;
         let result = await API.groups.updateJobsInGroup({id:this.currentSelectedGroup.id,jobs:selectedJobs});
-        this.overlay = false;
         if(result.successful){
+          let result2 = await API.processes.notifyCClientToRefreshJobsList();
+          this.overlay = false;
+          if(!result2.successful){
+            this.dialogType = 'error';
+            this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+            this.isDialogShow = true;
+            return -1;
+          }
           this.fetchData();
           this.mode = "group-reorder";
         }else{
@@ -392,8 +399,15 @@ export default {
         this.items.forEach((group,index)=>group.order = index +1);
         this.overlay = true;
         const result = await API.groups.updateList(this.items);
-        this.overlay = false;
         if(result.successful){
+          let result2 = await API.processes.notifyCClientToRefreshJobsList();   
+          this.overlay = false;
+          if(!result2.successful){
+            this.dialogType = 'error';
+            this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+            this.isDialogShow = true;
+            return -1;
+          }
           this.$emit("handle-event", {
             type: "change_mode",
             value: "home",
@@ -417,8 +431,15 @@ export default {
           })
         ); 
         const result = await API.groups.createWithJobs(selectedJobs);
-        this.overlay = false;
         if(result.successful){
+          let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
+          this.overlay = false;
+          if(!result2.successful){
+            this.dialogType = 'error';
+            this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+            this.isDialogShow = true;
+            return -1;
+          }
           this.fetchData();
           this.mode = "group-reorder";
         }else{
