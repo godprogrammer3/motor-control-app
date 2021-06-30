@@ -78,7 +78,7 @@
               "
             >
               <v-toolbar
-                :color="item.isContinue ? 'indigo' : 'orange'"
+                color="indigo"
                 height="95"
                 v-if="
                   (mode != 'manage-member-ingroup' || item.id == currentSelectedGroup.id)&& mode != 'add-group' 
@@ -88,7 +88,7 @@
                   >กลุ่มหมายเลข {{ item.id }}</v-toolbar-title
                 >
                 <v-spacer></v-spacer>
-                <v-switch
+                <!-- <v-switch
                   v-model="item.isContinue"
                   inset
                   hide-details
@@ -103,7 +103,7 @@
                       }}</span
                     >
                   </template>
-                </v-switch>
+                </v-switch> -->
                 <v-btn
                   x-large
                   fab

@@ -28,7 +28,7 @@
           <v-list-item v-for="(item, index) in items" :key="index">
             <v-card width="100%" class="mb-5 rounded-xl">
               <v-toolbar
-                :color="item.isContinue ? 'indigo' : 'orange'"
+                color="indigo"
                 height="95"
               >
                 <v-toolbar-title class="text-h5 white--text ml-5 nocopy"

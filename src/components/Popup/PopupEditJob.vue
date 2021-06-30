@@ -368,7 +368,7 @@ export default {
               workDate: this.deParseDate(this.workDate) + " 00:00:00",
             });
             if (result.successful) {
-               let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
+                let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
                 this.overlay = false;
                 if(!result2.successful){
                   this.isError = true;
@@ -379,6 +379,7 @@ export default {
                 value: event.value,
               });
             } else {
+              this.overlay = false;
               this.dialogValue = {
                 errorMessage: "กรุณาลองอีกครั้ง",
               };
