@@ -30,23 +30,23 @@
                 <v-col>
                   <span class="text-h4 indigo--text">ระยะทางลอน A ถึง NC</span>
                   <v-text-field
-                    ref="motorAToMotorCutLenght"
-                    id="motorAToMotorCutLenght"
-                    v-model="motorAToMotorCutLenght"
+                    ref="motorAToMotorCutLength"
+                    id="motorAToMotorCutLength"
+                    v-model="motorAToMotorCutLength"
                     suffix="เมตร"
                     style="transform:scale(2);width:40%;"
                     placeholder="กรอกค่า"
-                    @click="textFieldFocusHandler('motorAToMotorCutLenght')"
-                    @focus="textFieldFocusHandler('motorAToMotorCutLenght')"
+                    @click="textFieldFocusHandler('motorAToMotorCutLength')"
+                    @focus="textFieldFocusHandler('motorAToMotorCutLength')"
                     @keydown="
-                      (event) => updateValue(event, 'motorAToMotorCutLenght')
+                      (event) => updateValue(event, 'motorAToMotorCutLength')
                     "
                     @keyup="
-                      (event) => enterHandler(event, 'motorAToMotorCutLenght')
+                      (event) => enterHandler(event, 'motorAToMotorCutLength')
                     "
                     counter
                     maxlength="8"
-                    :rules="motorAToMotorCutLenghtRules"
+                    :rules="motorAToMotorCutLengthRules"
                   >
                   </v-text-field>
                 </v-col>
@@ -57,21 +57,21 @@
                     >ความยาวเตือนปล่อยกระดาษใกล้เสร็จ</span
                   >
                   <v-text-field
-                    ref="alertLenghtMotorC"
-                    id="alertLenghtMotorC"
-                    v-model="alertLenghtMotorC"
+                    ref="alertLengthMotorC"
+                    id="alertLengthMotorC"
+                    v-model="alertLengthMotorC"
                     suffix="เมตร"
                     style="transform:scale(2);width:40%;"
                     placeholder="กรอกค่า"
-                    @click="textFieldFocusHandler('alertLenghtMotorC')"
-                    @focus="textFieldFocusHandler('alertLenghtMotorC')"
+                    @click="textFieldFocusHandler('alertLengthMotorC')"
+                    @focus="textFieldFocusHandler('alertLengthMotorC')"
                     @keydown="
-                      (event) => updateValue(event, 'alertLenghtMotorC')
+                      (event) => updateValue(event, 'alertLengthMotorC')
                     "
-                    @keyup="(event) => enterHandler(event, 'alertLenghtMotorC')"
+                    @keyup="(event) => enterHandler(event, 'alertLengthMotorC')"
                     counter
                     maxlength="8"
-                    :rules="alertLenghtMotorCRules"
+                    :rules="alertLengthMotorCRules"
                   >
                   </v-text-field>
                 </v-col>
@@ -135,8 +135,8 @@ export default {
   data() {
     return {
       currentInput: "",
-      motorAToMotorCutLenght: "",
-      motorAToMotorCutLenghtRules: [
+      motorAToMotorCutLength: "",
+      motorAToMotorCutLengthRules: [
         (v) => !!v || "กรุณากรอกค่า ระยะทางลอน A ถึง NC",
       ],
       slowModeSpeed: "",
@@ -145,8 +145,8 @@ export default {
       isDialogShow: false,
       dialogValue: "",
       dialogType: "",
-      alertLenghtMotorC: "",
-      alertLenghtMotorCRules: [
+      alertLengthMotorC: "",
+      alertLengthMotorCRules: [
         (v) => !!v || "กรุณากรอกค่าความยาวเตือนปล่อยกระดาษใกล้เสร็จ",
       ],
       spare: "",
@@ -161,20 +161,20 @@ export default {
     async keyboardEventHandler(event) {
       if (event.type == "letter" && event.value != ".") {
         var element;
-        if (this.currentInput == "motorAToMotorCutLenght") {
-          element = this.$refs.motorAToMotorCutLenght.$el.querySelector(
+        if (this.currentInput == "motorAToMotorCutLength") {
+          element = this.$refs.motorAToMotorCutLength.$el.querySelector(
             "input"
           );
           if (
-            (this.motorAToMotorCutLenght.length < 8 ||
+            (this.motorAToMotorCutLength.length < 8 ||
               element.selectionStart != element.selectionEnd) &&
             (event.value != "0" || element.selectionStart != 0)
           ) {
             var newSelectionStart = element.selectionStart + 1;
-            this.motorAToMotorCutLenght =
-              this.motorAToMotorCutLenght.substring(0, element.selectionStart) +
+            this.motorAToMotorCutLength =
+              this.motorAToMotorCutLength.substring(0, element.selectionStart) +
               event.value +
-              this.motorAToMotorCutLenght.substring(element.selectionEnd);
+              this.motorAToMotorCutLength.substring(element.selectionEnd);
             this.$nextTick(() => {
               element.focus();
               element.setSelectionRange(newSelectionStart, newSelectionStart);
@@ -197,18 +197,18 @@ export default {
               element.setSelectionRange(newSelectionStart, newSelectionStart);
             });
           }
-        } else if (this.currentInput == "alertLenghtMotorC") {
-          element = this.$refs.alertLenghtMotorC.$el.querySelector("input");
+        } else if (this.currentInput == "alertLengthMotorC") {
+          element = this.$refs.alertLengthMotorC.$el.querySelector("input");
           if (
-            (this.alertLenghtMotorC.length < 8 ||
+            (this.alertLengthMotorC.length < 8 ||
               element.selectionStart != element.selectionEnd) &&
             (event.value != "0" || element.selectionStart != 0)
           ) {
             var newSelectionStart = element.selectionStart + 1;
-            this.alertLenghtMotorC =
-              this.alertLenghtMotorC.substring(0, element.selectionStart) +
+            this.alertLengthMotorC =
+              this.alertLengthMotorC.substring(0, element.selectionStart) +
               event.value +
-              this.alertLenghtMotorC.substring(element.selectionEnd);
+              this.alertLengthMotorC.substring(element.selectionEnd);
             this.$nextTick(() => {
               element.focus();
               element.setSelectionRange(newSelectionStart, newSelectionStart);
@@ -234,25 +234,25 @@ export default {
         }
       } else if (event.type == "action") {
         if (event.value == "delete") {
-          if (this.currentInput == "motorAToMotorCutLenght") {
-            element = this.$refs.motorAToMotorCutLenght.$el.querySelector(
+          if (this.currentInput == "motorAToMotorCutLength") {
+            element = this.$refs.motorAToMotorCutLength.$el.querySelector(
               "input"
             );
             var newSelectionStart;
             if (element.selectionStart == element.selectionEnd) {
               newSelectionStart = element.selectionStart - 1;
-              this.motorAToMotorCutLenght =
-                this.motorAToMotorCutLenght.substring(
+              this.motorAToMotorCutLength =
+                this.motorAToMotorCutLength.substring(
                   0,
                   element.selectionStart - 1
-                ) + this.motorAToMotorCutLenght.substring(element.selectionEnd);
+                ) + this.motorAToMotorCutLength.substring(element.selectionEnd);
             } else {
               newSelectionStart = element.selectionStart;
-              this.motorAToMotorCutLenght =
-                this.motorAToMotorCutLenght.substring(
+              this.motorAToMotorCutLength =
+                this.motorAToMotorCutLength.substring(
                   0,
                   element.selectionStart
-                ) + this.motorAToMotorCutLenght.substring(element.selectionEnd);
+                ) + this.motorAToMotorCutLength.substring(element.selectionEnd);
             }
             this.$nextTick(() => {
               element.focus();
@@ -276,21 +276,21 @@ export default {
               element.focus();
               element.setSelectionRange(newSelectionStart, newSelectionStart);
             });
-          } else if (this.currentInput == "alertLenghtMotorC") {
-            element = this.$refs.alertLenghtMotorC.$el.querySelector("input");
+          } else if (this.currentInput == "alertLengthMotorC") {
+            element = this.$refs.alertLengthMotorC.$el.querySelector("input");
             var newSelectionStart;
             if (element.selectionStart == element.selectionEnd) {
               newSelectionStart = element.selectionStart - 1;
-              this.alertLenghtMotorC =
-                this.alertLenghtMotorC.substring(
+              this.alertLengthMotorC =
+                this.alertLengthMotorC.substring(
                   0,
                   element.selectionStart - 1
-                ) + this.alertLenghtMotorC.substring(element.selectionEnd);
+                ) + this.alertLengthMotorC.substring(element.selectionEnd);
             } else {
               newSelectionStart = element.selectionStart;
-              this.alertLenghtMotorC =
-                this.alertLenghtMotorC.substring(0, element.selectionStart) +
-                this.alertLenghtMotorC.substring(element.selectionEnd);
+              this.alertLengthMotorC =
+                this.alertLengthMotorC.substring(0, element.selectionStart) +
+                this.alertLengthMotorC.substring(element.selectionEnd);
             }
             this.$nextTick(() => {
               element.focus();
@@ -318,12 +318,12 @@ export default {
         } else if (event.value == "save") {
           this.updateSetting();
         } else if (event.value == "clear") {
-          if (this.currentInput == "motorAToMotorCutLenght") {
-            this.motorAToMotorCutLenght = "";
+          if (this.currentInput == "motorAToMotorCutLength") {
+            this.motorAToMotorCutLength = "";
           } else if (this.currentInput == "slowModeSpeed") {
             this.slowModeSpeed = "";
-          } else if (this.currentInput == "alertLenghtMotorC") {
-            this.alertLenghtMotorC = "";
+          } else if (this.currentInput == "alertLengthMotorC") {
+            this.alertLengthMotorC = "";
           } else if (this.currentInput == "spare") {
             this.spare = "";
           }
@@ -341,9 +341,9 @@ export default {
     updateValue(event, type) {
       var letters;
       if (
-        type == "motorAToMotorCutLenght" ||
+        type == "motorAToMotorCutLength" ||
         type == "slowModeSpeed" ||
-        type == "alertLenghtMotorC" ||
+        type == "alertLengthMotorC" ||
         "spare"
       ) {
         letters = /^[0-9]$/;
@@ -367,7 +367,7 @@ export default {
         var element;
         if (event.target.id == "slowModeSpeed") {
           if (this.slowModeSpeed != "") {
-            element = this.$refs.motorAToMotorCutLenght.$el.querySelector(
+            element = this.$refs.motorAToMotorCutLength.$el.querySelector(
               "input"
             );
             this.$nextTick(() => {
@@ -380,14 +380,14 @@ export default {
               element.focus();
             });
           }
-        } else if (event.target.id == "motorAToMotorCutLenght") {
-          if (this.motorAToMotorCutLenght != "") {
-            element = this.$refs.alertLenghtMotorC.$el.querySelector("input");
+        } else if (event.target.id == "motorAToMotorCutLength") {
+          if (this.motorAToMotorCutLength != "") {
+            element = this.$refs.alertLengthMotorC.$el.querySelector("input");
             this.$nextTick(() => {
               element.focus();
             });
           } else {
-            element = this.$refs.motorAToMotorCutLenght.$el.querySelector(
+            element = this.$refs.motorAToMotorCutLength.$el.querySelector(
               "input"
             );
             element.blur();
@@ -395,14 +395,14 @@ export default {
               element.focus();
             });
           }
-        } else if (event.target.id == "alertLenghtMotorC") {
-          if (this.alertLenghtMotorC != "") {
+        } else if (event.target.id == "alertLengthMotorC") {
+          if (this.alertLengthMotorC != "") {
             element = this.$refs.spare.$el.querySelector("input");
             this.$nextTick(() => {
               element.focus();
             });
           } else {
-            element = this.$refs.alertLenghtMotorC.$el.querySelector("input");
+            element = this.$refs.alertLengthMotorC.$el.querySelector("input");
             element.blur();
             this.$nextTick(() => {
               element.focus();
@@ -435,8 +435,8 @@ export default {
         if (response.successful) {
           this.slowModeSpeed = response.data.slowSpeedMotorC.toString();
           this.spare = response.data.spare.toString();
-          this.motorAToMotorCutLenght = response.data.motorAToMotorCutLenght.toString();
-          this.alertLenghtMotorC = response.data.alertLenghtMotorC.toString();
+          this.motorAToMotorCutLength = response.data.motorAToMotorCutLength.toString();
+          this.alertLengthMotorC = response.data.alertLengthMotorC.toString();
         } else {
           this.dialogType = "error";
           this.dialogValue = { errorMessage: "กรุณาลองอีกครั้ง" };
@@ -451,8 +451,8 @@ export default {
           id: 0,
           slowSpeedMotorC: Number(this.slowModeSpeed),
           spare: Number(this.spare),
-          alertLenghtMotorC: Number(this.alertLenghtMotorC),
-          motorAToMotorCutLenght: Number(this.motorAToMotorCutLenght),
+          alertLengthMotorC: Number(this.alertLengthMotorC),
+          motorAToMotorCutLength: Number(this.motorAToMotorCutLength),
         });
         this.overlay = false;
         if (!result.successful) {
