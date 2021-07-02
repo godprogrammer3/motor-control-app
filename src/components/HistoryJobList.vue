@@ -68,11 +68,8 @@
               height="95"
             >
               <v-toolbar-title class="text-h5 white--text ml-5 nocopy"
-                >กลุ่มหมายเลข {{ item.group_id }}</v-toolbar-title
+                >กลุ่มหมายเลข {{ item.id }}</v-toolbar-title
               >
-              <span class="text-h5 ml-5 white--text">{{
-                item.is_continue ? "กลุ่มต่อเนื่อง" : "กลุ่มไม่ต่อเนื่อง"
-              }}</span>
               <v-spacer></v-spacer>
               <v-btn
                 v-if="isJobRunning != true"
@@ -92,7 +89,7 @@
                     <template v-slot:default>
                       <tbody>
                         <tr
-                          v-for="(sub_item, sub_index) in item.job"
+                          v-for="(sub_item, sub_index) in item.history_jobs"
                           :key="sub_index"
                         >
                           <v-row
@@ -104,7 +101,7 @@
                               ><span>{{ sub_index + 1 }}</span></v-col
                             >
                             <v-col align="center" justify="center"
-                              ><span>{{ sub_item.job_id }}</span></v-col
+                              ><span>{{ sub_item.id }}</span></v-col
                             >
                             <v-col align="center" justify="center"
                               ><span>{{
@@ -112,19 +109,19 @@
                               }}</span></v-col
                             >
                             <v-col align="center" justify="center"
-                              ><span>{{ sub_item.offset }}</span></v-col
+                              ><span>{{ sub_item.offsetPaper }}</span></v-col
                             >
                             <v-col align="center" justify="center"
                               ><span>
                                 {{
                                   sub_item.height *
-                                    (sub_item.sheet + sub_item.offset)
+                                    (sub_item.sheet + sub_item.offsetPaper)
                                 }}</span
                               ></v-col
                             >
                             <v-col align="center" justify="center"
                               ><span>
-                                {{ parseDateFromDB(sub_item.work_date) }}</span
+                                {{ parseDateFromDB(sub_item.workDate) }}</span
                               ></v-col
                             >
                             <v-col align="center" justify="center">
@@ -240,7 +237,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import Popup from "@/components/Popup/Popup.vue";
-import API from "@/store/api";
+import * as API from "../utills/api";
 import moment from "moment";
 export default {
   name: "HomeJobList",
@@ -264,7 +261,6 @@ export default {
       searchYear: "",
       overlay: false,
       items: [],
-      api: new API(),
       showDatePicker: false,
       startDate: "",
       endDate: "",
@@ -337,15 +333,22 @@ export default {
     },
     async getHistory() {
       this.overlay = true;
-      let result = await this.api.getHistoryJobByStartAndEndDate(
-        this.startDate,
-        this.endDate
-      );
+      let result = await API.historyGroups.listWithHistoryJobs({
+        orderBy:'finishedAt',
+        direction:'DESC',
+        startedDate: this.startDate + ' 00:00:00',
+        endedDate: this.endDate + ' 23:59:00'
+      });
       this.overlay = false;
-      console.log("result :", result);
-      if (result.status == 0) {
-        this.items = result.data;
+      if(!result.successful){
+        this.dialogType = "error";
+        this.dialogValue = { errorMessage:"กรุณาลองอีกครั้ง"};
+        this.isDialogShow = true;
+        return - 1;
       }
+
+      this.items = result.data;
+
     },
     cancel() {
       this.showDatePicker = false;
@@ -397,14 +400,14 @@ export default {
     totalJob() {
       var sum = 0;
       this.items.forEach((element) => {
-        sum += element.job.length;
+        sum += element.history_jobs.length;
       });
       return sum;
     },
     sumWorkLength() {
       var sum = 0;
       this.items.forEach((element) => {
-        element.job.forEach((sub_element) => {
+        element.history_jobs.forEach((sub_element) => {
           sum += (sub_element.height * sub_element.sheet) / 100.0;
         });
       });
@@ -413,8 +416,8 @@ export default {
     sumOffset() {
       var sum = 0;
       this.items.forEach((element) => {
-        element.job.forEach((sub_element) => {
-          sum += (sub_element.offset * sub_element.height) / 100.0;
+        element.history_jobs.forEach((sub_element) => {
+          sum += (sub_element.offsetPaper * sub_element.height) / 100.0;
         });
       });
       return sum;
@@ -422,8 +425,8 @@ export default {
     sumOverhead() {
       var sum = 0;
       this.items.forEach((element) => {
-        element.job.forEach((sub_element) => {
-          sum += sub_element.overhead;
+        element.history_jobs.forEach((sub_element) => {
+          sum += sub_element.wasteLength;
         });
       });
       return sum;
@@ -434,7 +437,7 @@ export default {
         return "วัน/เดือน/ปี";
       } else {
         var list = str.split("-");
-        return list[2] + "-" + list[1] + "-" + (Number(list[0]) + 543);
+        return list[2] + "/" + list[1] + "/" + (Number(list[0]) + 543);
       }
     },
     endDateShow() {
@@ -443,7 +446,7 @@ export default {
         return "วัน/เดือน/ปี";
       } else {
         var list = str.split("-");
-        return list[2] + "-" + list[1] + "-" + (Number(list[0]) + 543);
+        return list[2] + "/" + list[1] + "/" + (Number(list[0]) + 543);
       }
     },
   },

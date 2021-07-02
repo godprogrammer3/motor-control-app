@@ -21,7 +21,7 @@
       >
       <v-row align="center" justify="center">
        <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">งานหมายเลข :</span></v-col>
-       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.job_id}}</span> </v-col> 
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.id}}</span> </v-col> 
       </v-row>
       <v-row align="center" justify="center">
        <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">หน้ากว้าง : </span></v-col>
@@ -41,15 +41,15 @@
       </v-row>
       <v-row align="center" justify="center">
        <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">เพิ่ม/ลดรวม : </span></v-col>
-       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.offset}} แผ่น</span></v-col> 
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.offsetPaper}} แผ่น</span></v-col> 
       </v-row>
       <v-row align="center" justify="center">
        <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">รวมทั้งสิ้น : </span></v-col>
-       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{(job.height*(job.sheet+job.offset)/100.0).toFixed(2)}} เมตร</span></v-col> 
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{(job.height*(job.sheet+job.offsetPaper)/100.0).toFixed(2)}} เมตร</span></v-col> 
       </v-row>
       <v-row align="center" justify="center">
        <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">ส่วนเกิน : </span></v-col>
-       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.overhead.toFixed(2)}} เมตร</span></v-col> 
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.initialWasteLength.toFixed(2)}} เมตร</span></v-col> 
       </v-row>
     </v-col>
   </v-card>

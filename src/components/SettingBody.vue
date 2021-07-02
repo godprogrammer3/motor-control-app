@@ -425,6 +425,8 @@ export default {
       if (event.type == "action") {
         if (event.value == "finish") {
           this.isDialogShow = false;
+        }else if(event.value == 'cancel'){
+          this.isDialogShow = false;
         }
       }
     },
