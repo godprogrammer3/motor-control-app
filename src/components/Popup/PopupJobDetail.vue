@@ -47,9 +47,21 @@
        <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">รวมทั้งสิ้น : </span></v-col>
        <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{(job.height*(job.sheet+job.offsetPaper)/100.0).toFixed(2)}} เมตร</span></v-col> 
       </v-row>
+        <v-row align="center" justify="center">
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">เสียเป็นเมตรที่ลอน : </span></v-col>
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.initialWasteLength}} เมตร</span></v-col> 
+      </v-row>
       <v-row align="center" justify="center">
-       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">ส่วนเกิน : </span></v-col>
-       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.initialWasteLength.toFixed(2)}} เมตร</span></v-col> 
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">เสียเป็นเมตรที่NC : </span></v-col>
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.wasteLength}} เมตร</span></v-col> 
+      </v-row>
+           <v-row align="center" justify="center">
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">เสียเป็นแผ่นที่NC : </span></v-col>
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{job.wastePaper}} แผ่น</span></v-col> 
+      </v-row>
+      <v-row align="center" justify="center">
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">กระดาษเสียรวม : </span></v-col>
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{sumWaste(job).toFixed(2)}} เมตร</span></v-col> 
       </v-row>
     </v-col>
   </v-card>
@@ -65,6 +77,11 @@ export default {
       type: Object,
       default: () => {}
     },
+  },
+  methods: {
+    sumWaste(job) {
+      return job.initialWasteLength + job.wasteLength + (job.wastePaper * job.height / 1000.0)
+    }
   },
 };
 </script>

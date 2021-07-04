@@ -198,6 +198,8 @@
             width="40vw"
             locale="th"
             style="transform:scale(1.1);margin-left:20vw;margin-bottom:5vh;"
+            :min="minDate"
+            :max="maxDate"
           ></v-date-picker
         ></v-row>
         <v-row justify="center">
@@ -209,7 +211,7 @@
             @click="isStartDateSelected ? saveStartDate() : saveEndDate()"
             class="text-h5 ma-2"
           >
-            บันทึก
+            เลือก
           </v-btn>
           <v-btn
             color="indigo"
@@ -240,7 +242,7 @@ import Popup from "@/components/Popup/Popup.vue";
 import * as API from "../utills/api";
 import moment from "moment";
 export default {
-  name: "HomeJobList",
+  name: "HistoryJobList",
   props: {
     isJobRunning: {
       type: Boolean,
@@ -266,9 +268,11 @@ export default {
       endDate: "",
       isStartDateSelected: false,
       picker: "",
+      minDate: undefined,
+      maxDate: undefined,
+      sevenHoursInMilliSecond : 1000*60*60*7
     };
   },
-  mounted() {},
   methods: {
     ...mapActions(["getAllHistoryJobByAllGroup"]),
     popupEventHandler(event) {
@@ -316,10 +320,24 @@ export default {
       this.isDialogShow = true;
     },
     setStartDate() {
+      if(this.endDate != ""){
+        this.maxDate = this.endDateShow;
+        this.minDate = undefined;
+      }else{
+        
+        this.maxDate =  new Date(new Date().getTime()+this.sevenHoursInMilliSecond).toISOString().substring(0,10);
+      }
       this.showDatePicker = true;
       this.isStartDateSelected = true;
     },
     setEndDate() {
+      if(this.startDate != ""){
+        this.minDate = this.startDate;
+        this.maxDate = new Date(new Date().getTime()+this.sevenHoursInMilliSecond).toISOString().substring(0,10);
+      }else{
+        this.minDate = undefined;
+        this.maxDate = new Date(new Date().getTime()+this.sevenHoursInMilliSecond).toISOString().substring(0,10);
+      }
       this.showDatePicker = true;
       this.isStartDateSelected = false;
     },

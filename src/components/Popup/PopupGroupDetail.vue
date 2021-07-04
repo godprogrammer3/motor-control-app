@@ -44,7 +44,19 @@
        <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{(sumWorkLength(group.history_jobs)+sumOffset(group.history_jobs)).toFixed(2)}} เมตร</span></v-col> 
       </v-row>
       <v-row align="center" justify="center">
-       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">ส่วนเกินรวม : </span></v-col>
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">เสียเป็นเมตรที่ลอน : </span></v-col>
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{sumInitialWasteLength(group.history_jobs).toFixed(2)}} เมตร</span></v-col> 
+      </v-row>
+      <v-row align="center" justify="center">
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">เสียเป็นเมตรที่NC : </span></v-col>
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{sumWasteLength(group.history_jobs).toFixed(2)}} เมตร</span></v-col> 
+      </v-row>
+           <v-row align="center" justify="center">
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">เสียเป็นแผ่นที่NC : </span></v-col>
+       <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{sumWastePaper(group.history_jobs).toFixed(0)}} แผ่น</span></v-col> 
+      </v-row>
+      <v-row align="center" justify="center">
+       <v-col class="d-flex flex-column justify-end align-end"><span class="indigo--text">กระดาษเสียรวม : </span></v-col>
        <v-col class="d-flex flex-column justify-start align-start"><span class="ml-5">{{sumOverhead(group.history_jobs).toFixed(2)}} เมตร</span></v-col> 
       </v-row>
     </v-col>
@@ -66,21 +78,42 @@ export default {
     sumWorkLength(jobs) {
       var sum = 0;
       jobs.forEach(element => {
-        sum += element.height * element.sheet / 100.0;
+        sum += element.height * element.sheet / 1000.0;
       });
       return sum;
     },
     sumOffset(jobs){
       var sum = 0;
       jobs.forEach(element => {
-        sum += element.offsetPaper * element.sheet / 100.0;
+        sum += element.offsetPaper * element.sheet / 1000.0;
+      });
+      return sum;
+    },
+    sumInitialWasteLength(jobs){
+       var sum = 0;
+      jobs.forEach(element => {
+        sum += element.initialWasteLength;
+      });
+      return sum;
+    },
+    sumWasteLength(jobs){
+       var sum = 0;
+      jobs.forEach(element => {
+        sum += element.wasteLength;
+      });
+      return sum;
+    },
+    sumWastePaper(jobs){
+       var sum = 0;
+      jobs.forEach(element => {
+        sum += element.wastePaper;
       });
       return sum;
     },
     sumOverhead(jobs){
       var sum = 0;
       jobs.forEach(element => {
-        sum += element.initialWasteLength ;
+        sum += element.initialWasteLength + element.wasteLength + (element.wastePaper*element.height/1000.0) ;
       });
       return sum;
     }
