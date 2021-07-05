@@ -194,26 +194,38 @@
       <v-container>
         <v-row>
           <v-date-picker
-            v-model="picker"
+            v-if="isStartDateSelected"
+            v-model="startDate"
             width="40vw"
             locale="th"
             style="transform:scale(1.1);margin-left:20vw;margin-bottom:5vh;"
-            :min="minDate"
-            :max="maxDate"
+            :min="minStartDate"
+            :max="maxStartDate"
           ></v-date-picker
-        ></v-row>
+        >
+        <v-date-picker
+            v-else
+            v-model="endDate"
+            width="40vw"
+            locale="th"
+            style="transform:scale(1.1);margin-left:20vw;margin-bottom:5vh;"
+            :min="minEndDate"
+            :max="maxEndDate"
+          ></v-date-picker
+        >
+        </v-row>
         <v-row justify="center">
           <v-btn
             color="indigo"
             dark
             x-large
             bottom
-            @click="isStartDateSelected ? saveStartDate() : saveEndDate()"
+            @click="showDatePicker = false"
             class="text-h5 ma-2"
           >
-            เลือก
+            ตกลง
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             color="indigo"
             dark
             x-large
@@ -222,7 +234,7 @@
             class="text-h5  ma-2"
           >
             ยกเลิก
-          </v-btn>
+          </v-btn> -->
         </v-row>
       </v-container>
     </v-dialog>
@@ -237,7 +249,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
 import Popup from "@/components/Popup/Popup.vue";
 import * as API from "../utills/api";
 import moment from "moment";
@@ -268,16 +279,18 @@ export default {
       endDate: "",
       isStartDateSelected: false,
       picker: "",
-      minDate: undefined,
-      maxDate: undefined,
-      sevenHoursInMilliSecond : 1000*60*60*7
+      minStartDate: undefined,
+      maxStartDate: undefined,
+      minEndDate: undefined,
+      maxEndDate: undefined,
+      sevenHoursInMilliSecond : 1000*60*60*7,
     };
   },
   methods: {
-    ...mapActions(["getAllHistoryJobByAllGroup"]),
     popupEventHandler(event) {
       if (event.type == "action") {
         if (event.value == "cancel" || event.value == "save") {
+          console.log('This is the line');
           this.isDialogShow = false;
         }
       } else if (event.type == "search-date") {
@@ -314,40 +327,28 @@ export default {
         date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
       );
     },
-    showSearchDatePopup() {
-      this.dialogType = "searchDate";
-      this.dialogValue = { str: this.searchBy };
-      this.isDialogShow = true;
-    },
     setStartDate() {
-      if(this.endDate != ""){
-        this.maxDate = this.endDateShow;
-        this.minDate = undefined;
+      if(this.endDate != "" && this.endDate != undefined){
+        this.minStartDate = undefined;
+        this.maxStartDate = this.endDate;
       }else{
+        this.minStartDate = undefined;
+        this.maxStartDate =  new Date(new Date().getTime()+this.sevenHoursInMilliSecond).toISOString().substring(0,10);
         
-        this.maxDate =  new Date(new Date().getTime()+this.sevenHoursInMilliSecond).toISOString().substring(0,10);
       }
       this.showDatePicker = true;
       this.isStartDateSelected = true;
     },
     setEndDate() {
-      if(this.startDate != ""){
-        this.minDate = this.startDate;
-        this.maxDate = new Date(new Date().getTime()+this.sevenHoursInMilliSecond).toISOString().substring(0,10);
+      if(this.startDate != "" && this.startDate != undefined){
+        this.minEndDate = this.startDate;
+        this.maxEndDate = new Date(new Date().getTime()+this.sevenHoursInMilliSecond).toISOString().substring(0,10);
       }else{
-        this.minDate = undefined;
-        this.maxDate = new Date(new Date().getTime()+this.sevenHoursInMilliSecond).toISOString().substring(0,10);
+        this.minEndDate = undefined;
+        this.maxEndDate = new Date(new Date().getTime()+this.sevenHoursInMilliSecond).toISOString().substring(0,10);
       }
       this.showDatePicker = true;
       this.isStartDateSelected = false;
-    },
-    saveStartDate() {
-      this.startDate = this.picker;
-      this.showDatePicker = false;
-    },
-    saveEndDate() {
-      this.endDate = this.picker;
-      this.showDatePicker = false;
     },
     async getHistory() {
       this.overlay = true;
@@ -386,7 +387,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getAllHistoryJobByAllGroupData"]),
     searchDateShow() {
       var date = "";
       if (this.searchDay != "") {
