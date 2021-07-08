@@ -149,6 +149,11 @@
             </v-container>
           </v-card>
         </v-list-item>
+         <v-container v-if="isNotHasData" fill-height fluid >
+          <v-row align="center" justify="center">
+            <v-col justify="center" align="center" class="not-found-text text-h4">ไม่พบประวัติการดำเนินงาน</v-col>
+          </v-row>
+        </v-container>
       </v-list></v-row
     >
     <v-footer absolute>
@@ -251,7 +256,6 @@
 <script>
 import Popup from "@/components/Popup/Popup.vue";
 import * as API from "../utills/api";
-import moment from "moment";
 export default {
   name: "HistoryJobList",
   props: {
@@ -284,6 +288,7 @@ export default {
       minEndDate: undefined,
       maxEndDate: undefined,
       sevenHoursInMilliSecond : 1000*60*60*7,
+      isNotHasData:false
     };
   },
   methods: {
@@ -352,6 +357,7 @@ export default {
     },
     async getHistory() {
       this.overlay = true;
+      this.isNotHasData = false;
       let result = await API.historyGroups.listWithHistoryJobs({
         orderBy:'finishedAt',
         direction:'DESC',
@@ -365,8 +371,10 @@ export default {
         this.isDialogShow = true;
         return - 1;
       }
-
       this.items = result.data;
+      if(this.items.length <= 0 ){
+         this.isNotHasData = true;
+      }
 
     },
     cancel() {
@@ -374,16 +382,21 @@ export default {
     },
     async exportData() {
       this.overlay = true;
-      const result = await this.api.getAllDrive();
+      const result = await API.drives.list();
       this.overlay = false;
-      if (result.status == 0) {
-        this.dialogType = "exportData";
+      if(!result.successful){
+        this.dialogType = 'error';
+        this.dialogValue = { errorMessage: 'กรุณาลองใหม่อีกครั้ง'};
         this.isDialogShow = true;
-        this.dialogValue = {
-          value: result.data,
-          extraValue: { jobs: this.items },
-        };
+        return -1;
       }
+      this.dialogType = "exportData";
+      this.isDialogShow = true;
+      this.dialogValue = {
+        value: result.data,
+        extraValue: { jobs: this.items },
+      };
+    
     },
   },
   computed: {
@@ -426,7 +439,7 @@ export default {
       var sum = 0;
       this.items.forEach((element) => {
         element.history_jobs.forEach((sub_element) => {
-          sum += (sub_element.height * sub_element.sheet) / 100.0;
+          sum += (sub_element.height * sub_element.sheet) / 1000.0;
         });
       });
       return sum;
@@ -435,7 +448,7 @@ export default {
       var sum = 0;
       this.items.forEach((element) => {
         element.history_jobs.forEach((sub_element) => {
-          sum += (sub_element.offsetPaper * sub_element.height) / 100.0;
+          sum += (sub_element.offsetPaper * sub_element.height) / 1000.0;
         });
       });
       return sum;
@@ -444,7 +457,7 @@ export default {
       var sum = 0;
       this.items.forEach((element) => {
         element.history_jobs.forEach((sub_element) => {
-          sum += sub_element.wasteLength;
+          sum += sub_element.initialWasteLength+ sub_element.wasteLength + sub_element.wastePaper;
         });
       });
       return sum;

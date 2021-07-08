@@ -31,6 +31,7 @@
                 style="height:auto;width:auto;"
                 color="indigo"
                 @click="save"
+                :disabled="usbList.length == 0 || radioGroup == '' || jobs.length <= 0 "
               >
                 บันทึก
               </v-btn>
@@ -54,11 +55,37 @@
         ></v-overlay>
       </v-container>
     </v-card>
+        <v-dialog v-model="isDialogShow">
+      <v-card width="50vw" style="margin-left:24.4%;">
+        <v-row align="center" justify="center"> 
+          <v-col align="center" justify="center" class="text-h3">
+              <span class="red--text">เกิดข้อผิดพลาดในการดำเนินการ</span>
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center"> 
+          <v-col align="center" justify="center" class="text-h3">
+              <span>{{errorMessage}}</span>
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center"> 
+          <v-col align="center" justify="center">
+               <v-btn
+        class="text-h4 white--text px-10"
+        style="height:auto;width:auto;"
+        color="indigo"
+        @click="isDialogShow = false"
+      >
+        ย้อนกลับ
+      </v-btn>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
-import API from "@/store/api";
+import * as API from "../../utills/api";
 export default {
   props: {
     usbList: Array,
@@ -68,7 +95,8 @@ export default {
     return {
       radioGroup: "",
       overlay: false,
-      api: new API(),
+      isDialogShow:false,
+      errorMessage:""
     };
   },
   methods: {
@@ -80,11 +108,16 @@ export default {
     },
     async save() {
       this.overlay = true;
-      await this.api.saveHistoryToDrive({
+      const result = await API.drives.exportHistoryJobs({
         path: this.radioGroup,
-        jobs: this.jobs,
+        historyGroupsWithJobs: this.jobs,
       });
       this.overlay = false;
+      if(!result.successful){
+        this.isDialogShow = true,
+        this.errorMessage = "กรุณาลองใหม่อีกครั้ง"
+        return -1;
+      }
       this.$emit("popup-export-data-event", {
         type: "action",
         value: "cancel",

@@ -122,7 +122,7 @@
         </draggable>
         <v-container v-if="isNotHasData" fill-height fluid >
           <v-row align="center" justify="center">
-            <v-col justify="center" align="center" class="not-found-text">ยังไม่มีงานในระบบ</v-col>
+            <v-col justify="center" align="center" class="not-found-text  text-h4">ยังไม่มีงานในระบบ</v-col>
           </v-row>
         </v-container>
       </v-list></v-row
