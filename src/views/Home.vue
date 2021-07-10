@@ -39,6 +39,13 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block color="red" class="white--text text-h6">
+           ปิดเครื่อง
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
     <HomeJobList
       @handle-event="handleEvent"
