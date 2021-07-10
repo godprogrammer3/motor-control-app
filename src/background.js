@@ -91,3 +91,13 @@ if (isDevelopment) {
     });
   }
 }
+
+const { exec } = require('child_process');
+function shutdown(callback){
+  exec('shutdown now', function(error, stdout, stderr){ callback(stdout); });
+}
+ipcMain.on('shutdown-request-event',(event,arg)=>{
+  shutdown(function(output){
+    console.log(output);
+  });
+});

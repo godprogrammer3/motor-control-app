@@ -41,7 +41,7 @@
       </v-list>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block color="red" class="white--text text-h6">
+          <v-btn block color="red" class="white--text text-h6" @click="showConfirmShutdownPopup">
            ปิดเครื่อง
           </v-btn>
         </div>
@@ -55,6 +55,14 @@
       @handle-event="handleEvent"
       v-else-if="mode == 'home_manage_group'"
     ></HomeJobListManage>
+    <v-dialog v-model="isDialogShow" class="elevation-0" elevation="0" persistent>
+      <Popup
+        :type="dialogType"
+        :value="dialogValue"
+        @popup-event="popupEventHandler"
+        
+      ></Popup>
+    </v-dialog>
   </div>
 </template>
 
@@ -62,13 +70,13 @@
 // @ is an alias to /src
 import moment from "moment";
 import HomeJobList from "@/components/HomeJobList.vue";
-import { mapActions } from "vuex";
 import HomeJobListManage from "@/components/HomeJobListManage.vue";
-
+import Popup from "../components/Popup/Popup.vue";
 export default {
   components: {
     HomeJobList,
     HomeJobListManage,
+    Popup
   },
   data() {
     return {
@@ -83,6 +91,8 @@ export default {
       length: "",
       isDatePickerShow: false,
       mode: "home",
+      dialogType: {},
+      dialogValue: {},
     };
   },
   methods: {
@@ -94,100 +104,22 @@ export default {
     dateUpdate() {
       this.datenow = moment().format("DD/M/YYYY");
     },
-    showDialog(data) {
+    showConfirmShutdownPopup(){
+      this.dialogType = 'confirm',
+      this.dialogValue = { str:'confirmShutdown' };
       this.isDialogShow = true;
-      this.dialogInfo = data;
-      if (this.dialogInfo.type === "edit") {
-        this.workNo = this.dialogInfo.item.workNo;
-        this.length = this.dialogInfo.item.length;
-        this.dialogInfo.item.oldWorkNo = this.dialogInfo.item.workNo;
-        this.date = this.dialogInfo.item.workDate;
-      } else {
-        this.workNo = this.dialogInfo.item.workNo;
-        this.length = this.dialogInfo.item.length;
-      }
     },
-    keyPress(key) {
-      if (key === "close") {
-        this.input = "";
-      } else if (key === "del") {
-        if (this.input === "workNo") {
-          this.workNo = this.workNo.slice(0, -1);
-        } else {
-          this.length = parseInt(this.length.toString().slice(0, -1));
-          if (isNaN(this.length)) {
-            this.length = "";
-          }
-        }
-      } else {
-        if (this.input === "workNo") {
-          this.workNo += key;
-        } else {
-          this.length += key;
-        }
-      }
-    },
-    async deleteJobAction() {
-      await this.deleteJob(this.dialogInfo.item.workNo);
-      this.isDialogShow = false;
-    },
-    async editJobAction() {
-      this.formHasErrors = false;
-      Object.keys(this.form).forEach((f) => {
-        if (!this.form[f]) this.formHasErrors = true;
-        this.$refs[f].validate(true);
-      });
-      if (!this.formHasErrors) {
-        await this.editJob({
-          jobId: this.workNo,
-          length: this.length,
-          workTime: this.date,
-          oldJobId: this.dialogInfo.item.oldWorkNo,
-        });
+    popupEventHandler(event){
+      if(event.type === 'confirm-shutdown'){
         this.isDialogShow = false;
       }
-    },
-    async createJobAction() {
-      await this.createJob({
-        jobId: this.workNo,
-        length: this.length,
-        workTime: this.date,
-      });
-      this.isDialogShow = false;
-    },
-    showCreateDialog() {
-      this.dialogInfo.type = "create";
-      this.workNo = "";
-      this.length = 0;
-      this.date = new Date().toISOString().substr(0, 10);
-      this.isDialogShow = true;
-    },
-    beginWork() {
-      this.startWork();
-      this.$router.replace(
-        "/operating?workNo=" + this.workNo + "&length=" + this.length
-      );
-    },
-    ...mapActions(["deleteJob", "createJob", "editJob", "startWork"]),
-  },
-  computed: {
-    form() {
-      return {
-        workNo: this.workNo,
-        length: this.length,
-      };
-    },
+    }
   },
   mounted() {
     this.interval = setInterval(this.dateUpdate, 1800000);
   },
   beforeDestroy() {
     clearInterval(this.interval);
-  },
-  watch: {
-    isDialogShow(newValue, oldValue) {
-      this.input = "";
-    },
   },
 };
 </script>

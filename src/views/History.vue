@@ -35,21 +35,53 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block color="red" class="white--text text-h6" @click="showConfirmShutdownPopup">
+           ปิดเครื่อง
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
     <HistoryJobList></HistoryJobList>
+    <v-dialog v-model="isDialogShow" class="elevation-0" elevation="0" persistent>
+      <Popup
+        :type="dialogType"
+        :value="dialogValue"
+        @popup-event="popupEventHandler"
+        
+      ></Popup>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import HistoryJobList from "@/components/HistoryJobList.vue";
+import Popup from "../components/Popup/Popup.vue";
 export default {
   components: {
     HistoryJobList,
+    Popup
   },
   data() {
     return {
       drawer: false,
+      isDialogShow: false,
+      dialogType: {},
+      dialogValue: {},
     };
+  },
+  methods: {
+    showConfirmShutdownPopup(){
+      this.dialogType = 'confirm',
+      this.dialogValue = { str:'confirmShutdown' };
+      this.isDialogShow = true;
+    },
+    popupEventHandler(event){
+      if(event.type === 'confirm-shutdown'){
+        this.isDialogShow = false;
+      }
+    }
   },
 };
 </script>

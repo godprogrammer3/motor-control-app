@@ -35,91 +35,53 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block color="red" class="white--text text-h6" @click="showConfirmShutdownPopup">
+           ปิดเครื่อง
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
     <SettingBody></SettingBody>
+    <v-dialog v-model="isDialogShow" class="elevation-0" elevation="0" persistent>
+      <Popup
+        :type="dialogType"
+        :value="dialogValue"
+        @popup-event="popupEventHandler"
+        
+      ></Popup>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import SettingBody from "@/components/SettingBody.vue";
-import TouchKeyboard from "../components/Popup/TouchKeyboard.vue";
-import { mapState, mapActions } from "vuex";
+import Popup from "../components/Popup/Popup.vue";
 export default {
   components: {
     SettingBody,
-    TouchKeyboard,
+    Popup
   },
   data() {
     return {
       drawer: false,
-      onTop: 0,
-      slowModeVelocity: 0,
-      input: "",
-      isSaveDialogShow: false,
+      isDialogShow: false,
+      dialogType: {},
+      dialogValue: {},
     };
   },
-  created() {
-    this.getSetting();
-  },
   methods: {
-    changeInput(data) {
-      this.input = data;
+    showConfirmShutdownPopup(){
+      this.dialogType = 'confirm',
+      this.dialogValue = { str:'confirmShutdown' };
+      this.isDialogShow = true;
     },
-    saveSetting() {
-      this.isSaveDialogShow = true;
-    },
-    saveAction() {
-      this.editSetting({
-        defaultOnTop: this.onTop,
-        defaultSlowModeVelocity: this.slowModeVelocity,
-      });
-      this.isSaveDialogShow = false;
-    },
-    cancelAction() {
-      this.onTop = this.setting.defaultOnTop;
-      this.slowModeVelocity = this.setting.defaultSlowModeVelocity;
-      this.isSaveDialogShow = false;
-    },
-    keyPress(key) {
-      if (key == "close") {
-        this.input = "";
-      } else if (key == "del") {
-        if (this.input === "onTop") {
-          this.onTop = parseInt(this.onTop.toString().slice(0, -1));
-          if (isNaN(this.onTop)) {
-            this.onTop = 0;
-          }
-        } else {
-          this.slowModeVelocity = parseInt(
-            this.slowModeVelocity.toString().slice(0, -1)
-          );
-          if (isNaN(this.slowModeVelocity)) {
-            this.slowModeVelocity = 0;
-          }
-        }
-      } else {
-        if (this.input === "onTop") {
-          this.onTop += key;
-        } else {
-          this.slowModeVelocity += key;
-        }
+    popupEventHandler(event){
+      if(event.type === 'confirm-shutdown'){
+        this.isDialogShow = false;
       }
-      this.onTop = parseInt(this.onTop);
-      this.slowModeVelocity = parseInt(this.slowModeVelocity);
-    },
-    ...mapActions(["getSetting", "editSetting"]),
-    keyboardEventHandler(event) {
-      console.log(`Event Type: ${event.type} , Value : ${event.value}`);
-    },
-  },
-  computed: {
-    ...mapState(["setting"]),
-  },
-  watch: {
-    setting(newValue, oldValue) {
-      this.onTop = this.setting.defaultOnTop;
-      this.slowModeVelocity = this.setting.defaultSlowModeVelocity;
-    },
+    }
   },
 };
 </script>
