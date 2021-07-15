@@ -124,6 +124,15 @@
       "
     >
     </PopupExportData>
+    <PopupHome
+    v-else-if="type == 'openPopupHome'"
+    @popup-event="
+      (event) => {
+          $emit('popup-event', { type: event.type, value: event.value });
+        }
+    "
+    >  
+    </PopupHome>
   </div>
 </template>
 
@@ -141,6 +150,7 @@ import PopupChangingPaper from "./PopupChangingPaper";
 import PopupSaveSettingComplete from "./PopupSaveSettingComplete";
 import PopupEditOffsetComplete from "./PopupEditOffsetComplete";
 import PopupExportData from "./PopupExportData";
+import PopupHome from "./PopupHome.vue";
 export default {
   components: {
     PopupCreateJob,
@@ -156,6 +166,7 @@ export default {
     PopupSaveSettingComplete,
     PopupEditOffsetComplete,
     PopupExportData,
+    PopupHome
   },
   mounted() {},
   props: {

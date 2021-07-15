@@ -26,10 +26,9 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import moment from "moment";
-import HomeJobList from "@/components/HomeJobList.vue";
-import HomeJobListManage from "@/components/HomeJobListManage.vue";
+import HomeJobList from "../HomeJobList.vue";
+import HomeJobListManage from "../HomeJobListManage.vue";
 
 export default {
   components: {

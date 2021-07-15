@@ -18,7 +18,6 @@ export default {
       console.log("socket connected");
     },
     NOTIFY_NC_CLIENT_TO_CANCEL_WORK:function(data){
-      console.log(data);
       this.$socket.emit('NOTIFY_NC_CLIENT_TO_CANCEL_WORK_RESPONSE',data);
       this.$router.replace("/");
     },

@@ -207,10 +207,10 @@
             dark
             x-large
             bottom
-            @click="addWastPaper"
+            @click="openPopupHome"
             class="text-h5"
           >
-            เพิ่มกระดาษเสีย
+            แผนการดำเนินงาน
           </v-btn>
         </v-col>
         <v-col justify="center" style="width:100%;visibility:hidden;">
@@ -352,15 +352,17 @@ export default {
           this.overlay = true;
           const result = await API.processes.notifyCClientToCancelWork();
           this.overlay = false;
-          if(!result.successful){
-            this.dialogType = 'error';
-            this.dialogValue = { errorMessage:'เครื่อง C ไม่ได้เชื่อมต่อ'};
-            this.isDialogShow = true;
-            return -1;
-          }
+          // if(!result.successful){
+          //   this.dialogType = 'error';
+          //   this.dialogValue = { errorMessage:'เครื่อง C ไม่ได้เชื่อมต่อ'};
+          //   this.isDialogShow = true;
+          //   return -1;
+          // }
           this.$router.replace("/");
         }
       }else if(event.type == 'confirm-near-finish'){
+        this.isDialogShow = false;
+      }else if(event.type == 'popup-home'){
         this.isDialogShow = false;
       }
     },

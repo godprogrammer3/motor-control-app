@@ -70,7 +70,6 @@ export default {
   },
   data() {
     return {
-      api: new API(),
       overlay:false,
       isDialogShow:false,
       errorMessage:''

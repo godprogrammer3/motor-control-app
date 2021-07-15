@@ -37,11 +37,6 @@ export default {
       default: ()=>{}
     },
   },
-  data() {
-    return {
-      api: new API()
-    }
-  },
   methods: {
     async cancelJob() {
       this.$emit('popup-confirm-start-job', 'yes')

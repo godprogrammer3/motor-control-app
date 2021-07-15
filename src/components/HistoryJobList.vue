@@ -197,13 +197,13 @@
     </v-dialog>
     <v-dialog v-model="showDatePicker" width="100vw" height>
       <v-container>
-        <v-row>
+        <v-row justify="center">
           <v-date-picker
             v-if="isStartDateSelected"
             v-model="startDate"
             width="40vw"
             locale="th"
-            style="transform:scale(1.1);margin-left:20vw;margin-bottom:5vh;"
+            style="transform:scale(1.1);margin-bottom:5vh;"
             :min="minStartDate"
             :max="maxStartDate"
           ></v-date-picker
@@ -213,7 +213,7 @@
             v-model="endDate"
             width="40vw"
             locale="th"
-            style="transform:scale(1.1);margin-left:20vw;margin-bottom:5vh;"
+            style="transform:scale(1.1);margin-bottom:5vh;"
             :min="minEndDate"
             :max="maxEndDate"
           ></v-date-picker
