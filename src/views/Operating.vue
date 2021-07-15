@@ -201,29 +201,17 @@
         </v-row>
       </footer>
       <v-row align="center" justify="center" style="height:10vh;">
-        <v-col justify="center" style="width:100%;visibility:hidden;">
-          <v-row align="center" justify="center">
-            <v-switch
-              style="transform:scale(1.3);"
-              v-model="isSlowMode"
-              inset
-              color="green"
-            >
-              <template v-slot:label>
-                <span :class="isAutoMode ? 'green--text' : 'orange--text'">{{
-                  isSlowMode ? "โหมดช้า" : "โหมดเร็ว"
-                }}</span>
-                <v-icon
-                  style="margin-left:5px;transform:scale(1.1);"
-                  x-large
-                  :color="isSlowMode ? 'green' : 'orange'"
-                >
-                  {{ isSlowMode ? "sync" : "sync_disabled" }}
-                </v-icon>
-              </template>
-            </v-switch>
-            
-          </v-row>
+         <v-col align="center" justify="center">
+          <v-btn
+            color="indigo"
+            dark
+            x-large
+            bottom
+            @click="addWastPaper"
+            class="text-h5"
+          >
+            เพิ่มกระดาษเสีย
+          </v-btn>
         </v-col>
         <v-col justify="center" style="width:100%;visibility:hidden;">
           <v-row align="center" justify="center">
@@ -282,7 +270,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import Popup from "@/components/Popup/Popup.vue";
 import * as API from "../utills/api";
 export default {
@@ -334,7 +321,6 @@ export default {
       this.isDialogShow = true;
     },
     async popupEventHandler(event) {
-      console.log(event);
       if (event.type == "action") {
         if (event.value == "cancel") {
           this.isDialogShow = false;
@@ -404,7 +390,6 @@ export default {
       this.dialogValue = null;
       this.isDialogShow = true;
     },
-    ...mapActions(["processWork", "stopWork"]),
     fetchData(){
       this.overlay = true;
       API.groups.getWithJobs(this.$route.query.id).then((response) => {

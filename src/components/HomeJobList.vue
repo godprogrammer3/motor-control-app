@@ -178,7 +178,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
 import Popup from "@/components/Popup/Popup.vue";
 import * as API from "../utills/api";
@@ -233,7 +232,6 @@ export default {
     this.fetchData();
   },
   methods: {
-    ...mapActions(["getAllJobByAllGroup"]),
     popupEventHandler(event) {
       if (event.type == "action") {
         this.fetchData();
@@ -303,6 +301,7 @@ export default {
             this.items = response.data;
           } else {
             this.isNotHasData = true;
+            this.items = [];
           }
         }else{
           this.dialogType = 'error';
@@ -311,9 +310,6 @@ export default {
         }
       });
     }
-  },
-  computed: {
-    ...mapGetters(["getAllJobByAllGroupData"]),
   },
   watch: {
     getAllJobByAllGroupData(newValue, oldValue) {

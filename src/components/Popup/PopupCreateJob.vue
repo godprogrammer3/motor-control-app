@@ -171,7 +171,6 @@
 
 <script>
 import TouchKeyboard from "./TouchKeyboard.vue";
-import { mapActions } from "vuex";
 import moment from "moment";
 import * as API from "../../utills/api";
 import PopupError from "./PopupError.vue";
@@ -365,15 +364,15 @@ export default {
               workDate: this.deParseDate(this.workDate) + " 00:00:00",
             });
             if (result.successful) {
-              let result2 = await API.processes.notifyCClientToRefreshJobsList();
+              API.processes.notifyCClientToRefreshJobsList();
               this.overlay = false;
-              if (!result2.successful) {
-                this.dialogValue = {
-                  errorMessage: "เครื่อง c ไม่ได้เชื่อมต่อ",
-                };
-                this.isDialogShow = true;
-                return -1;
-              }
+              // if (!result2.successful) {
+              //   this.dialogValue = {
+              //     errorMessage: "เครื่อง c ไม่ได้เชื่อมต่อ",
+              //   };
+              //   this.isDialogShow = true;
+              //   return -1;
+              // }
               this.$emit("popup-create-event", {
                 type: event.type,
                 value: event.value,
@@ -411,7 +410,6 @@ export default {
     textFieldFocusHandler(type) {
       this.currentInput = type;
     },
-    ...mapActions(["createJob"]),
     parseDate(date) {
       let part = date.split("-");
       return part[2] + "/" + part[1] + "/" + part[0];

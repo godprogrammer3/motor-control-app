@@ -171,7 +171,6 @@
 
 <script>
 import TouchKeyboard from "./TouchKeyboard.vue";
-import { mapActions } from "vuex";
 import moment from "moment";
 import * as API from "../../utills/api";
 import PopupError from './PopupError.vue';
@@ -368,12 +367,12 @@ export default {
               workDate: this.deParseDate(this.workDate) + " 00:00:00",
             });
             if (result.successful) {
-                let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
-                this.overlay = false;
-                if(!result2.successful){
-                  this.isError = true;
-                  return -1;
-                }
+              API.processes.notifyCClientToRefreshJobsList(); 
+              this.overlay = false;
+              // if(!result2.successful){
+              //   this.isError = true;
+              //   return -1;
+              // }
               this.$emit("popup-edit-event", {
                 type: event.type,
                 value: event.value,
@@ -409,7 +408,6 @@ export default {
     textFieldFocusHandler(type) {
       this.currentInput = type;
     },
-    ...mapActions(["editJob"]),
     parseDate(date) {
       let part = date.split("-");
       return part[2] + "/" + part[1] + "/" + part[0];

@@ -4,7 +4,6 @@
       <v-icon x-large style="transform:scale(4);margin:2em;"
         >settings_applications</v-icon
       >
-    </v-row>
     <v-row align="center" justify="center"
       ><span>กรุณาเปลี่ยนใบมีดให้เรียบร้อย</span>
     </v-row>
@@ -32,8 +31,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import API from "@/store/api";
 export default {
   props: {},
   data() {

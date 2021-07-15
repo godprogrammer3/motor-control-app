@@ -29,7 +29,6 @@
 // @ is an alias to /src
 import moment from "moment";
 import HomeJobList from "@/components/HomeJobList.vue";
-import { mapActions } from "vuex";
 import HomeJobListManage from "@/components/HomeJobListManage.vue";
 
 export default {

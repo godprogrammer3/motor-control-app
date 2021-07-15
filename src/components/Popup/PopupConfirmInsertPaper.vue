@@ -8,7 +8,6 @@
       ><span>กำลังใส่กระดาษ</span>
     </v-row>
     <v-row align="center" justify="space-around" class="mt-4">
-      </v-btn>
         <v-btn
         class="text-h4 white--text px-10"
         style="height:auto;width:auto;"
@@ -27,8 +26,6 @@
 </template>
 
 <script>
-import { mapActions} from "vuex";
-import API from "@/store/api";
 export default {
   props: {
   },
@@ -44,7 +41,6 @@ export default {
       this.overlay = true;
       //var result = await this.api.runProcess();
       var result = { status: 0};
-      await this.api.insertPaperComplete();
       this.overlay = false;
       if(result.status == 0){
         this.$emit('popup-confirm-insert-paper-event','confirm');

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid fill-heigh>
-    <v-row align="center" justify="center">
+    <v-row v-if="!isError" align="center" justify="center">
       <v-col align="center" justify="center">
         <v-card width="40vw" height="30vh" class="pa-2">
           <v-col align="center" justify="center">
@@ -66,12 +66,34 @@
         ><TouchKeyboard @keyboard-event="keyboardEventHandler"></TouchKeyboard
       ></v-col>
     </v-row>
+    <v-row v-else align="center" justify="center">
+      <v-card width="60vw">
+        <v-col  align="center" justify="center" class="text-h3 pa-5">
+          <v-row align="center" justify="center"
+            ><span class="red--text">เกิดข้อผิดพลาดในการดำเนินการ!</span>
+          </v-row>
+          <v-row align="center" justify="center"
+            ><span >กรุณาลองอีกครั้ง</span>
+          </v-row>
+          <v-row align="center" justify="space-around" class="mt-4">
+            <v-btn
+              class="text-h4 white--text"
+              style="height:auto;width:auto;"
+              color="grey"
+              @click="isError = false"
+            >
+              ย้อนกลับ
+            </v-btn>
+          </v-row>
+        </v-col>
+      </v-card>
+      
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import TouchKeyboard from "./TouchKeyboard.vue";
-import {mapActions} from "vuex";
 import * as API from '../../utills/api';
 export default {
   components: {
@@ -88,7 +110,8 @@ export default {
       currentInput: "",
       radioGroup: true,
       offsetRules:[(v) => !!v || "กรุณากรอกค่าเพิ่ม/ลด"],
-      offset:''
+      offset:'',
+      isError:false
     };
   },
   methods: {
@@ -127,15 +150,14 @@ export default {
         } else if (event.value == "save") {
           if (this.$refs.form.validate()) {
             this.overlay = true;
-            console.log( this.radioGroup );
             let tmp = parseInt(this.offset);
-            if(!this.radioGroup){
+            if(this.radioGroup == 'false'){
               tmp *= -1;
             }
             const result = await API.controls.addPaperSheet(tmp);
             this.overlay = false;
             if(!result.successful){
-              console.log('Error');
+              this.isError = true;
               return -1;
             }
             this.$emit("popup-edit-offset-event", {
@@ -174,7 +196,6 @@ export default {
           }
       }
     },
-    ...mapActions(["changeOffsetWork"]),
     enterHandler(event,type){
       if( event.keyCode == 13){
         var element;

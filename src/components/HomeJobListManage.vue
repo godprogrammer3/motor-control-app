@@ -237,7 +237,7 @@
           bottom
           @click="handleSaveButton"
           class="text-h5"
-          :disabled="mode == 'add-group' && !isCreatable"
+          :disabled="(mode == 'add-group' && !isCreatable) || items.length <= 0"
         >
           บันทึก
         </v-btn>
@@ -271,7 +271,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
 import * as API from "../utills/api";
 import Popup from "./Popup/Popup.vue";
@@ -328,7 +327,6 @@ export default {
     this.fetchData();
   },
   methods: {
-    ...mapActions(["getAllJobByAllGroup","reorderGroup","createGroupWithJob","updateInGroup"]),
     manageMemberInGroup(group) {
       this.currentSelectedGroup = group;
       this.mode = "manage-member-ingroup";
@@ -380,14 +378,14 @@ export default {
         this.overlay = true;
         let result = await API.groups.updateJobsInGroup({id:this.currentSelectedGroup.id,jobs:selectedJobs});
         if(result.successful){
-          let result2 = await API.processes.notifyCClientToRefreshJobsList();
+          API.processes.notifyCClientToRefreshJobsList();
           this.overlay = false;
-          if(!result2.successful){
-            this.dialogType = 'error';
-            this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
-            this.isDialogShow = true;
-            return -1;
-          }
+          // if(!result2.successful){
+          //   this.dialogType = 'error';
+          //   this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+          //   this.isDialogShow = true;
+          //   return -1;
+          // }
           this.fetchData();
           this.mode = "group-reorder";
         }else{
@@ -398,16 +396,16 @@ export default {
       } else if (this.mode == "group-reorder") {
         this.items.forEach((group,index)=>group.order = index +1);
         this.overlay = true;
-        const result = await API.groups.updateList(this.items);
+        let result = await API.groups.updateList(this.items);
         if(result.successful){
-          let result2 = await API.processes.notifyCClientToRefreshJobsList();   
+          API.processes.notifyCClientToRefreshJobsList();   
           this.overlay = false;
-          if(!result2.successful){
-            this.dialogType = 'error';
-            this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
-            this.isDialogShow = true;
-            return -1;
-          }
+          // if(!result2.successful){
+          //   this.dialogType = 'error';
+          //   this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+          //   this.isDialogShow = true;
+          //   return -1;
+          // }
           this.$emit("handle-event", {
             type: "change_mode",
             value: "home",
@@ -432,14 +430,14 @@ export default {
         ); 
         const result = await API.groups.createWithJobs(selectedJobs);
         if(result.successful){
-          let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
+          API.processes.notifyCClientToRefreshJobsList(); 
           this.overlay = false;
-          if(!result2.successful){
-            this.dialogType = 'error';
-            this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
-            this.isDialogShow = true;
-            return -1;
-          }
+          // if(!result2.successful){
+          //   this.dialogType = 'error';
+          //   this.dialogValue = { errorMessage:'กรุณาลองอีกครั้ง'};
+          //   this.isDialogShow = true;
+          //   return -1;
+          // }
           this.fetchData();
           this.mode = "group-reorder";
         }else{
@@ -509,6 +507,7 @@ export default {
             this.items = response.data;
           } else {
             this.isNotHasData = true;
+            this.items = [];
           }
         }else{
           this.dialogType = 'error';
@@ -542,9 +541,6 @@ export default {
          this.isCreatable = false;
       }
     }
-  },
-  computed: {
-    ...mapGetters(["getAllJobByAllGroupData"]),
   },
 };
 </script>

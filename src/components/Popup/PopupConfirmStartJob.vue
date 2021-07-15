@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import API from "@/store/api";
 export default {
   props: {
     group: {

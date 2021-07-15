@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import TouchKeyboard from "./TouchKeyboard.vue";
 export default {
   components: {
@@ -138,7 +137,6 @@ export default {
           }
       }
   },
-    ...mapActions(["changeOnTopWork"]),
      enterHandler(event,type){
       if( event.keyCode == 13){
         var element;

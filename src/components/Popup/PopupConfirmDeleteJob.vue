@@ -52,19 +52,11 @@
           ย้อนกลับ
         </v-btn>
       </v-row>
-      <v-overlay :value="overlay"
-        ><v-progress-circular
-          :size="50"
-          color="indigo"
-          indeterminate
-        ></v-progress-circular
-      ></v-overlay>
     </v-col>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import * as API from "../../utills/api";
 export default {
   props: {
@@ -80,17 +72,16 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["deleteJob"]),
     async deleteJobAction() {
       this.overlay = true;
       const result = await API.jobs.remove(this.job.id);
       if (result.successful) {
-          let result2 = await API.processes.notifyCClientToRefreshJobsList(); 
-          this.overlay = false;
-          if(!result2.successful){
-            this.isError = true;
-            return -1;
-          }
+        API.processes.notifyCClientToRefreshJobsList(); 
+        this.overlay = false;
+          // if(!result2.successful){
+          //   this.isError = true;
+          //   return -1;
+          // }
         this.$emit("popup-confirm-delete-job", "yes");
       } else {
         this.isError = true;

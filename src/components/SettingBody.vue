@@ -123,7 +123,6 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
 import TouchKeyboard from "./Popup/TouchKeyboard.vue";
 import Popup from "./Popup/Popup.vue";
 import * as API from "../utills/api";
@@ -157,7 +156,6 @@ export default {
     this.fetchData();
   },
   methods: {
-    ...mapActions(["getSetting", "editSetting"]),
     async keyboardEventHandler(event) {
       if (event.type == "letter" && event.value != ".") {
         var element;
@@ -468,9 +466,6 @@ export default {
         this.isDialogShow = true;
       }
     },
-  },
-  computed: {
-    ...mapGetters(["getSettingData"]),
   },
 };
 </script>
