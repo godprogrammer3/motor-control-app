@@ -13,11 +13,13 @@
       </v-btn>
     </v-app-bar>
     <HomeJobList
+      name="homeJobListInPopup"
       @handle-event="handleEvent"
       :isJobRunning="true"
       v-if="mode == 'home'"
     ></HomeJobList>
     <HomeJobListManage
+      name="homeJobListManageInPopup"
       :isJobRunning="true"
       @handle-event="handleEvent"
       v-else-if="mode == 'home_manage_group'"
@@ -27,13 +29,11 @@
 
 <script>
 import moment from "moment";
-import HomeJobList from "../HomeJobList.vue";
-import HomeJobListManage from "../HomeJobListManage.vue";
-
 export default {
+  name:'PopupHome',
   components: {
-    HomeJobList,
-    HomeJobListManage,
+    HomeJobList: () => import('../HomeJobList.vue'),
+    HomeJobListManage : () => import('../HomeJobListManage.vue'),
   },
   data() {
     return {

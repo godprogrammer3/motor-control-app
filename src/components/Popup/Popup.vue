@@ -26,6 +26,7 @@
     </PopupEditOnTop>
     <PopupEditOffset
       v-else-if="type == 'editOffset'"
+      :isShowAddMinusOption="value.isShowAddMinusOption"
       @popup-edit-offset-event="
         (event) =>
           $emit('popup-event', {

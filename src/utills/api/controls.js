@@ -66,6 +66,20 @@ export async function addPaperSheet(sheets){
   }
 } 
 
+export async function confirmFinishGroupJob(){
+  var result;
+  try{
+    result = await instance.put("/confirmFinish");
+    const response = responseSuccess;
+    responseSuccess.data = result;
+    return response;
+  }catch(error){
+    const response = responseFailed;
+    response.data = error?.response?.data;
+    return response;
+  }
+} 
+
 const responseSuccess = {
     successful:true,
     errorCode:"00",

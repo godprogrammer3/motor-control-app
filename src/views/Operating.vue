@@ -8,7 +8,7 @@
         >กำลังดำเนินงาน...</v-toolbar-title
       >
       <span class="white--text text-h4 ml-5"
-        >({{ currentJobOrder + 1 }}/{{ group.jobs.length }} งาน)</span
+        >({{ 'เหลือ '+group.jobs.length }} งาน)</span
       >
       <v-spacer></v-spacer>
       <v-btn
@@ -69,7 +69,7 @@
       </v-row>
       <v-row align="center" justify="center" class="mt-5">
         <span class="text-h2 indigo--text">ลอน C จ่ายกระดาษแล้ว :</span>
-        <span class="text-h2 ml-5">{{( targetLength != 0?finishLength / targetLength:0).toFixed(2)}} %</span>
+        <span class="text-h2 ml-5">{{( targetLength != 0?finishLength / targetLength * 100:0).toFixed(2)}} %</span>
       </v-row>
       <v-container>
         <v-row align="center" justify="center">
@@ -88,7 +88,7 @@
             <v-card color="indigo darken-4" class="text-h4 white--text">
               <v-col align="center" justify="center">
                 <v-row align="center" justify="center">คงเหลือ</v-row>
-                <v-row align="center" justify="center">{{ targetLength - finishLength}}</v-row>
+                <v-row align="center" justify="center">{{ (targetLength - finishLength).toFixed(2)}}</v-row>
                 <v-row align="center" justify="center">เมตร</v-row>
               </v-col>
             </v-card>
@@ -97,7 +97,7 @@
             <v-card color="purple" class="text-h4 white--text">
               <v-col align="center" justify="center">
                 <v-row align="center" justify="center">ทั้งหมด</v-row>
-                <v-row align="center" justify="center">{{targetLength}}</v-row>
+                <v-row align="center" justify="center">{{targetLength.toFixed(2)}}</v-row>
                 <v-row align="center" justify="center">เมตร</v-row>
               </v-col>
             </v-card>
@@ -120,7 +120,7 @@
             <v-card color="blue" class="text-h4 white--text" @click="editOffset">
               <v-col align="center" justify="center">
                 <v-row align="center" justify="center">เพิ่ม/ลด</v-row>
-                <v-row align="center" justify="center">{{offset}}</v-row>
+                <v-row align="center" justify="center">{{offset.toFixed(0)}}</v-row>
                 <v-row align="center" justify="center"
                   ><span class="mr-5">แผ่น</span>
                    <v-icon x-large color="white">
@@ -282,9 +282,7 @@ export default {
       isAutoMode: true,
       isNotSlowMode: true,
       isAutoMode: true,
-      isCloseDialogShow: false,
       input: "",
-      isEditDialogShow: false,
       editValue: "",
       editType: "",
       offsetValue: 100,
@@ -364,6 +362,12 @@ export default {
         this.isDialogShow = false;
       }else if(event.type == 'popup-home'){
         this.isDialogShow = false;
+      }else if(event.type == 'confirm-finish'){
+        if(event.value === 'yes'){
+          this.isDialogShow = false;
+        }else{
+          this.isDialogShow = false;
+        }
       }
     },
     confirmChangePaper() {
@@ -406,13 +410,6 @@ export default {
       });
     }
   },
-  watch: {
-    isEditDialogShow(newValue, oldValue) {
-      if (!newValue) {
-        this.input = "";
-      }
-    },
-  },
   created () {
     this.fetchData();
   },
@@ -421,7 +418,6 @@ export default {
       console.log("socket connected");
     },
     NOTIFY_NC_CLIENT_TO_CANCEL_WORK:function(data){
-      console.log(data);
       this.$socket.emit('NOTIFY_NC_CLIENT_TO_CANCEL_WORK_RESPONSE',data);
       this.$router.replace("/");
     },
@@ -432,18 +428,21 @@ export default {
       this.finishLength = data;
     },
     wastePaper_sheet:function( data ){
-      console.log(data);
       this.offset = data;
     },
     alert:function( data ){
       this.dialogType = 'confirm';
-      this.dialogValue = {str:'confirmNearFinish'};
-      this.isCloseDialogShow = true;
+      this.dialogValue = {str:'confirmNearFinish',value:this.group};
+      this.isDialogShow = true;
     },
-    end:function(data){
-       if(this.currentJobOrder+1 < this.group.jobs.length){
-         this.currentJobOrder++;
-       }
+    end: async function(data){
+      if(this.group){
+        this.group = data;
+      }else{
+        API.processes.notifyCClientToCancelWork();
+        this.$router.replace('/');
+      }
+       
     }
   },
 };

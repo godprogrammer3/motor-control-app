@@ -12,6 +12,7 @@
                     v-model="radioGroup"
                     row
                     :mandatory="true"
+                    v-if="isShowAddMinusOption"
                   >
                     <v-radio
                       value="true"
@@ -104,6 +105,10 @@ export default {
       type: String,
       default: "",
     },
+    isShowAddMinusOption:{
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -160,6 +165,7 @@ export default {
               this.isError = true;
               return -1;
             }
+            this.offset = '';
             this.$emit("popup-edit-offset-event", {
               type: event.type,
               value: 'saveOffset',
@@ -212,8 +218,6 @@ export default {
         }
       }
     },
-  },
-  mounted () {
   },
 }
 </script>

@@ -73,6 +73,7 @@ import HomeJobList from "@/components/HomeJobList.vue";
 import HomeJobListManage from "@/components/HomeJobListManage.vue";
 import Popup from "../components/Popup/Popup.vue";
 export default {
+  name:'Home',
   components: {
     HomeJobList,
     HomeJobListManage,

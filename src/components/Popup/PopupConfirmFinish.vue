@@ -1,25 +1,17 @@
 <template>
   <v-col align="center" justify="center" class="text-h3 pa-5">
     <v-row align="center" justify="center"
-      ><span >งานกลุ่มหมายเลข</span><span class="ml-3">{{group.id}}</span></v-row
+      ><span class="red--text">งานกลุ่มหมายเลข</span><span class="ml-3">{{group.id}}</span></v-row
     >
-    <v-row align="center" justify="center"><span class="orange--text">ใกล้ปล่อยกระดาษเสร็จสิ้นแล้ว</span> </v-row>
+    <v-row align="center" justify="center"><span>ปล่อยกระดาษเสร็จสิ้นแล้ว</span> </v-row>
     <v-row align="center" justify="space-around" class="mt-4">
       <v-btn
         class="text-h4 white--text"
         style="height:auto;width:auto;"
-        color="indigo"
-        @click="showPopupEditOffset"
+        color="grey"
+        @click="confirmFinish"
       >
-        เพิ่มกระดาษ
-      </v-btn>
-      <v-btn
-        class="text-h4 white--text"
-        style="height:auto;width:auto;"
-        color="indigo"
-        @click="confirmAutoFinishGroupJob"
-      >
-        ยืนยัน
+        ยืนยันกลุ่มงานเสร็จสิ้น
       </v-btn>
     </v-row>
      <v-overlay :value="overlay"><v-progress-circular
@@ -27,7 +19,7 @@
       color="indigo"
       indeterminate
     ></v-progress-circular></v-overlay>
-    <!-- <v-dialog v-model="isDialogShow">
+    <v-dialog v-model="isDialogShow">
       <v-card width="50vw" style="margin-left:24.4%;">
         <v-row align="center" justify="center"> 
           <v-col align="center" justify="center" class="text-h3">
@@ -52,24 +44,13 @@
           </v-col>
         </v-row>
       </v-card>
-
-    </v-dialog> -->
-    <v-dialog v-model="isDialogShow" elevation="0" :persistent="isPersistent">
-        <Popup
-          :type="dialogType"
-          :value="dialogValue"
-          @popup-event="popupEventHandler"
-        ></Popup>
-      </v-dialog>
+    </v-dialog>
   </v-col>
 </template>
 
 <script>
 import * as API from '../../utills/api';
 export default {
-  components: {
-    Popup: ()=> import('../Popup/Popup.vue')
-  },
   props: {
     group: {
       type: Object,
@@ -80,39 +61,21 @@ export default {
     return {
       overlay:false,
       isDialogShow:false,
-      errorMessage:'',
-      dialogType:'',
-      dialogValue:{},
-      isPersistent:true
+      errorMessage:''
     }
   },
   methods: {
-    popupEventHandler(event){
-      if(event.type === 'action'){
-        if(event.value === 'saveOffset'){
-          this.confirmAutoFinishGroupJob();
-        }else{
-          this.isDialogShow = false;
-        }
-        
-      }
-    },
-    async confirmAutoFinishGroupJob(){
+    async confirmFinish(){
       this.overlay = true;
       let result = await API.controls.confirmFinishGroupJob();
+      console.log('-> DEBUG : This line in confirmFinish()');
+      console.log('result :',result);
       this.overlay = false;
-      if(!result.successful){
-        this.dialogType = 'error';
-        this.dialogValue = {errorMessage:'กรุณาลองอีกครั้ง'};
+      if( !result.successful ){
         this.isDialogShow = true;
         return -1;
       }
-      this.$emit('popup-confirm-near-finish',{type:'action',value:'yes'});
-    },
-    showPopupEditOffset(){
-      this.dialogType = "editOffset";
-      this.dialogValue = { offset: '',isShowAddMinusOption:false};
-      this.isDialogShow = true;
+      this.$emit('popup-confirm-finish','yes');
     }
   },
 };
